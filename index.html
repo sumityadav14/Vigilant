@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIGILANT — AI Smart Vehicle, Traffic & Citizen Management Platform</title>
+  <meta name="description" content="Next-generation AI traffic monitoring, vehicle re-identification, citizen vehicle services, and automated violation review platform.">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Landing Page Custom Styles */
+    .landing-header {
+      height: 80px;
+      padding: 0 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(8, 13, 24, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-main);
+    }
+
+    .hero-section {
+      padding: 160px 5% 100px 5%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      min-height: 90vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--primary-glow) 0%, rgba(0,0,0,0) 70%);
+      top: 10%;
+      left: -10%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(37, 99, 235, 0.12);
+      border: 1px solid rgba(37, 99, 235, 0.3);
+      border-radius: var(--radius-full);
+      color: #3B82F6;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, #FFFFFF 30%, #94A3B8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      margin-bottom: 36px;
+      max-width: 540px;
+    }
+
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* Animated Visual Grid Cards */
+    .hero-visual {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      z-index: 1;
+    }
+
+    .visual-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition-normal);
+    }
+
+    .visual-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px var(--primary-glow);
+    }
+
+    .visual-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      margin-bottom: 16px;
+    }
+
+    .stats-bar {
+      background: #0B132B;
+      border-y: 1px solid var(--border-color);
+      padding: 40px 5%;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .features-section {
+      padding: 100px 5%;
+    }
+
+    .section-title-wrap {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 60px auto;
+    }
+
+    .section-title {
+      font-size: 2.4rem;
+      margin-bottom: 14px;
+    }
+  </style>
+</head>
+<body data-page="landing">
+
+  <!-- Header Navigation -->
+  <header class="landing-header">
+    <a href="index.html" class="brand-logo">
+      <div class="brand-icon"><i class="lucide-shield-check"></i></div>
+      <span class="brand-name">VIGILANT</span>
+      <span class="brand-tag">AI SMART CITY</span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#workflow">How It Works</a></li>
+      <li><a href="#tech">Tech Stack</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+
+    <div style="display:flex; gap:12px;">
+      <a href="login.html" class="btn btn-outline">Log In</a>
+      <a href="login.html" class="btn btn-primary">Get Started</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-glow"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <i class="lucide-sparkles"></i> AI-Powered Traffic & Citizen Platform
+      </div>
+      <h1 class="hero-title">INTELLIGENT VEHICLE & TRAFFIC MANAGEMENT</h1>
+      <p class="hero-subtitle">
+        Unified Smart City platform combining AI violation detection, multi-camera vehicle re-identification, citizen vehicle services, document vault, and stolen vehicle alert network.
+      </p>
+      <div class="hero-cta">
+        <a href="login.html" class="btn btn-primary btn-lg">
+          Explore Command Center <i class="lucide-arrow-right"></i>
+        </a>
+        <a href="#features" class="btn btn-secondary btn-lg">
+          View Platform Features
+        </a>
+      </div>
+    </div>
+
+    <!-- Hero Animated Cards -->
+    <div class="hero-visual">
+      <div class="visual-card">
+        <div class="visual-icon" style="background:rgba(37,99,235,0.15); color:var(--primary);">
+          <i class="lucide-scan"></i>
+        </div>
+        <div class="badge badge-success" style="margin-bottom:8px;">96% Confidence</div>
+        <h4 style="font-size:1.1rem; margin-bottom:4px;">AI Violation Detect</h4>
+        <p style="font-size:0.85rem; color:var(--text-muted);">Red Light & Helmet AI classification in real-time camera feeds.</p>
+      </div>
+
+      <div class="visual-card">
+        <div class="visual-icon" style="background:rgba(6,182,212,0.15); color:var(--accent-cyan);">
+          <i class="lucide-git-commit"></i>
+        </div>
+        <div class="badge badge-info" style="margin-bottom:8px;">CAM-07 Matched</div>
+        <h4 style="font-size:1.1rem; margin-bottom:4px;">Vehicle Re-ID</h4>
+        <p style="font-size:0.85rem; color:var(--text-muted);">Multi-camera feature re-identification and route tracking.</p>
+      </div>
+
+      <div class="visual-card">
+        <div class="visual-icon" style="background:rgba(239,68,68,0.15); color:var(--danger);">
+          <i class="lucide-alert-triangle"></i>
+        </div>
+        <div class="badge badge-danger" style="margin-bottom:8px;">Possible Match</div>
+        <h4 style="font-size:1.1rem; margin-bottom:4px;">Stolen Vehicle Network</h4>
+        <p style="font-size:0.85rem; color:var(--text-muted);">Instant alert routing & authority verification assistance.</p>
+      </div>
+
+      <div class="visual-card">
+        <div class="visual-icon" style="background:rgba(34,197,94,0.15); color:var(--success);">
+          <i class="lucide-video"></i>
+        </div>
+        <div class="badge badge-success badge-pulse" style="margin-bottom:8px;">24 Active</div>
+        <h4 style="font-size:1.1rem; margin-bottom:4px;">Live Surveillance</h4>
+        <p style="font-size:0.85rem; color:var(--text-muted);">24/7 CCTV surveillance grid with edge video analytics.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Stats Bar -->
+  <section class="stats-bar">
+    <div>
+      <div class="stat-num" style="color:var(--primary);">24</div>
+      <div style="font-size:0.9rem; color:var(--text-muted); font-weight:500;">Active Smart Cameras</div>
+    </div>
+    <div>
+      <div class="stat-num" style="color:var(--success);">94.8%</div>
+      <div style="font-size:0.9rem; color:var(--text-muted); font-weight:500;">AI Detection Accuracy</div>
+    </div>
+    <div>
+      <div class="stat-num" style="color:var(--accent-cyan);">12,450+</div>
+      <div style="font-size:0.9rem; color:var(--text-muted); font-weight:500;">Vehicles Detected Today</div>
+    </div>
+    <div>
+      <div class="stat-num" style="color:var(--warning);">100%</div>
+      <div style="font-size:0.9rem; color:var(--text-muted); font-weight:500;">Human Verification Guardrail</div>
+    </div>
+  </section>
+
+  <!-- Key Features Grid -->
+  <section id="features" class="features-section">
+    <div class="section-title-wrap">
+      <h2 class="section-title">Built for Citizens & Traffic Authorities</h2>
+      <p style="color:var(--text-muted);">A comprehensive SaaS solution empowering citizens with seamless RC/Challan management while equipping police command centers with AI-driven surveillance.</p>
+    </div>
+
+    <div class="grid-4">
+      <div class="glass-card" style="padding:28px;">
+        <div class="visual-icon" style="background:rgba(37,99,235,0.15); color:var(--primary); width:50px; height:50px; font-size:1.4rem;">
+          <i class="lucide-car"></i>
+        </div>
+        <h3 style="font-size:1.25rem; margin-bottom:10px;">Citizen Vehicle Hub</h3>
+        <p style="font-size:0.9rem; color:var(--text-muted);">Manage RC, Insurance, and PUC certificates in one secure vault. Receive automated expiry reminders before penalties accrue.</p>
+      </div>
+
+      <div class="glass-card" style="padding:28px;">
+        <div class="visual-icon" style="background:rgba(239,68,68,0.15); color:var(--danger); width:50px; height:50px; font-size:1.4rem;">
+          <i class="lucide-file-text"></i>
+        </div>
+        <h3 style="font-size:1.25rem; margin-bottom:10px;">Challan Review Workflow</h3>
+        <p style="font-size:0.9rem; color:var(--text-muted);">Inspect high-resolution AI violation evidence clips and submit formal dispute review requests with supporting proof.</p>
+      </div>
+
+      <div class="glass-card" style="padding:28px;">
+        <div class="visual-icon" style="background:rgba(6,182,212,0.15); color:var(--accent-cyan); width:50px; height:50px; font-size:1.4rem;">
+          <i class="lucide-crosshair"></i>
+        </div>
+        <h3 style="font-size:1.25rem; margin-bottom:10px;">Vehicle Re-Identification</h3>
+        <p style="font-size:0.9rem; color:var(--text-muted);">Deep learning visual search matching vehicle body shape, color, and features across multiple camera feeds without relying solely on license plates.</p>
+      </div>
+
+      <div class="glass-card" style="padding:28px;">
+        <div class="visual-icon" style="background:rgba(34,197,94,0.15); color:var(--success); width:50px; height:50px; font-size:1.4rem;">
+          <i class="lucide-map-pin"></i>
+        </div>
+        <h3 style="font-size:1.25rem; margin-bottom:10px;">Multi-Camera Tracking</h3>
+        <p style="font-size:0.9rem; color:var(--text-muted);">Interactive map route reconstruction visualizing a target vehicle's movement vector across traffic intersections in real time.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Legal Principles Banner -->
+  <section style="padding:0 5% 80px 5%;">
+    <div class="legal-notice-banner" style="padding:20px; font-size:0.95rem;">
+      <i class="lucide-shield-alert" style="font-size:1.8rem; flex-shrink:0;"></i>
+      <div>
+        <strong style="font-size:1.05rem; display:block; margin-bottom:4px;">Legal & Safety Design Guardrail Notice</strong>
+        This platform is an academic engineering prototype. Simulated AI detections provide probability matches marked <em>"Possible AI Match — Human Verification Required"</em>. All final challan decisions and legal actions remain strictly under the jurisdiction of authorized traffic police officers according to official legal procedures.
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="background:#04070D; border-top:1px solid var(--border-color); padding:40px 5%; color:var(--text-muted); font-size:0.9rem; display:flex; justify-content:space-between; align-items:center;">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <div class="brand-icon" style="width:28px; height:28px; font-size:0.9rem;"><i class="lucide-shield-check"></i></div>
+      <strong style="color:var(--text-main);">VIGILANT</strong> — B.Tech CSE (AI) Major Project Prototype
+    </div>
+    <div>
+      Designed for Smart City Traffic Management & Citizen Empowerment
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/mock-data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

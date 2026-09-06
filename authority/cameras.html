@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live CCTV Cameras — VIGILANT Command Center</title>
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body data-page="authority-cameras">
+
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon" style="background:linear-gradient(135deg, var(--danger), var(--warning));"><i class="lucide-shield-alert"></i></div>
+          <span class="brand-name">VIGILANT</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-menu">
+        <div class="menu-category">Command Center Nav</div>
+        <a href="dashboard.html" class="nav-item">
+          <i class="lucide-activity"></i> Command Center
+        </a>
+        <a href="cameras.html" class="nav-item active">
+          <i class="lucide-video"></i> Live Cameras <span class="badge-count" style="background:rgba(34,197,94,0.2); color:var(--success);">21</span>
+        </a>
+        <a href="violations.html" class="nav-item">
+          <i class="lucide-shield-alert"></i> AI Violations <span class="badge-count">823</span>
+        </a>
+        <a href="vehicle-reid.html" class="nav-item">
+          <i class="lucide-scan-line"></i> Vehicle Re-ID
+        </a>
+        <a href="tracking.html" class="nav-item">
+          <i class="lucide-route"></i> Multi-Cam Tracking
+        </a>
+        <a href="stolen-search.html" class="nav-item">
+          <i class="lucide-search"></i> Stolen Vehicle Search
+        </a>
+        <a href="dashboard.html#reviews" class="nav-item">
+          <i class="lucide-file-check"></i> Challan Reviews
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-mini">
+          <div class="avatar" style="border-color:var(--danger);">RS</div>
+          <div class="user-info">
+            <span class="user-name">Insp. R. K. Sharma</span>
+            <span class="user-role">Traffic Enforcement Officer</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <header class="top-header">
+        <button id="sidebar-toggle" class="btn-icon d-lg-none"><i class="lucide-menu"></i></button>
+
+        <div class="header-search">
+          <i class="lucide-search"></i>
+          <input type="text" class="form-control" placeholder="Search camera code, junction name...">
+        </div>
+
+        <div class="header-actions">
+          <button class="role-switcher-btn" style="color:var(--warning);" onclick="window.AuthEngine.switchRole('citizen')">
+            <i class="lucide-user"></i> Citizen View
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
+        </div>
+      </header>
+
+      <div class="dashboard-container">
+        
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Smart City CCTV Surveillance Network</h1>
+            <p class="page-subtitle">24/7 Live edge analytics feeds with automatic vehicle detection and bounding box overlays.</p>
+          </div>
+
+          <div style="display:flex; gap:12px;">
+            <button class="btn btn-primary" onclick="showToast('Refreshing stream sync...', 'info')">
+              <i class="lucide-refresh-cw"></i> Sync Streams
+            </button>
+          </div>
+        </div>
+
+        <!-- Camera Grid -->
+        <div class="camera-grid" style="grid-template-columns:repeat(2, 1fr); gap:24px;">
+          
+          <!-- Cam 1 -->
+          <div class="camera-card" onclick="openCameraModal('CAM-01')" style="cursor:pointer;">
+            <div class="camera-feed-sim">
+              <img src="https://images.unsplash.com/photo-1506521781263-d8422e82f27a?q=80&w=800&auto=format&fit=crop" style="width:100%; height:100%; object-fit:cover; opacity:0.8;" alt="CAM-01">
+              <div class="camera-overlay-top">
+                <span class="badge badge-success badge-pulse">CAM-01 LIVE</span>
+                <span style="font-size:0.75rem; background:rgba(0,0,0,0.6); padding:4px 8px; border-radius:4px;">30 FPS</span>
+              </div>
+              <div class="camera-overlay-bottom">
+                <span>XYZ Intersection - North Gate</span>
+                <span style="color:var(--warning);">42 Vehicles Detected</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cam 2 -->
+          <div class="camera-card" onclick="openCameraModal('CAM-03')" style="cursor:pointer;">
+            <div class="camera-feed-sim">
+              <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=800&auto=format&fit=crop" style="width:100%; height:100%; object-fit:cover; opacity:0.8;" alt="CAM-03">
+              <div class="camera-overlay-top">
+                <span class="badge badge-success badge-pulse">CAM-03 LIVE</span>
+                <span style="font-size:0.75rem; background:rgba(0,0,0,0.6); padding:4px 8px; border-radius:4px;">28 FPS</span>
+              </div>
+              <div class="camera-overlay-bottom">
+                <span>ABC Expressway KM 14</span>
+                <span style="color:var(--warning);">89 Vehicles Detected</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cam 3 -->
+          <div class="camera-card" onclick="openCameraModal('CAM-07')" style="cursor:pointer;">
+            <div class="camera-feed-sim">
+              <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=800&auto=format&fit=crop" style="width:100%; height:100%; object-fit:cover; opacity:0.8;" alt="CAM-07">
+              <div class="camera-overlay-top">
+                <span class="badge badge-danger badge-pulse">CAM-07 ALERT ACTIVE</span>
+                <span style="font-size:0.75rem; background:rgba(0,0,0,0.6); padding:4px 8px; border-radius:4px;">30 FPS</span>
+              </div>
+              <div class="camera-overlay-bottom">
+                <span>City Center Square</span>
+                <span style="color:var(--danger);">65 Vehicles Detected</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cam 4 -->
+          <div class="camera-card" onclick="openCameraModal('CAM-11')" style="cursor:pointer;">
+            <div class="camera-feed-sim">
+              <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=800&auto=format&fit=crop" style="width:100%; height:100%; object-fit:cover; opacity:0.8;" alt="CAM-11">
+              <div class="camera-overlay-top">
+                <span class="badge badge-success badge-pulse">CAM-11 LIVE</span>
+                <span style="font-size:0.75rem; background:rgba(0,0,0,0.6); padding:4px 8px; border-radius:4px;">29 FPS</span>
+              </div>
+              <div class="camera-overlay-bottom">
+                <span>Highway Flyover Exit</span>
+                <span style="color:var(--success);">112 Vehicles Detected</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Fullscreen Camera Stream Modal -->
+  <div id="camera-modal" class="modal-overlay">
+    <div class="modal-container" style="max-width:800px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Live Feed: <span id="cam-modal-id"></span></h3>
+        <button class="modal-close" onclick="closeModal('camera-modal')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border-color); background:#000; margin-bottom:16px;">
+          <img id="cam-modal-img" src="" alt="Enlarged Camera Feed" style="width:100%; height:380px; object-fit:cover; display:block;">
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; font-size:0.85rem; background:var(--bg-dark-alt); padding:14px; border-radius:var(--radius-sm);">
+          <div><strong style="color:var(--text-muted)">Camera Name:</strong> <div id="cam-modal-name"></div></div>
+          <div><strong style="color:var(--text-muted)">Location:</strong> <div id="cam-modal-loc"></div></div>
+          <div><strong style="color:var(--text-muted)">Active Traffic:</strong> <div id="cam-modal-veh" style="color:var(--success); font-weight:700;"></div></div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('camera-modal')">Close Stream</button>
+        <button class="btn btn-primary" onclick="showToast('Recording 60-second evidence clip...', 'info')">Record Evidence Clip</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+</html>

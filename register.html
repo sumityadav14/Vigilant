@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register Account — VIGILANT Smart Platform</title>
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: radial-gradient(circle at center, #0F172A 0%, #080D18 100%);
+      padding: 20px;
+    }
+
+    .register-card-container {
+      width: 100%;
+      max-width: 520px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 36px 32px;
+      box-shadow: var(--shadow-lg), var(--shadow-glow);
+    }
+
+    .auth-tabs {
+      display: flex;
+      background: var(--bg-dark-alt);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 4px;
+      margin-bottom: 24px;
+    }
+
+    .auth-tab-btn {
+      flex: 1;
+      padding: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .auth-tab-btn.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      box-shadow: 0 2px 8px var(--primary-glow);
+    }
+  </style>
+</head>
+<body data-page="register">
+
+  <div class="register-card-container">
+    <!-- Brand Header -->
+    <div style="text-align:center; margin-bottom:24px;">
+      <a href="index.html" class="brand-logo" style="justify-content:center; margin-bottom:10px;">
+        <div class="brand-icon" style="width:44px; height:44px; font-size:1.4rem;"><i class="lucide-shield-check"></i></div>
+        <span class="brand-name" style="font-size:1.6rem;">VIGILANT</span>
+      </a>
+      <h2 style="font-size:1.3rem;">Create New Account</h2>
+      <p style="color:var(--text-muted); font-size:0.85rem; margin-top:2px;">Register for Citizen Services or Police Authority Access</p>
+    </div>
+
+    <!-- Role Switcher Tabs -->
+    <div class="auth-tabs">
+      <button id="tab-reg-citizen" class="auth-tab-btn active" onclick="switchRegRole('citizen')">
+        <i class="lucide-user"></i> Citizen Registration
+      </button>
+      <button id="tab-reg-authority" class="auth-tab-btn" onclick="switchRegRole('authority')">
+        <i class="lucide-shield-alert"></i> Police / Officer Reg
+      </button>
+    </div>
+
+    <!-- Citizen Form -->
+    <form id="citizen-reg-form" onsubmit="handleRegistration(event, 'citizen')">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" id="reg-cit-name" class="form-control" placeholder="e.g. Sumit Yadav" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" id="reg-cit-email" class="form-control" placeholder="name@example.com" required>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" id="reg-cit-pass" class="form-control" placeholder="••••••••" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mobile Number</label>
+          <input type="tel" id="reg-cit-phone" class="form-control" placeholder="+91 98765 43210" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Primary Vehicle Reg Number (Optional)</label>
+        <input type="text" id="reg-cit-veh" class="form-control" placeholder="e.g. DL 01 AB 1234">
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg" style="width:100%; margin-top:10px;">
+        Create Citizen Account <i class="lucide-arrow-right"></i>
+      </button>
+    </form>
+
+    <!-- Authority Officer Form (Initially Hidden) -->
+    <form id="authority-reg-form" onsubmit="handleRegistration(event, 'authority')" style="display:none;">
+      <div class="form-group">
+        <label class="form-label">Officer Full Name</label>
+        <input type="text" id="reg-auth-name" class="form-control" placeholder="e.g. Insp. R. K. Sharma" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Official Department Email</label>
+        <input type="email" id="reg-auth-email" class="form-control" placeholder="officer@police.gov.in" required>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div class="form-group">
+          <label class="form-label">Security Passcode</label>
+          <input type="password" id="reg-auth-pass" class="form-control" placeholder="••••••••" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Officer Badge Number</label>
+          <input type="text" id="reg-auth-badge" class="form-control" placeholder="POL-DEL-8091" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Department / Police Station Jurisdiction</label>
+        <input type="text" id="reg-auth-dept" class="form-control" placeholder="e.g. Traffic Enforcement Cell — Sector 4" required>
+      </div>
+
+      <button type="submit" class="btn btn-danger btn-lg" style="width:100%; margin-top:10px;">
+        Register Police Officer Account <i class="lucide-shield"></i>
+      </button>
+    </form>
+
+    <div style="text-align:center; margin-top:20px; font-size:0.85rem; color:var(--text-muted);">
+      Already have an account? <a href="login.html" style="color:var(--primary); font-weight:600;">Log In Here</a>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/mock-data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    function switchRegRole(role) {
+      const tabCitizen = document.getElementById("tab-reg-citizen");
+      const tabAuthority = document.getElementById("tab-reg-authority");
+      const citForm = document.getElementById("citizen-reg-form");
+      const authForm = document.getElementById("authority-reg-form");
+
+      if (role === 'citizen') {
+        tabCitizen.classList.add("active");
+        tabAuthority.classList.remove("active");
+        citForm.style.display = "block";
+        authForm.style.display = "none";
+      } else {
+        tabAuthority.classList.add("active");
+        tabCitizen.classList.remove("active");
+        authForm.style.display = "block";
+        citForm.style.display = "none";
+      }
+    }
+
+    function handleRegistration(event, role) {
+      event.preventDefault();
+      let userData = { role };
+
+      if (role === 'citizen') {
+        userData.name = document.getElementById('reg-cit-name').value;
+        userData.email = document.getElementById('reg-cit-email').value;
+        userData.phone = document.getElementById('reg-cit-phone').value;
+        userData.vehicleReg = document.getElementById('reg-cit-veh').value;
+      } else {
+        userData.name = document.getElementById('reg-auth-name').value;
+        userData.email = document.getElementById('reg-auth-email').value;
+        userData.badgeNumber = document.getElementById('reg-auth-badge').value;
+        userData.department = document.getElementById('reg-auth-dept').value;
+      }
+
+      showToast(`Creating ${role} account...`, 'info');
+      setTimeout(() => {
+        window.AuthEngine.register(userData);
+        showToast('Registration successful! Logging in...', 'success');
+        setTimeout(() => {
+          if (role === 'authority') {
+            window.location.href = 'authority/dashboard.html';
+          } else {
+            window.location.href = 'citizen/dashboard.html';
+          }
+        }, 600);
+      }, 500);
+    }
+  </script>
+</body>
+</html>

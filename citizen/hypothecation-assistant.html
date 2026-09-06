@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hypothecation Assistance — VIGILANT</title>
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    .timeline-steps {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin: 36px 0;
+    }
+
+    .timeline-steps::before {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: 10%;
+      right: 10%;
+      height: 3px;
+      background: var(--border-color);
+      z-index: 0;
+    }
+
+    .step-item {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      flex: 1;
+    }
+
+    .step-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      border: 2px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px auto;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .step-item.completed .step-icon {
+      background: var(--success);
+      border-color: var(--success);
+      color: #FFF;
+    }
+
+    .step-item.active .step-icon {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #FFF;
+      box-shadow: 0 0 12px var(--primary-glow);
+    }
+
+    .step-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body data-page="hypothecation">
+
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon"><i class="lucide-shield-check"></i></div>
+          <span class="brand-name">VIGILANT</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-menu">
+        <div class="menu-category">Citizen Navigation</div>
+        <a href="dashboard.html" class="nav-item">
+          <i class="lucide-layout-dashboard"></i> Dashboard
+        </a>
+        <a href="my-vehicles.html" class="nav-item">
+          <i class="lucide-car"></i> My Vehicles
+        </a>
+        <a href="challan-list.html" class="nav-item">
+          <i class="lucide-file-text"></i> Challans
+        </a>
+        <a href="document-vault.html" class="nav-item">
+          <i class="lucide-folder"></i> Documents
+        </a>
+        <a href="hypothecation-assistant.html" class="nav-item active">
+          <i class="lucide-banknote"></i> Hypothecation
+        </a>
+        <a href="stolen-report.html" class="nav-item">
+          <i class="lucide-shield-alert"></i> Stolen Vehicle
+        </a>
+        <a href="notifications-center.html" class="nav-item">
+          <i class="lucide-bell"></i> Notifications
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-mini">
+          <div class="avatar">SY</div>
+          <div class="user-info">
+            <span class="user-name">Sumit Yadav</span>
+            <span class="user-role">Vehicle Owner</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <header class="top-header">
+        <button id="sidebar-toggle" class="btn-icon d-lg-none"><i class="lucide-menu"></i></button>
+
+        <div style="font-size:0.9rem; color:var(--text-muted);">
+          Hypothecation (HPA) Endorsement & Removal Assistant
+        </div>
+
+        <div class="header-actions">
+          <button class="role-switcher-btn" onclick="window.AuthEngine.switchRole('authority')">
+            <i class="lucide-shield"></i> Authority View
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
+        </div>
+      </header>
+
+      <div class="dashboard-container">
+        
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Hypothecation (HPA) Removal Assistant</h1>
+            <p class="page-subtitle">Track loan closure status and prepare Form 35 application for RTO endorsement removal.</p>
+          </div>
+        </div>
+
+        <!-- Vehicle Loan Card -->
+        <div class="glass-card" style="padding:28px; margin-bottom:28px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <span class="badge badge-info" style="margin-bottom:8px;">READY FOR REMOVAL</span>
+              <h2 style="font-size:1.4rem;">Tata Nexon EV (DL 04 CD 5678)</h2>
+              <p style="color:var(--text-muted); font-size:0.9rem;">Financier: <strong>HDFC Bank Ltd</strong> • Loan A/C: <code>HDFC-EV-99812</code></p>
+            </div>
+
+            <button class="btn btn-primary" onclick="showToast('Initiating Form 35 RTO Application Bundle...', 'success')">
+              Start RTO Removal Assistance
+            </button>
+          </div>
+
+          <!-- Step Progress -->
+          <div class="timeline-steps">
+            <div class="step-item completed">
+              <div class="step-icon"><i class="lucide-check"></i></div>
+              <div class="step-title">Loan Paid</div>
+            </div>
+            <div class="step-item completed">
+              <div class="step-icon"><i class="lucide-check"></i></div>
+              <div class="step-title">Bank NOC Issued</div>
+            </div>
+            <div class="step-item active">
+              <div class="step-icon">3</div>
+              <div class="step-title">Form 35 Draft</div>
+            </div>
+            <div class="step-item">
+              <div class="step-icon">4</div>
+              <div class="step-title">RTO Submission</div>
+            </div>
+            <div class="step-item">
+              <div class="step-icon">5</div>
+              <div class="step-title">RC Updated</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Checklist Card -->
+        <div class="glass-card" style="padding:24px;">
+          <h3 style="font-size:1.15rem; margin-bottom:16px;">Required Application Checklist for RTO</h3>
+
+          <div style="display:flex; flex-direction:column; gap:12px; font-size:0.9rem;">
+            <div style="display:flex; align-items:center; gap:12px; background:var(--bg-dark-alt); padding:12px; border-radius:6px;">
+              <i class="lucide-check-circle" style="color:var(--success)"></i>
+              <div style="flex:1;"><strong>Bank No Objection Certificate (NOC)</strong> — Issued by HDFC Bank</div>
+              <button class="btn btn-outline btn-sm" onclick="showToast('Downloading NOC PDF...', 'info')">Download NOC</button>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:12px; background:var(--bg-dark-alt); padding:12px; border-radius:6px;">
+              <i class="lucide-check-circle" style="color:var(--success)"></i>
+              <div style="flex:1;"><strong>RTO Form 35 (Duplicate Copies)</strong> — Signed by Financier</div>
+              <button class="btn btn-outline btn-sm" onclick="showToast('Generating Form 35 draft...', 'info')">Generate Form 35</button>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:12px; background:var(--bg-dark-alt); padding:12px; border-radius:6px;">
+              <i class="lucide-clock" style="color:var(--warning)"></i>
+              <div style="flex:1;"><strong>Valid PUC & Insurance Policy</strong> — Active in Document Vault</div>
+              <a href="document-vault.html" class="btn btn-outline btn-sm">Vault</a>
+            </div>
+          </div>
+
+          <div class="legal-notice-banner" style="margin-top:20px; font-size:0.8rem;">
+            <i class="lucide-info"></i>
+            This platform provides workflow assistance and document preparation. Final RC update requires officer approval at RTO.
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+</html>

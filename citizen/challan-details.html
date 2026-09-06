@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Challan Details & AI Evidence — VIGILANT</title>
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body data-page="challan-details">
+
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon"><i class="lucide-shield-check"></i></div>
+          <span class="brand-name">VIGILANT</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-menu">
+        <div class="menu-category">Citizen Navigation</div>
+        <a href="dashboard.html" class="nav-item">
+          <i class="lucide-layout-dashboard"></i> Dashboard
+        </a>
+        <a href="my-vehicles.html" class="nav-item">
+          <i class="lucide-car"></i> My Vehicles
+        </a>
+        <a href="challan-list.html" class="nav-item active">
+          <i class="lucide-file-text"></i> Challans
+        </a>
+        <a href="document-vault.html" class="nav-item">
+          <i class="lucide-folder"></i> Documents
+        </a>
+        <a href="hypothecation-assistant.html" class="nav-item">
+          <i class="lucide-banknote"></i> Hypothecation
+        </a>
+        <a href="stolen-report.html" class="nav-item">
+          <i class="lucide-shield-alert"></i> Stolen Vehicle
+        </a>
+        <a href="notifications-center.html" class="nav-item">
+          <i class="lucide-bell"></i> Notifications
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-mini">
+          <div class="avatar">SY</div>
+          <div class="user-info">
+            <span class="user-name">Sumit Yadav</span>
+            <span class="user-role">Vehicle Owner</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <header class="top-header">
+        <button id="sidebar-toggle" class="btn-icon d-lg-none"><i class="lucide-menu"></i></button>
+
+        <div style="font-size:0.9rem; color:var(--text-muted);">
+          <a href="challan-list.html" style="color:var(--text-muted);">&larr; Back to Challans List</a>
+        </div>
+
+        <div class="header-actions">
+          <button class="role-switcher-btn" onclick="window.AuthEngine.switchRole('authority')">
+            <i class="lucide-shield"></i> Authority View
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
+        </div>
+      </header>
+
+      <div class="dashboard-container">
+        
+        <div class="page-header">
+          <div>
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:4px;">
+              <span id="ch-id" style="font-family:monospace; font-weight:700; color:var(--primary); font-size:1.2rem;"></span>
+              <span class="badge badge-danger">Pending Payment</span>
+            </div>
+            <h1 id="ch-title" class="page-title" style="color:var(--danger);"></h1>
+          </div>
+
+          <div style="display:flex; gap:12px;">
+            <a id="ch-dispute-link" href="#" class="btn btn-danger">
+              <i class="lucide-alert-octagon"></i> Request Dispute Review
+            </a>
+            <button class="btn btn-primary" onclick="showToast('Opening payment gateway portal...', 'success')">
+              Pay ₹1,000 Fine Online
+            </button>
+          </div>
+        </div>
+
+        <div class="grid-3-1">
+          <!-- AI Captured Visual Frame Card -->
+          <div class="glass-card" style="padding:24px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+              <h3 style="font-size:1.1rem;">Captured AI Surveillance Frame</h3>
+              <span id="ch-conf" class="badge badge-danger"></span>
+            </div>
+
+            <div style="position:relative; border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border-color); background:#000;">
+              <img id="ch-img" src="" alt="AI Violation Snapshot" style="width:100%; max-height:380px; object-fit:cover; display:block;">
+              <div class="cam-bounding-box" style="top:25%; left:35%; width:140px; height:80px;">
+                RED LIGHT<br>96% CONF
+              </div>
+            </div>
+
+            <div style="margin-top:16px; font-size:0.9rem; color:var(--text-muted);">
+              <strong style="color:var(--text-main)">AI Analysis Note:</strong> <span id="ch-desc"></span>
+            </div>
+          </div>
+
+          <!-- Incident Details Card -->
+          <div class="glass-card" style="padding:24px;">
+            <h3 style="font-size:1.1rem; margin-bottom:16px;">Violation Incident Details</h3>
+
+            <div style="display:flex; flex-direction:column; gap:14px; font-size:0.9rem;">
+              <div style="background:var(--bg-dark-alt); padding:12px; border-radius:6px; border:1px solid var(--border-color);">
+                <strong style="color:var(--text-muted); font-size:0.78rem; text-transform:uppercase;">Vehicle Registration</strong>
+                <div id="ch-veh" style="font-family:monospace; font-weight:700; color:var(--accent-cyan); font-size:1.1rem; margin-top:2px;"></div>
+              </div>
+
+              <div style="background:var(--bg-dark-alt); padding:12px; border-radius:6px; border:1px solid var(--border-color);">
+                <strong style="color:var(--text-muted); font-size:0.78rem; text-transform:uppercase;">Timestamp</strong>
+                <div id="ch-date" style="color:var(--text-main); font-weight:600; margin-top:2px;"></div>
+              </div>
+
+              <div style="background:var(--bg-dark-alt); padding:12px; border-radius:6px; border:1px solid var(--border-color);">
+                <strong style="color:var(--text-muted); font-size:0.78rem; text-transform:uppercase;">Camera & Location</strong>
+                <div id="ch-loc" style="color:var(--text-main); font-weight:600; margin-top:2px;"></div>
+                <div style="font-size:0.75rem; color:var(--text-dim); margin-top:2px;">Camera ID: <span id="ch-cam"></span></div>
+              </div>
+
+              <div style="background:var(--bg-dark-alt); padding:12px; border-radius:6px; border:1px solid var(--border-color);">
+                <strong style="color:var(--text-muted); font-size:0.78rem; text-transform:uppercase;">Fine Penalty Amount</strong>
+                <div id="ch-amt" style="color:var(--text-main); font-size:1.3rem; font-weight:800; margin-top:2px;"></div>
+              </div>
+            </div>
+
+            <div class="legal-notice-banner" style="margin-top:20px; font-size:0.78rem;">
+              <i class="lucide-shield-alert"></i>
+              Dispute reviews are evaluated by designated police officers according to applicable legal procedure.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+</html>

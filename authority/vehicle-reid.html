@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Vehicle Re-Identification — VIGILANT Command Center</title>
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body data-page="authority-reid">
+
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon" style="background:linear-gradient(135deg, var(--danger), var(--warning));"><i class="lucide-shield-alert"></i></div>
+          <span class="brand-name">VIGILANT</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-menu">
+        <div class="menu-category">Command Center Nav</div>
+        <a href="dashboard.html" class="nav-item">
+          <i class="lucide-activity"></i> Command Center
+        </a>
+        <a href="cameras.html" class="nav-item">
+          <i class="lucide-video"></i> Live Cameras
+        </a>
+        <a href="violations.html" class="nav-item">
+          <i class="lucide-shield-alert"></i> AI Violations
+        </a>
+        <a href="vehicle-reid.html" class="nav-item active">
+          <i class="lucide-scan-line"></i> Vehicle Re-ID
+        </a>
+        <a href="tracking.html" class="nav-item">
+          <i class="lucide-route"></i> Multi-Cam Tracking
+        </a>
+        <a href="stolen-search.html" class="nav-item">
+          <i class="lucide-search"></i> Stolen Vehicle Search
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-mini">
+          <div class="avatar" style="border-color:var(--danger);">RS</div>
+          <div class="user-info">
+            <span class="user-name">Insp. R. K. Sharma</span>
+            <span class="user-role">Traffic Enforcement Officer</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <header class="top-header">
+        <button id="sidebar-toggle" class="btn-icon d-lg-none"><i class="lucide-menu"></i></button>
+
+        <div style="font-size:0.9rem; color:var(--text-muted);">
+          Deep Learning Multi-Camera Visual Re-ID Search
+        </div>
+
+        <div class="header-actions">
+          <button class="role-switcher-btn" style="color:var(--warning);" onclick="window.AuthEngine.switchRole('citizen')">
+            <i class="lucide-user"></i> Citizen View
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
+        </div>
+      </header>
+
+      <div class="dashboard-container" style="max-width:960px; margin:0 auto;">
+        
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">AI Vehicle Re-Identification Engine</h1>
+            <p class="page-subtitle">Search and re-identify target vehicles across camera networks using visual feature embeddings.</p>
+          </div>
+        </div>
+
+        <!-- Search Input Card -->
+        <div class="glass-card" style="padding:28px; margin-bottom:28px;">
+          <form onsubmit="performReIDSearch(event)">
+            <div style="display:grid; grid-template-columns:1fr 120px; gap:16px; align-items:end;">
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">Enter Vehicle Registration Number or Vehicle ID</label>
+                <input type="text" id="reid-query-input" class="form-control" value="VH-1029 (DL 01 AB 1234)" placeholder="e.g. VH-1029 or DL 01 AB 1234">
+              </div>
+              <button type="submit" class="btn btn-primary" style="height:44px;">
+                <i class="lucide-search"></i> SEARCH
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Re-ID Search Results Container -->
+        <div id="reid-results-card" class="glass-card" style="padding:28px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <div>
+              <span class="badge badge-success" style="margin-bottom:6px;">96% FEATURE SIMILARITY MATCH</span>
+              <h2 style="font-size:1.4rem;">POSSIBLE VEHICLE MATCH: VH-1029</h2>
+              <p style="color:var(--text-muted); font-size:0.9rem;">Hyundai Creta • White SUV • Reg: DL 01 AB 1234</p>
+            </div>
+            <a href="tracking.html" class="btn btn-primary"><i class="lucide-route"></i> Track Multi-Camera Route &rarr;</a>
+          </div>
+
+          <div class="legal-notice-banner" style="margin-bottom:24px;">
+            <i class="lucide-shield-alert"></i>
+            <strong>Guardrail Notice:</strong> Visual Re-ID produces <em>"Possible AI Match — Human Verification Required"</em>.
+          </div>
+
+          <!-- Matched Cameras Timeline Grid -->
+          <h3 style="font-size:1.1rem; margin-bottom:16px;">Matched Camera Trajectory (4 Camera Detections)</h3>
+
+          <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px;">
+            <div style="background:var(--bg-dark-alt); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:16px; text-align:center;">
+              <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">STEP 1</div>
+              <h4 style="color:var(--primary); margin:4px 0;">CAM-01</h4>
+              <p style="font-size:0.8rem; color:var(--text-muted);">XYZ Intersection</p>
+              <div style="font-size:0.85rem; font-weight:700; margin-top:6px; color:var(--text-main);">10:21 AM</div>
+              <span class="badge badge-success" style="font-size:0.7rem; margin-top:8px;">96% Similarity</span>
+            </div>
+
+            <div style="background:var(--bg-dark-alt); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:16px; text-align:center;">
+              <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">STEP 2</div>
+              <h4 style="color:var(--primary); margin:4px 0;">CAM-03</h4>
+              <p style="font-size:0.8rem; color:var(--text-muted);">ABC Expressway</p>
+              <div style="font-size:0.85rem; font-weight:700; margin-top:6px; color:var(--text-main);">10:29 AM</div>
+              <span class="badge badge-success" style="font-size:0.7rem; margin-top:8px;">94% Similarity</span>
+            </div>
+
+            <div style="background:var(--bg-dark-alt); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:16px; text-align:center;">
+              <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">STEP 3</div>
+              <h4 style="color:var(--primary); margin:4px 0;">CAM-07</h4>
+              <p style="font-size:0.8rem; color:var(--text-muted);">City Center Square</p>
+              <div style="font-size:0.85rem; font-weight:700; margin-top:6px; color:var(--text-main);">10:42 AM</div>
+              <span class="badge badge-success" style="font-size:0.7rem; margin-top:8px;">96% Similarity</span>
+            </div>
+
+            <div style="background:var(--bg-dark-alt); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:16px; text-align:center;">
+              <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">STEP 4</div>
+              <h4 style="color:var(--primary); margin:4px 0;">CAM-11</h4>
+              <p style="font-size:0.8rem; color:var(--text-muted);">Highway Flyover</p>
+              <div style="font-size:0.85rem; font-weight:700; margin-top:6px; color:var(--text-main);">10:51 AM</div>
+              <span class="badge badge-success" style="font-size:0.7rem; margin-top:8px;">93% Similarity</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+</html>

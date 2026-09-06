@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multi-Camera Route Tracking — VIGILANT Command Center</title>
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    #leaflet-map {
+      width: 100%;
+      height: 480px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      z-index: 1;
+    }
+  </style>
+</head>
+<body data-page="authority-tracking">
+
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon" style="background:linear-gradient(135deg, var(--danger), var(--warning));"><i class="lucide-shield-alert"></i></div>
+          <span class="brand-name">VIGILANT</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-menu">
+        <div class="menu-category">Command Center Nav</div>
+        <a href="dashboard.html" class="nav-item">
+          <i class="lucide-activity"></i> Command Center
+        </a>
+        <a href="cameras.html" class="nav-item">
+          <i class="lucide-video"></i> Live Cameras
+        </a>
+        <a href="violations.html" class="nav-item">
+          <i class="lucide-shield-alert"></i> AI Violations
+        </a>
+        <a href="vehicle-reid.html" class="nav-item">
+          <i class="lucide-scan-line"></i> Vehicle Re-ID
+        </a>
+        <a href="tracking.html" class="nav-item active">
+          <i class="lucide-route"></i> Multi-Cam Tracking
+        </a>
+        <a href="stolen-search.html" class="nav-item">
+          <i class="lucide-search"></i> Stolen Vehicle Search
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-mini">
+          <div class="avatar" style="border-color:var(--danger);">RS</div>
+          <div class="user-info">
+            <span class="user-name">Insp. R. K. Sharma</span>
+            <span class="user-role">Traffic Enforcement Officer</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <header class="top-header">
+        <button id="sidebar-toggle" class="btn-icon d-lg-none"><i class="lucide-menu"></i></button>
+
+        <div style="font-size:0.9rem; color:var(--text-muted);">
+          Spatial GIS Multi-Camera Route Reconstruction
+        </div>
+
+        <div class="header-actions">
+          <button class="role-switcher-btn" style="color:var(--warning);" onclick="window.AuthEngine.switchRole('citizen')">
+            <i class="lucide-user"></i> Citizen View
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
+        </div>
+      </header>
+
+      <div class="dashboard-container">
+        
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Multi-Camera Trajectory Tracking Map</h1>
+            <p class="page-subtitle">Reconstructed movement trajectory vector for Target Vehicle <strong>VH-1029 (DL 01 AB 1234)</strong>.</p>
+          </div>
+        </div>
+
+        <!-- Guardrail Banner -->
+        <div class="legal-notice-banner" style="margin-bottom:20px;">
+          <i class="lucide-shield-alert"></i>
+          <strong>AI Guardrail Notice:</strong> Multi-camera tracking results represent AI trajectory reconstruction. Physical officer intercept requires verification.
+        </div>
+
+        <div class="grid-3-1">
+          <!-- Interactive Map Container -->
+          <div class="glass-card" style="padding:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+              <h3 style="font-size:1.1rem;">Live Route Polyline Reconstruction</h3>
+              <span class="badge badge-success">4 CAMERAS MATCHED</span>
+            </div>
+
+            <div id="leaflet-map"></div>
+          </div>
+
+          <!-- Timeline Sidebar -->
+          <div class="glass-card" style="padding:20px;">
+            <h3 style="font-size:1.1rem; margin-bottom:14px;">Chronological Timeline</h3>
+
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <div style="background:var(--bg-dark-alt); padding:12px; border-radius:6px; border-left:3px solid var(--primary);">
+                <strong style="color:var(--primary); font-size:0.8rem;">10:21 AM — CAM-01</strong>
+                <div style="font-size:0.85rem; font-weight:600; margin-top:2px;">XYZ Intersection Gate 1</div>
+                <div style="font-size:0.75rem; color:var(--text-dim);">Speed: 42 km/h • 96% Match</div>
+              </div>
+
+              <div style="background:var(--bg-dark-alt); padding:12px; border-radius:6px; border-left:3px solid var(--primary);">
+                <strong style="color:var(--primary); font-size:0.8rem;">10:29 AM — CAM-03</strong>
+                <div style="font-size:0.85rem; font-weight:600; margin-top:2px;">ABC Expressway KM 14</div>
+                <div style="font-size:0.75rem; color:var(--text-dim);">Speed: 58 km/h • 94% Match</div>
+              </div>
+
+              <div style="background:var(--bg-dark-alt); padding:12px; border-radius:6px; border-left:3px solid var(--danger);">
+                <strong style="color:var(--danger); font-size:0.8rem;">10:42 AM — CAM-07</strong>
+                <div style="font-size:0.85rem; font-weight:600; margin-top:2px;">City Center Square</div>
+                <div style="font-size:0.75rem; color:var(--text-dim);">Red Light Violation • 96% Match</div>
+              </div>
+
+              <div style="background:var(--bg-dark-alt); padding:12px; border-radius:6px; border-left:3px solid var(--primary);">
+                <strong style="color:var(--primary); font-size:0.8rem;">10:51 AM — CAM-11</strong>
+                <div style="font-size:0.85rem; font-weight:600; margin-top:2px;">Highway Flyover Exit</div>
+                <div style="font-size:0.75rem; color:var(--text-dim);">Speed: 64 km/h • 93% Match</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+</html>

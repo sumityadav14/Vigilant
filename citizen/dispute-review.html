@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Challan Dispute Review — VIGILANT</title>
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body data-page="citizen-dispute-review">
+
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon"><i class="lucide-shield-check"></i></div>
+          <span class="brand-name">VIGILANT</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-menu">
+        <div class="menu-category">Citizen Navigation</div>
+        <a href="dashboard.html" class="nav-item">
+          <i class="lucide-layout-dashboard"></i> Dashboard
+        </a>
+        <a href="my-vehicles.html" class="nav-item">
+          <i class="lucide-car"></i> My Vehicles
+        </a>
+        <a href="challan-list.html" class="nav-item active">
+          <i class="lucide-file-text"></i> Challans
+        </a>
+        <a href="document-vault.html" class="nav-item">
+          <i class="lucide-folder"></i> Documents
+        </a>
+        <a href="hypothecation-assistant.html" class="nav-item">
+          <i class="lucide-banknote"></i> Hypothecation
+        </a>
+        <a href="stolen-report.html" class="nav-item">
+          <i class="lucide-shield-alert"></i> Stolen Vehicle
+        </a>
+        <a href="notifications-center.html" class="nav-item">
+          <i class="lucide-bell"></i> Notifications
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-mini">
+          <div class="avatar">SY</div>
+          <div class="user-info">
+            <span class="user-name">Sumit Yadav</span>
+            <span class="user-role">Vehicle Owner</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <header class="top-header">
+        <button id="sidebar-toggle" class="btn-icon d-lg-none"><i class="lucide-menu"></i></button>
+
+        <div style="font-size:0.9rem; color:var(--text-muted);">
+          Official Challan Dispute Review & Legal Appeal Workflow
+        </div>
+
+        <div class="header-actions">
+          <button class="role-switcher-btn" onclick="window.AuthEngine.switchRole('authority')">
+            <i class="lucide-shield"></i> Authority Mode
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
+        </div>
+      </header>
+
+      <div class="dashboard-container" style="max-width:860px;">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Request Challan Dispute Review</h1>
+            <p class="page-subtitle">Submit formal evidence to dispute an incorrectly classified traffic violation.</p>
+          </div>
+          <a href="challan-list.html" class="btn btn-outline btn-sm">&larr; Back to Challans</a>
+        </div>
+
+        <!-- FORM CARD -->
+        <div id="dispute-form-card" class="glass-card" style="padding:28px;">
+          <form onsubmit="handleDisputeSubmit(event)">
+            <div style="background:var(--bg-dark-alt); padding:16px; border-radius:var(--radius-sm); border:1px solid var(--border-color); margin-bottom:20px; font-size:0.88rem; display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div><strong>Challan ID:</strong> <span style="font-family:monospace; color:var(--primary);">CH-2026-00124</span></div>
+              <div><strong>Violation:</strong> Red Light Violation</div>
+              <div><strong>Vehicle:</strong> Hyundai Creta (DL 01 AB 1234)</div>
+              <div><strong>Fine Amount:</strong> ₹1,000</div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Dispute Grounds / Reason</label>
+              <select id="dispute-reason" class="form-control" required>
+                <option value="Evidence Issue">Evidence Photo Issue (Obscured / Reflection)</option>
+                <option value="Not Driving">Vehicle Was Driven by Someone Else</option>
+                <option value="Emergency Medical">Emergency Medical Circumstance</option>
+                <option value="Wrong Vehicle Plate">Incorrect License Plate OCR Match</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Detailed Explanation for Dispute Review</label>
+              <textarea id="dispute-explanation" class="form-control" placeholder="Describe why you are contesting this challan in detail..." required>I was wearing a dark shirt which blurred with seatbelt strap in sun reflection. Please re-verify frame.</textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Attach Supporting Document / Proof (PDF or Image)</label>
+              <input type="file" class="form-control">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg" style="width:100%; margin-top:10px;">
+              Submit Dispute Review Request <i class="lucide-send"></i>
+            </button>
+          </form>
+        </div>
+
+        <!-- DYNAMIC CONFIRMATION STATE CARD (Initially Hidden) -->
+        <div id="dispute-confirmation-card" class="glass-card" style="padding:32px; text-align:center; display:none;">
+          <div style="width:64px; height:64px; border-radius:50%; background:rgba(34,197,94,0.15); color:var(--success); font-size:2rem; display:inline-flex; align-items:center; justify-content:center; margin-bottom:16px;">
+            <i class="lucide-check-circle"></i>
+          </div>
+
+          <h2 style="font-size:1.5rem; margin-bottom:6px;">Dispute Review Submitted!</h2>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px;">Your review request has been logged. Fine accumulation is paused while a police officer verifies your evidence.</p>
+
+          <div style="background:var(--bg-dark-alt); padding:16px; border-radius:var(--radius-sm); border:1px solid var(--border-color); display:inline-block; margin-bottom:24px;">
+            <span style="font-size:0.8rem; color:var(--text-muted); display:block;">Reference ID</span>
+            <strong id="confirm-ref-id" style="font-size:1.3rem; color:var(--primary); font-family:monospace;">REV-2026-9901</strong>
+          </div>
+
+          <div style="display:flex; justify-content:center; gap:12px;">
+            <a href="challan-list.html" class="btn btn-primary">Return to Challans List</a>
+            <a href="dashboard.html" class="btn btn-outline">Go to Dashboard</a>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/ai-chat.js"></script>
+</body>
+</html>

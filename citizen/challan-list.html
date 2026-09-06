@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Challans Management — VIGILANT</title>
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body data-page="challan-list">
+
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon"><i class="lucide-shield-check"></i></div>
+          <span class="brand-name">VIGILANT</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-menu">
+        <div class="menu-category">Citizen Navigation</div>
+        <a href="dashboard.html" class="nav-item">
+          <i class="lucide-layout-dashboard"></i> Dashboard
+        </a>
+        <a href="my-vehicles.html" class="nav-item">
+          <i class="lucide-car"></i> My Vehicles
+        </a>
+        <a href="challan-list.html" class="nav-item active">
+          <i class="lucide-file-text"></i> Challans <span class="badge-count">2</span>
+        </a>
+        <a href="document-vault.html" class="nav-item">
+          <i class="lucide-folder"></i> Documents
+        </a>
+        <a href="hypothecation-assistant.html" class="nav-item">
+          <i class="lucide-banknote"></i> Hypothecation
+        </a>
+        <a href="stolen-report.html" class="nav-item">
+          <i class="lucide-shield-alert"></i> Stolen Vehicle
+        </a>
+        <a href="notifications-center.html" class="nav-item">
+          <i class="lucide-bell"></i> Notifications
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-mini">
+          <div class="avatar">SY</div>
+          <div class="user-info">
+            <span class="user-name">Sumit Yadav</span>
+            <span class="user-role">Vehicle Owner</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <header class="top-header">
+        <button id="sidebar-toggle" class="btn-icon d-lg-none"><i class="lucide-menu"></i></button>
+
+        <div class="header-search">
+          <i class="lucide-search"></i>
+          <input type="text" class="form-control" placeholder="Search Challan ID, vehicle plate...">
+        </div>
+
+        <div class="header-actions">
+          <button class="role-switcher-btn" onclick="window.AuthEngine.switchRole('authority')">
+            <i class="lucide-shield"></i> Authority View
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
+        </div>
+      </header>
+
+      <div class="dashboard-container">
+        
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Traffic Violation Challans</h1>
+            <p class="page-subtitle">Inspect AI captured violation evidence clips and submit dispute review requests.</p>
+          </div>
+
+          <div class="legal-notice-banner" style="margin-bottom:0; font-size:0.8rem;">
+            <i class="lucide-info"></i>
+            Legal Notice: Submitting a review request halts penalty accumulation while an officer reviews your evidence.
+          </div>
+        </div>
+
+        <!-- Filter Pills -->
+        <div style="display:flex; gap:12px; margin-bottom:20px;">
+          <button class="btn btn-secondary btn-sm" onclick="renderChallansList(window.VIGILANT_MOCK_DATA.challans)">All Challans (2)</button>
+          <button class="btn btn-outline btn-sm" onclick="renderChallansList(window.VIGILANT_MOCK_DATA.challans.filter(c => c.status === 'Pending'))">Pending Only (1)</button>
+          <button class="btn btn-outline btn-sm" onclick="renderChallansList(window.VIGILANT_MOCK_DATA.challans.filter(c => c.status === 'Under Review'))">Under Review (1)</button>
+        </div>
+
+        <!-- Challans Table Card -->
+        <div class="glass-card" style="padding:24px;">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Challan ID</th>
+                  <th>Date & Time</th>
+                  <th>Vehicle</th>
+                  <th>Violation Type</th>
+                  <th>Camera Location</th>
+                  <th>Fine Amount</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="full-challan-table-body">
+                <!-- Rendered dynamically by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+</html>

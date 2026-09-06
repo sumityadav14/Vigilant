@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traffic Analytics — VIGILANT Command Center</title>
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+
+  <!-- Lucide Icons & Chart.js -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body data-page="authority-analytics">
+
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon" style="background:linear-gradient(135deg, var(--danger), var(--warning));"><i class="lucide-shield-alert"></i></div>
+          <span class="brand-name">VIGILANT</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-menu">
+        <div class="menu-category">Command Center Nav</div>
+        <a href="dashboard.html" class="nav-item">
+          <i class="lucide-activity"></i> Command Center
+        </a>
+        <a href="cameras.html" class="nav-item">
+          <i class="lucide-video"></i> Live Cameras
+        </a>
+        <a href="violations.html" class="nav-item">
+          <i class="lucide-shield-alert"></i> AI Violations
+        </a>
+        <a href="vehicle-reid.html" class="nav-item">
+          <i class="lucide-scan-line"></i> Vehicle Re-ID
+        </a>
+        <a href="tracking.html" class="nav-item">
+          <i class="lucide-route"></i> Multi-Cam Tracking
+        </a>
+        <a href="stolen-search.html" class="nav-item">
+          <i class="lucide-search"></i> Stolen Search
+        </a>
+        <a href="analytics.html" class="nav-item active">
+          <i class="lucide-bar-chart-3"></i> Analytics
+        </a>
+        <a href="maps.html" class="nav-item">
+          <i class="lucide-map"></i> Full Map
+        </a>
+        <a href="reports.html" class="nav-item">
+          <i class="lucide-file-spreadsheet"></i> Reports
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-mini">
+          <div class="avatar" style="border-color:var(--danger);">RS</div>
+          <div class="user-info">
+            <span class="user-name">Insp. R. K. Sharma</span>
+            <span class="user-role">Traffic Enforcement Officer</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <header class="top-header">
+        <button id="sidebar-toggle" class="btn-icon d-lg-none"><i class="lucide-menu"></i></button>
+
+        <div style="font-size:0.9rem; color:var(--text-muted);">
+          Real-time AI Model Performance & Traffic Statistics
+        </div>
+
+        <div class="header-actions">
+          <button class="role-switcher-btn" style="color:var(--warning);" onclick="window.AuthEngine.switchRole('citizen')">
+            <i class="lucide-user"></i> Citizen View
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
+        </div>
+      </header>
+
+      <div class="dashboard-container">
+        
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Traffic Analytics & AI Performance Center</h1>
+            <p class="page-subtitle">Real-time telemetry, model classification accuracy metrics, and violation distributions.</p>
+          </div>
+
+          <button class="btn btn-primary" onclick="showToast('Exporting complete analytics dataset...', 'success')">
+            <i class="lucide-download"></i> Export Analytics Report
+          </button>
+        </div>
+
+        <!-- Metric Cards Grid -->
+        <div class="grid-4">
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">Avg AI Confidence</div>
+              <div class="stat-value" style="color:var(--success);">94.8%</div>
+            </div>
+            <div class="stat-icon stat-icon-green"><i class="lucide-cpu"></i></div>
+          </div>
+
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">Total Detections Today</div>
+              <div class="stat-value">12,450</div>
+            </div>
+            <div class="stat-icon stat-icon-blue"><i class="lucide-eye"></i></div>
+          </div>
+
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">Active Surveillance Nodes</div>
+              <div class="stat-value">21 / 24</div>
+            </div>
+            <div class="stat-icon stat-icon-warning"><i class="lucide-video"></i></div>
+          </div>
+
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">Dispute Resolution Rate</div>
+              <div class="stat-value" style="color:var(--primary);">86.4%</div>
+            </div>
+            <div class="stat-icon stat-icon-blue"><i class="lucide-check-square"></i></div>
+          </div>
+        </div>
+
+        <!-- 2x2 Charts Grid -->
+        <div class="grid-2" style="margin-bottom:24px;">
+          <!-- Chart 1: Violations by Type -->
+          <div class="glass-card" style="padding:24px;">
+            <h3 style="font-size:1.1rem; margin-bottom:16px;">Traffic Violations by Category</h3>
+            <div style="height:250px;">
+              <canvas id="analyticsBarChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 2: Hourly Violation Trend -->
+          <div class="glass-card" style="padding:24px;">
+            <h3 style="font-size:1.1rem; margin-bottom:16px;">Hourly Violation Trends (Peak vs Off-Peak)</h3>
+            <div style="height:250px;">
+              <canvas id="analyticsLineChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Chart 3: Vehicle Type Composition -->
+          <div class="glass-card" style="padding:24px;">
+            <h3 style="font-size:1.1rem; margin-bottom:16px;">Detected Vehicle Type Distribution</h3>
+            <div style="height:250px;">
+              <canvas id="analyticsDoughnutChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 4: Camera Node Activity -->
+          <div class="glass-card" style="padding:24px;">
+            <h3 style="font-size:1.1rem; margin-bottom:16px;">Top Camera Nodes by Violation Volume</h3>
+            <div style="height:250px;">
+              <canvas id="analyticsCamChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+</html>

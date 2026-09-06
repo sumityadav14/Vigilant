@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authority Command Center — VIGILANT</title>
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+
+  <!-- Lucide Icons & Chart.js -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body data-page="authority-dashboard">
+
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon" style="background:linear-gradient(135deg, var(--danger), var(--warning));"><i class="lucide-shield-alert"></i></div>
+          <span class="brand-name">VIGILANT</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-menu">
+        <div class="menu-category">Command Center Nav</div>
+        <a href="dashboard.html" class="nav-item active">
+          <i class="lucide-activity"></i> Command Center
+        </a>
+        <a href="cameras.html" class="nav-item">
+          <i class="lucide-video"></i> Live Cameras <span class="badge-count" style="background:rgba(34,197,94,0.2); color:var(--success);">21</span>
+        </a>
+        <a href="violations.html" class="nav-item">
+          <i class="lucide-shield-alert"></i> AI Violations <span class="badge-count">823</span>
+        </a>
+        <a href="vehicle-reid.html" class="nav-item">
+          <i class="lucide-scan-line"></i> Vehicle Re-ID
+        </a>
+        <a href="tracking.html" class="nav-item">
+          <i class="lucide-route"></i> Multi-Cam Tracking
+        </a>
+        <a href="stolen-search.html" class="nav-item">
+          <i class="lucide-search"></i> Stolen Vehicle Search
+        </a>
+        <a href="ai-models.html" class="nav-item">
+          <i class="lucide-cpu"></i> AI Model Telemetry
+        </a>
+        <a href="analytics.html" class="nav-item">
+          <i class="lucide-bar-chart-3"></i> Analytics
+        </a>
+        <a href="maps.html" class="nav-item">
+          <i class="lucide-map"></i> Full Map
+        </a>
+        <a href="reports.html" class="nav-item">
+          <i class="lucide-file-spreadsheet"></i> Reports
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-mini">
+          <div class="avatar" style="border-color:var(--danger);">RS</div>
+          <div class="user-info">
+            <span class="user-name">Insp. R. K. Sharma</span>
+            <span class="user-role">Traffic Enforcement Officer</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <!-- Top Sticky Header -->
+      <header class="top-header">
+        <button id="sidebar-toggle" class="btn-icon d-lg-none">
+          <i class="lucide-menu"></i>
+        </button>
+
+        <div class="header-search">
+          <i class="lucide-search"></i>
+          <input type="text" class="form-control" placeholder="Search vehicle ID, plate no, camera code...">
+        </div>
+
+        <div class="header-actions">
+          <button class="role-switcher-btn" style="color:var(--warning); border-color:rgba(245,158,11,0.3); background:rgba(245,158,11,0.1);" onclick="window.AuthEngine.switchRole('citizen')">
+            <i class="lucide-user"></i> Switch to Citizen View
+          </button>
+          
+          <a href="stolen-search.html" class="btn-icon">
+            <i class="lucide-alert-octagon" style="color:var(--danger);"></i>
+          </a>
+
+          <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">
+            <i class="lucide-log-out"></i> Logout
+          </button>
+        </div>
+      </header>
+
+      <!-- Dashboard Container -->
+      <div class="dashboard-container">
+        
+        <!-- Header -->
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" style="display:flex; align-items:center; gap:10px;">
+              Smart City Command Center 
+              <span class="badge badge-success badge-pulse">LIVE FEED</span>
+            </h1>
+            <p class="page-subtitle">Real-time edge video analytics, AI traffic violation detection, and vehicle re-identification monitor.</p>
+          </div>
+
+          <div style="display:flex; gap:12px;">
+            <a href="vehicle-reid.html" class="btn btn-primary">
+              <i class="lucide-scan"></i> AI Re-ID Search
+            </a>
+            <a href="stolen-search.html" class="btn btn-danger">
+              <i class="lucide-broadcast"></i> Issue City Alert
+            </a>
+          </div>
+        </div>
+
+        <!-- Guardrail Banner -->
+        <div class="legal-notice-banner">
+          <i class="lucide-shield-alert" style="font-size:1.4rem;"></i>
+          <div>
+            <strong>Legal Guardrail Active:</strong> AI detections represent probable matches (e.g. <em>"Possible AI Match — Human Verification Required"</em>). Official legal action requires officer sign-off.
+          </div>
+        </div>
+
+        <!-- Top Statistics Bar -->
+        <div class="grid-4">
+          <a href="cameras.html" class="stat-card" style="text-decoration:none;">
+            <div>
+              <div class="stat-label">Live Cameras</div>
+              <div class="stat-value">21 / 24</div>
+            </div>
+            <div class="stat-icon stat-icon-green"><i class="lucide-video"></i></div>
+          </a>
+
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">Vehicles Detected Today</div>
+              <div class="stat-value">12,450</div>
+            </div>
+            <div class="stat-icon stat-icon-blue"><i class="lucide-car"></i></div>
+          </a>
+
+          <a href="violations.html" class="stat-card" style="text-decoration:none;">
+            <div>
+              <div class="stat-label">AI Violations Logged</div>
+              <div class="stat-value" style="color:var(--warning);">823</div>
+            </div>
+            <div class="stat-icon stat-icon-warning"><i class="lucide-shield-alert"></i></div>
+          </a>
+
+          <a href="stolen-search.html" class="stat-card" style="text-decoration:none;">
+            <div>
+              <div class="stat-label">Stolen Matches</div>
+              <div class="stat-value" style="color:var(--danger);">2</div>
+            </div>
+            <div class="stat-icon stat-icon-red"><i class="lucide-search"></i></div>
+          </a>
+        </div>
+
+        <!-- Command Center 4-Camera Grid & Activity Stream -->
+        <div class="grid-3-1" style="margin-bottom:32px;">
+          <!-- 4-Camera Grid -->
+          <div class="glass-card" style="padding:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+              <h3 style="font-size:1.2rem;">Live Traffic Monitoring Grid</h3>
+              <a href="cameras.html" style="font-size:0.85rem; color:var(--primary);">View Full Grid &rarr;</a>
+            </div>
+
+            <div class="camera-grid">
+              <!-- Camera 1 -->
+              <div class="camera-card" onclick="location.href='cameras.html'" style="cursor:pointer;">
+                <div class="camera-feed-sim">
+                  <img src="https://images.unsplash.com/photo-1506521781263-d8422e82f27a?q=80&w=800&auto=format&fit=crop" style="width:100%; height:100%; object-fit:cover; opacity:0.75;" alt="CAM-01">
+                  
+                  <div class="cam-bounding-box" style="top:25%; left:30%; width:100px; height:60px;">
+                    RED LIGHT<br>96% CONF
+                  </div>
+                  
+                  <div class="camera-overlay-top">
+                    <span class="badge badge-success badge-pulse">CAM-01 LIVE</span>
+                    <span style="font-size:0.7rem; background:rgba(0,0,0,0.6); padding:2px 6px; border-radius:4px;">30 FPS</span>
+                  </div>
+                  
+                  <div class="camera-overlay-bottom">
+                    <span>XYZ Intersection - Gate 1</span>
+                    <span style="color:var(--warning);">42 Vehicles</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Camera 2 -->
+              <div class="camera-card" onclick="location.href='cameras.html'" style="cursor:pointer;">
+                <div class="camera-feed-sim">
+                  <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=800&auto=format&fit=crop" style="width:100%; height:100%; object-fit:cover; opacity:0.75;" alt="CAM-03">
+                  
+                  <div class="cam-bounding-box" style="top:40%; left:50%; width:90px; height:50px; border-color:#F59E0B;">
+                    HELMET VIO<br>91% CONF
+                  </div>
+                  
+                  <div class="camera-overlay-top">
+                    <span class="badge badge-success badge-pulse">CAM-03 LIVE</span>
+                    <span style="font-size:0.7rem; background:rgba(0,0,0,0.6); padding:2px 6px; border-radius:4px;">28 FPS</span>
+                  </div>
+
+                  <div class="camera-overlay-bottom">
+                    <span>ABC Expressway KM 14</span>
+                    <span style="color:var(--warning);">89 Vehicles</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Camera 3 -->
+              <div class="camera-card" onclick="location.href='cameras.html'" style="cursor:pointer;">
+                <div class="camera-feed-sim">
+                  <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=800&auto=format&fit=crop" style="width:100%; height:100%; object-fit:cover; opacity:0.75;" alt="CAM-07">
+                  
+                  <div class="cam-bounding-box" style="top:20%; left:20%; width:120px; height:70px;">
+                    STOLEN MATCH<br>94% SIMILARITY
+                  </div>
+
+                  <div class="camera-overlay-top">
+                    <span class="badge badge-danger badge-pulse">CAM-07 ALERT</span>
+                    <span style="font-size:0.7rem; background:rgba(0,0,0,0.6); padding:2px 6px; border-radius:4px;">30 FPS</span>
+                  </div>
+
+                  <div class="camera-overlay-bottom">
+                    <span>City Center Square</span>
+                    <span style="color:var(--danger);">65 Vehicles</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Camera 4 -->
+              <div class="camera-card" onclick="location.href='cameras.html'" style="cursor:pointer;">
+                <div class="camera-feed-sim">
+                  <img src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=800&auto=format&fit=crop" style="width:100%; height:100%; object-fit:cover; opacity:0.75;" alt="CAM-11">
+                  
+                  <div class="camera-overlay-top">
+                    <span class="badge badge-success badge-pulse">CAM-11 LIVE</span>
+                    <span style="font-size:0.7rem; background:rgba(0,0,0,0.6); padding:2px 6px; border-radius:4px;">29 FPS</span>
+                  </div>
+
+                  <div class="camera-overlay-bottom">
+                    <span>Highway Flyover Exit</span>
+                    <span style="color:var(--success);">112 Vehicles</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Activity Stream Ticker -->
+          <div class="glass-card" style="padding:20px;">
+            <h3 style="font-size:1.15rem; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
+              Live Activity Stream
+              <span class="badge badge-info" style="font-size:0.7rem;">Realtime</span>
+            </h3>
+
+            <div id="authority-activity-feed" class="activity-feed">
+              <!-- Dynamic activity items rendered by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Chart.js Violations Analytics Card -->
+        <div class="glass-card" style="padding:24px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <div>
+              <h3 style="font-size:1.25rem;">Traffic Violation Classification Analytics</h3>
+              <p style="font-size:0.85rem; color:var(--text-muted);">AI classified traffic infractions over past 24 hours</p>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="showToast('Exporting analytics report CSV...', 'success')">
+              <i class="lucide-download"></i> Export Report
+            </button>
+          </div>
+
+          <div style="height:260px;">
+            <canvas id="violationsChart"></canvas>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/ai-chat.js"></script>
+</body>
+</html>

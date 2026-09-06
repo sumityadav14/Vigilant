@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Citizen Dashboard — VIGILANT</title>
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body data-page="citizen-dashboard">
+
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon"><i class="lucide-shield-check"></i></div>
+          <span class="brand-name">VIGILANT</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-menu">
+        <div class="menu-category">Citizen Navigation</div>
+        <a href="dashboard.html" class="nav-item active">
+          <i class="lucide-layout-dashboard"></i> Dashboard
+        </a>
+        <a href="my-vehicles.html" class="nav-item">
+          <i class="lucide-car"></i> My Vehicles <span class="badge-count">2</span>
+        </a>
+        <a href="challan-list.html" class="nav-item">
+          <i class="lucide-file-text"></i> Challans <span class="badge-count">2</span>
+        </a>
+        <a href="document-vault.html" class="nav-item">
+          <i class="lucide-folder"></i> Documents
+        </a>
+        <a href="hypothecation-assistant.html" class="nav-item">
+          <i class="lucide-banknote"></i> Hypothecation
+        </a>
+        <a href="stolen-report.html" class="nav-item">
+          <i class="lucide-shield-alert"></i> Stolen Vehicle
+        </a>
+        <a href="notifications-center.html" class="nav-item">
+          <i class="lucide-bell"></i> Notifications <span class="badge-count">3</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-mini">
+          <div class="avatar">SY</div>
+          <div class="user-info">
+            <span class="user-name">Sumit Yadav</span>
+            <span class="user-role">Vehicle Owner</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <!-- Top Sticky Header -->
+      <header class="top-header">
+        <button id="sidebar-toggle" class="btn-icon d-lg-none">
+          <i class="lucide-menu"></i>
+        </button>
+
+        <div class="header-search">
+          <i class="lucide-search"></i>
+          <input type="text" class="form-control" placeholder="Search vehicles, challans, RC...">
+        </div>
+
+        <div class="header-actions">
+          <button class="role-switcher-btn" onclick="window.AuthEngine.switchRole('authority')">
+            <i class="lucide-shield"></i> Switch to Authority Mode
+          </button>
+          
+          <a href="notifications-center.html" class="btn-icon">
+            <i class="lucide-bell"></i>
+          </a>
+
+          <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">
+            <i class="lucide-log-out"></i> Logout
+          </button>
+        </div>
+      </header>
+
+      <!-- Dashboard Container -->
+      <div class="dashboard-container">
+        
+        <!-- Welcome Banner -->
+        <div class="page-header">
+          <div>
+            <h1 id="user-greeting" class="page-title">Good Evening, Sumit 👋</h1>
+            <p class="page-subtitle">Here is your vehicle health, pending challans, and document status summary.</p>
+          </div>
+
+          <div style="display:flex; gap:12px;">
+            <a href="my-vehicles.html" class="btn btn-primary">
+              <i class="lucide-plus"></i> Add Vehicle
+            </a>
+            <a href="stolen-report.html" class="btn btn-secondary" style="border-color:var(--danger); color:var(--danger);">
+              <i class="lucide-alert-triangle"></i> Report Stolen
+            </a>
+          </div>
+        </div>
+
+        <!-- 4 Metric Cards -->
+        <div class="grid-4">
+          <a href="my-vehicles.html" class="stat-card" style="text-decoration:none;">
+            <div>
+              <div class="stat-label">Registered Vehicles</div>
+              <div class="stat-value">2</div>
+            </div>
+            <div class="stat-icon stat-icon-blue"><i class="lucide-car"></i></div>
+          </a>
+
+          <a href="challan-list.html" class="stat-card" style="text-decoration:none;">
+            <div>
+              <div class="stat-label">Pending Challans</div>
+              <div class="stat-value" style="color:var(--danger);">2</div>
+            </div>
+            <div class="stat-icon stat-icon-red"><i class="lucide-file-warning"></i></div>
+          </a>
+
+          <a href="document-vault.html" class="stat-card" style="text-decoration:none;">
+            <div>
+              <div class="stat-label">Valid Documents</div>
+              <div class="stat-value" style="color:var(--success);">3</div>
+            </div>
+            <div class="stat-icon stat-icon-green"><i class="lucide-shield-check"></i></div>
+          </a>
+
+          <a href="document-vault.html" class="stat-card" style="text-decoration:none;">
+            <div>
+              <div class="stat-label">Expiring Soon</div>
+              <div class="stat-value" style="color:var(--warning);">1</div>
+            </div>
+            <div class="stat-icon stat-icon-warning"><i class="lucide-clock"></i></div>
+          </a>
+        </div>
+
+        <!-- Registered Vehicles Grid -->
+        <div style="margin-bottom:32px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <h2 style="font-size:1.3rem;">My Registered Vehicles</h2>
+            <a href="my-vehicles.html" style="font-size:0.85rem; color:var(--primary);">View All Details &rarr;</a>
+          </div>
+
+          <div id="vehicles-grid" class="grid-2">
+            <!-- Dynamic Vehicles Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Challans & Health Grid -->
+        <div class="grid-3-1">
+          <!-- Challans Table Card -->
+          <div class="glass-card" style="padding:24px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+              <div>
+                <h3 style="font-size:1.2rem;">Recent Challans</h3>
+                <p style="font-size:0.82rem; color:var(--text-muted);">Inspect camera evidence or request dispute review</p>
+              </div>
+              <a href="challan-list.html" class="btn btn-outline btn-sm">Manage All Challans</a>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Challan ID</th>
+                    <th>Date & Time</th>
+                    <th>Vehicle</th>
+                    <th>Violation</th>
+                    <th>Location</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="challan-table-body">
+                  <!-- Dynamic Challans Rendered by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Vehicle Health Overview Card -->
+          <div class="glass-card" style="padding:24px;">
+            <h3 style="font-size:1.2rem; margin-bottom:16px;">Vehicle Health Overview</h3>
+
+            <div style="display:flex; flex-direction:column; gap:16px;">
+              <div style="background:var(--bg-dark-alt); padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+                <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:600; margin-bottom:4px;">
+                  <span>RC Validity</span>
+                  <span style="color:var(--success);">✓ 100% Valid</span>
+                </div>
+                <div style="background:#1E293B; height:6px; border-radius:3px; overflow:hidden;">
+                  <div style="background:var(--success); width:100%; height:100%;"></div>
+                </div>
+              </div>
+
+              <div style="background:var(--bg-dark-alt); padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+                <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:600; margin-bottom:4px;">
+                  <span>Insurance Policies</span>
+                  <span style="color:var(--success);">✓ Valid until Dec 2026</span>
+                </div>
+                <div style="background:#1E293B; height:6px; border-radius:3px; overflow:hidden;">
+                  <div style="background:var(--success); width:85%; height:100%;"></div>
+                </div>
+              </div>
+
+              <div style="background:var(--bg-dark-alt); padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+                <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:600; margin-bottom:4px;">
+                  <span>PUC Certificate</span>
+                  <span style="color:var(--warning);">⚠ Expiry in 7 Days</span>
+                </div>
+                <div style="background:#1E293B; height:6px; border-radius:3px; overflow:hidden;">
+                  <div style="background:var(--warning); width:15%; height:100%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <a href="document-vault.html" class="btn btn-primary btn-sm" style="width:100%; margin-top:20px; display:inline-block; text-align:center;">
+              Renew PUC Online <i class="lucide-external-link"></i>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/ai-chat.js"></script>
+</body>
+</html>

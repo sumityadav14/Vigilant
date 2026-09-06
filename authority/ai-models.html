@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Model Telemetry — VIGILANT Command Center</title>
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body data-page="authority-ai-models">
+
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon" style="background:linear-gradient(135deg, var(--danger), var(--warning));"><i class="lucide-shield-alert"></i></div>
+          <span class="brand-name">VIGILANT</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-menu">
+        <div class="menu-category">Command Center Nav</div>
+        <a href="dashboard.html" class="nav-item">
+          <i class="lucide-activity"></i> Command Center
+        </a>
+        <a href="cameras.html" class="nav-item">
+          <i class="lucide-video"></i> Live Cameras
+        </a>
+        <a href="violations.html" class="nav-item">
+          <i class="lucide-shield-alert"></i> AI Violations
+        </a>
+        <a href="vehicle-reid.html" class="nav-item">
+          <i class="lucide-scan-line"></i> Vehicle Re-ID
+        </a>
+        <a href="tracking.html" class="nav-item">
+          <i class="lucide-route"></i> Multi-Cam Tracking
+        </a>
+        <a href="stolen-search.html" class="nav-item">
+          <i class="lucide-search"></i> Stolen Search
+        </a>
+        <a href="ai-models.html" class="nav-item active">
+          <i class="lucide-cpu"></i> AI Model Telemetry
+        </a>
+        <a href="analytics.html" class="nav-item">
+          <i class="lucide-bar-chart-3"></i> Analytics
+        </a>
+        <a href="maps.html" class="nav-item">
+          <i class="lucide-map"></i> Full Map
+        </a>
+        <a href="reports.html" class="nav-item">
+          <i class="lucide-file-spreadsheet"></i> Reports
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-mini">
+          <div class="avatar" style="border-color:var(--danger);">RS</div>
+          <div class="user-info">
+            <span class="user-name">Insp. R. K. Sharma</span>
+            <span class="user-role">Traffic Enforcement Officer</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <header class="top-header">
+        <button id="sidebar-toggle" class="btn-icon d-lg-none"><i class="lucide-menu"></i></button>
+
+        <div style="font-size:0.9rem; color:var(--text-muted);">
+          Computer Vision Pipeline Inspector & Hyperparameter Tuning
+        </div>
+
+        <div class="header-actions">
+          <button class="role-switcher-btn" style="color:var(--warning);" onclick="window.AuthEngine.switchRole('citizen')">
+            <i class="lucide-user"></i> Citizen View
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
+        </div>
+      </header>
+
+      <div class="dashboard-container">
+        
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">AI Model Architecture & Inference Telemetry</h1>
+            <p class="page-subtitle">Inspect YOLOv8 object detection, ResNet-50 512D feature embeddings, and real-time GPU inference metrics.</p>
+          </div>
+        </div>
+
+        <!-- Metric KPI Cards -->
+        <div class="grid-4">
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">GPU Inference Latency</div>
+              <div class="stat-value" style="color:var(--success);">18 ms</div>
+            </div>
+            <div class="stat-icon stat-icon-green"><i class="lucide-zap"></i></div>
+          </div>
+
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">Detection Precision</div>
+              <div class="stat-value" style="color:var(--primary);">94.8%</div>
+            </div>
+            <div class="stat-icon stat-icon-blue"><i class="lucide-target"></i></div>
+          </div>
+
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">Model Recall Score</div>
+              <div class="stat-value" style="color:var(--warning);">92.1%</div>
+            </div>
+            <div class="stat-icon stat-icon-warning"><i class="lucide-check-circle"></i></div>
+          </div>
+
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">mAP @ IoU 0.5</div>
+              <div class="stat-value" style="color:var(--accent-cyan);">91.4%</div>
+            </div>
+            <div class="stat-icon stat-icon-blue"><i class="lucide-layers"></i></div>
+          </div>
+        </div>
+
+        <div class="grid-3-1">
+          <!-- YOLOv8 Bounding Box Interactive Slider Card -->
+          <div class="glass-card" style="padding:24px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+              <div>
+                <h3 style="font-size:1.15rem;">YOLOv8 Detection Threshold Simulator</h3>
+                <p style="font-size:0.82rem; color:var(--text-muted);">Adjust confidence threshold to simulate real-time Non-Maximum Suppression (NMS)</p>
+              </div>
+              <span id="active-detections-count" class="badge badge-success">3 Detected Boxes Active</span>
+            </div>
+
+            <!-- Slider Control -->
+            <div style="background:var(--bg-dark-alt); padding:16px; border-radius:var(--radius-sm); border:1px solid var(--border-color); margin-bottom:20px;">
+              <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:600; margin-bottom:8px;">
+                <span>Confidence Threshold cutoff (score_thresh):</span>
+                <span id="thresh-value-display" style="color:var(--primary); font-family:monospace; font-size:1rem;">0.80</span>
+              </div>
+              <input type="range" min="0.50" max="0.98" step="0.01" value="0.80" style="width:100%; cursor:pointer;" oninput="document.getElementById('thresh-value-display').textContent = parseFloat(this.value).toFixed(2); window.AISimEngine.filterDetections(parseFloat(this.value));">
+            </div>
+
+            <!-- Simulated Visual Frame -->
+            <div style="position:relative; border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border-color); background:#000;">
+              <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=800&auto=format&fit=crop" style="width:100%; max-height:360px; object-fit:cover; display:block;" alt="AI Pipeline">
+
+              <div class="sim-bbox-item cam-bounding-box" data-conf="0.96" style="top:25%; left:30%; width:150px; height:80px;">
+                RED LIGHT<br>CONF: 0.96
+              </div>
+
+              <div class="sim-bbox-item cam-bounding-box" data-conf="0.91" style="top:50%; left:60%; width:120px; height:70px; border-color:#F59E0B;">
+                NO HELMET<br>CONF: 0.91
+              </div>
+
+              <div class="sim-bbox-item cam-bounding-box" data-conf="0.75" style="top:60%; left:15%; width:110px; height:60px; border-color:#3B82F6;">
+                WRONG SIDE<br>CONF: 0.75
+              </div>
+            </div>
+          </div>
+
+          <!-- Feature Vector Embedding Card -->
+          <div class="glass-card" style="padding:24px;">
+            <h3 style="font-size:1.15rem; margin-bottom:14px;">Vehicle Re-ID Embedding Vector</h3>
+            <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:16px;">512-dimensional visual feature embedding generated by ResNet-50 backbone</p>
+
+            <div style="background:var(--bg-dark-alt); padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border-color); font-family:monospace; font-size:0.75rem; color:var(--accent-cyan); margin-bottom:16px; word-break:break-all;">
+              [ 0.124, -0.892, 0.451, 0.982, -0.114, 0.332, 0.761, -0.542, 0.211, 0.884, ... +502 dims ]
+            </div>
+
+            <div style="background:rgba(37,99,235,0.08); padding:16px; border-radius:var(--radius-sm); border:1px solid rgba(37,99,235,0.3); font-size:0.85rem;">
+              <strong style="color:var(--primary);">Cosine Distance Formula:</strong>
+              <div style="font-family:monospace; margin-top:4px;">cos(θ) = (A · B) / (||A|| ||B||)</div>
+              <div style="margin-top:8px; font-weight:700; color:var(--success);">Match Cosine Score: 0.9642</div>
+            </div>
+
+            <div style="margin-top:20px;">
+              <strong style="font-size:0.85rem;">Neural Architecture Pipeline:</strong>
+              <ul style="font-size:0.8rem; color:var(--text-muted); margin-top:8px; padding-left:20px; line-height:1.8;">
+                <li>Backbone: ResNet-50 pre-trained on Market-1501</li>
+                <li>Loss Function: Triplet Loss + Cross-Entropy</li>
+                <li>Vector Search Index: FAISS HNSW32</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/ai-sim.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+</html>

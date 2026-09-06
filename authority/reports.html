@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports Generator — VIGILANT Command Center</title>
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body data-page="authority-reports">
+
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon" style="background:linear-gradient(135deg, var(--danger), var(--warning));"><i class="lucide-shield-alert"></i></div>
+          <span class="brand-name">VIGILANT</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-menu">
+        <div class="menu-category">Command Center Nav</div>
+        <a href="dashboard.html" class="nav-item">
+          <i class="lucide-activity"></i> Command Center
+        </a>
+        <a href="cameras.html" class="nav-item">
+          <i class="lucide-video"></i> Live Cameras
+        </a>
+        <a href="violations.html" class="nav-item">
+          <i class="lucide-shield-alert"></i> AI Violations
+        </a>
+        <a href="vehicle-reid.html" class="nav-item">
+          <i class="lucide-scan-line"></i> Vehicle Re-ID
+        </a>
+        <a href="tracking.html" class="nav-item">
+          <i class="lucide-route"></i> Multi-Cam Tracking
+        </a>
+        <a href="stolen-search.html" class="nav-item">
+          <i class="lucide-search"></i> Stolen Search
+        </a>
+        <a href="analytics.html" class="nav-item">
+          <i class="lucide-bar-chart-3"></i> Analytics
+        </a>
+        <a href="maps.html" class="nav-item">
+          <i class="lucide-map"></i> Full Map
+        </a>
+        <a href="reports.html" class="nav-item active">
+          <i class="lucide-file-spreadsheet"></i> Reports
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-mini">
+          <div class="avatar" style="border-color:var(--danger);">RS</div>
+          <div class="user-info">
+            <span class="user-name">Insp. R. K. Sharma</span>
+            <span class="user-role">Traffic Enforcement Officer</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <header class="top-header">
+        <button id="sidebar-toggle" class="btn-icon d-lg-none"><i class="lucide-menu"></i></button>
+
+        <div style="font-size:0.9rem; color:var(--text-muted);">
+          Official Enforcement Audit & Export Generator
+        </div>
+
+        <div class="header-actions">
+          <button class="role-switcher-btn" style="color:var(--warning);" onclick="window.AuthEngine.switchRole('citizen')">
+            <i class="lucide-user"></i> Citizen View
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
+        </div>
+      </header>
+
+      <div class="dashboard-container">
+        
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Traffic & Violation Report Generator</h1>
+            <p class="page-subtitle">Generate official compliance reports, challan dispute summaries, and camera telemetry logs.</p>
+          </div>
+        </div>
+
+        <!-- Filter Form Card -->
+        <div class="glass-card" style="padding:24px; margin-bottom:28px;">
+          <form onsubmit="event.preventDefault(); showToast('Report dataset generated successfully!', 'success');">
+            <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px;">
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">Report Type</label>
+                <select class="form-control">
+                  <option>AI Violation Summary Report</option>
+                  <option>Challan Dispute & Review Log</option>
+                  <option>Stolen Vehicle Camera Matches</option>
+                  <option>Camera Node Health & Telemetry</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">RTO Jurisdiction Zone</label>
+                <select class="form-control">
+                  <option>All Zones (Delhi NCR)</option>
+                  <option>Zone 1 (North Corridor)</option>
+                  <option>Zone 2 (Expressway West)</option>
+                  <option>Zone 3 (Central Square)</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">Date Range</label>
+                <input type="date" class="form-control" value="2026-08-26">
+              </div>
+
+              <div class="form-group" style="margin-bottom:0; display:flex; align-items:end;">
+                <button type="submit" class="btn btn-primary" style="width:100%; height:44px;">
+                  <i class="lucide-filter"></i> Generate Report
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Report Preview Table Card -->
+        <div class="glass-card" style="padding:24px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <div>
+              <h3 style="font-size:1.2rem;">Generated Report Data Preview</h3>
+              <p style="font-size:0.82rem; color:var(--text-muted);">823 records matched for selected criteria</p>
+            </div>
+
+            <div style="display:flex; gap:10px;">
+              <button class="btn btn-outline btn-sm" onclick="showToast('Downloading official PDF report...', 'success')">
+                <i class="lucide-file-text"></i> Download PDF
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="showToast('Exporting raw CSV data file...', 'success')">
+                <i class="lucide-download"></i> Export CSV
+              </button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Report ID</th>
+                  <th>Timestamp</th>
+                  <th>Camera Node</th>
+                  <th>Vehicle Plate</th>
+                  <th>Violation Type</th>
+                  <th>AI Confidence</th>
+                  <th>Officer Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="font-family:monospace; color:var(--primary); font-weight:700;">REP-2026-001</td>
+                  <td>26 Aug 2026, 10:42 AM</td>
+                  <td>CAM-07 (City Center)</td>
+                  <td style="font-family:monospace; color:var(--accent-cyan);">DL 01 AB 1234</td>
+                  <td style="color:var(--danger); font-weight:600;">Red Light Violation</td>
+                  <td>96% Confidence</td>
+                  <td><span class="badge badge-success">Approved</span></td>
+                </tr>
+                <tr>
+                  <td style="font-family:monospace; color:var(--primary); font-weight:700;">REP-2026-002</td>
+                  <td>26 Aug 2026, 10:45 AM</td>
+                  <td>CAM-01 (XYZ Intersection)</td>
+                  <td style="font-family:monospace; color:var(--accent-cyan);">HR 26 DQ 9012</td>
+                  <td style="color:var(--warning); font-weight:600;">No Helmet</td>
+                  <td>91% Confidence</td>
+                  <td><span class="badge badge-warning">Pending Review</span></td>
+                </tr>
+                <tr>
+                  <td style="font-family:monospace; color:var(--primary); font-weight:700;">REP-2026-003</td>
+                  <td>26 Aug 2026, 10:47 AM</td>
+                  <td>CAM-07 (City Center)</td>
+                  <td style="font-family:monospace; color:var(--accent-cyan);">DL 01 AB 1234</td>
+                  <td style="color:var(--danger); font-weight:600;">Possible Stolen Match</td>
+                  <td>94% Similarity</td>
+                  <td><span class="badge badge-danger">Patrol Dispatched</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/mock-data.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+</html>
