@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YOLOv8 & License Plate OCR Playground — VIGILANT</title>
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    .preset-chip {
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      border-radius: var(--radius-full);
+      background: var(--bg-dark-alt);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .preset-chip:hover, .preset-chip.active {
+      background: rgba(37, 99, 235, 0.2);
+      border-color: var(--primary);
+      color: #FFFFFF;
+    }
+    /* Laser Scan Line Animation */
+    @keyframes laserScanSweep {
+      0% { top: 0%; opacity: 0.2; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { top: 100%; opacity: 0.2; }
+    }
+    .yolo-scan-active {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, #00E676, #00FFFF, #00E676, transparent);
+      box-shadow: 0 0 16px #00E676, 0 0 32px #00FFFF;
+      z-index: 15;
+      animation: laserScanSweep 1.6s infinite ease-in-out;
+      display: block !important;
+      pointer-events: none;
+    }
+    /* Pulsing Dot Indicator */
+    .loop-pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00E676;
+      box-shadow: 0 0 8px #00E676;
+      display: inline-block;
+      animation: pulseDotGlow 1.2s infinite;
+    }
+    @keyframes pulseDotGlow {
+      0% { transform: scale(0.9); opacity: 0.7; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.7; }
+    }
+    .loop-status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      background: rgba(0, 230, 118, 0.12);
+      border: 1px solid rgba(0, 230, 118, 0.4);
+      color: #00E676;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .loop-status-indicator.paused {
+      background: rgba(245, 158, 11, 0.12);
+      border-color: rgba(245, 158, 11, 0.4);
+      color: #F59E0B;
+    }
+    .loop-status-indicator.paused .loop-pulse-dot {
+      background: #F59E0B;
+      box-shadow: 0 0 8px #F59E0B;
+      animation: none;
+    }
+    .feed-hud-tag {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(4, 7, 13, 0.75);
+      backdrop-filter: blur(8px);
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.75rem;
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 12;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body data-page="authority-yolo-ocr">
+
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="../index.html" class="brand-logo">
+          <div class="brand-icon" style="background:linear-gradient(135deg, var(--danger), var(--warning));"><i class="lucide-shield-alert"></i></div>
+          <span class="brand-name">VIGILANT</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-menu">
+        <div class="menu-category">Command Center Nav</div>
+        <a href="dashboard.html" class="nav-item">
+          <i class="lucide-activity"></i> Command Center
+        </a>
+        <a href="cameras.html" class="nav-item">
+          <i class="lucide-video"></i> Live Cameras
+        </a>
+        <a href="violations.html" class="nav-item">
+          <i class="lucide-shield-alert"></i> AI Violations
+        </a>
+        <a href="yolo-ocr-demo.html" class="nav-item active">
+          <i class="lucide-scan-text"></i> YOLOv8 & OCR Pipeline
+        </a>
+        <a href="vehicle-reid.html" class="nav-item">
+          <i class="lucide-scan-line"></i> Vehicle Re-ID
+        </a>
+        <a href="tracking.html" class="nav-item">
+          <i class="lucide-route"></i> Multi-Cam Tracking
+        </a>
+        <a href="stolen-search.html" class="nav-item">
+          <i class="lucide-search"></i> Stolen Vehicle Search
+        </a>
+        <a href="ai-models.html" class="nav-item">
+          <i class="lucide-cpu"></i> AI Telemetry
+        </a>
+        <a href="analytics.html" class="nav-item">
+          <i class="lucide-bar-chart-3"></i> Analytics
+        </a>
+        <a href="maps.html" class="nav-item">
+          <i class="lucide-map"></i> Full Map
+        </a>
+        <a href="reports.html" class="nav-item">
+          <i class="lucide-file-spreadsheet"></i> Reports
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-mini">
+          <div class="avatar" style="border-color:var(--danger);">AU</div>
+          <div class="user-info">
+            <span class="user-name">Authority User</span>
+            <span class="user-role">Traffic Enforcement Officer</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <header class="top-header">
+        <button id="sidebar-toggle" class="btn-icon d-lg-none"><i class="lucide-menu"></i></button>
+
+        <div style="font-size:0.9rem; color:var(--text-muted);">
+          YOLOv8 Object Detection & Optical Character Recognition (OCR) Engine
+        </div>
+
+        <div class="header-actions">
+          <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
+        </div>
+      </header>
+
+      <div class="dashboard-container">
+        
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">YOLOv8 & OCR License Plate Recognition Studio</h1>
+            <p class="page-subtitle">Real-time object detection, bounding box localization, and high-accuracy license plate character extraction.</p>
+          </div>
+
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <button id="btn-toggle-loop" class="btn btn-success btn-sm" onclick="window.YoloOcrController.toggleLoop()">
+              <i class="lucide-repeat"></i> <span id="loop-btn-text">Start Auto-Loop Stream</span>
+            </button>
+            <label class="btn btn-outline btn-sm" style="cursor:pointer; margin-bottom:0;">
+              <i class="lucide-upload"></i> Upload Frame (Image/Video)
+              <input type="file" id="yolo-upload-input" accept="image/*,video/*" style="display:none;">
+            </label>
+            <button id="btn-run-yolo" class="btn btn-primary btn-sm" onclick="window.YoloOcrController.runYoloOcrPipeline()">
+              <i class="lucide-play"></i> Scan Current Frame
+            </button>
+          </div>
+        </div>
+
+        <!-- Metric KPI Cards -->
+        <div class="grid-4" style="margin-bottom:24px;">
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">YOLOv8 Model</div>
+              <div class="stat-value" style="color:var(--primary); font-size:1.3rem;">YOLOv8n-ALPR</div>
+            </div>
+            <div class="stat-icon stat-icon-blue"><i class="lucide-target"></i></div>
+          </div>
+
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">OCR Engine</div>
+              <div class="stat-value" style="color:var(--success); font-size:1.3rem;">EasyOCR v2.0</div>
+            </div>
+            <div class="stat-icon stat-icon-green"><i class="lucide-scan-text"></i></div>
+          </div>
+
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">OCR Accuracy Score</div>
+              <div id="ocr-confidence-score" class="stat-value" style="color:var(--warning);">99.2%</div>
+            </div>
+            <div class="stat-icon stat-icon-warning"><i class="lucide-check-circle"></i></div>
+          </div>
+
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">Inference Latency</div>
+              <div id="ocr-latency-score" class="stat-value" style="color:var(--accent-cyan);">16 ms</div>
+            </div>
+            <div class="stat-icon stat-icon-blue"><i class="lucide-zap"></i></div>
+          </div>
+        </div>
+
+        <!-- Preset Selectors & Auto-Loop Status Bar -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:14px; background:var(--bg-dark-alt); padding:12px 18px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;"><i class="lucide-camera"></i> Camera Feeds:</span>
+            <button class="preset-chip active" id="preset-btn-0" onclick="window.YoloOcrController.loadPreset(0)">
+              <i class="lucide-video"></i> Indirapuram Dzire (UP 14 DL 5922)
+            </button>
+            <button class="preset-chip" id="preset-btn-1" onclick="window.YoloOcrController.loadPreset(1)">
+              <i class="lucide-video"></i> Pune Ciaz Front (MH 12 AB 3456)
+            </button>
+            <button class="preset-chip" id="preset-btn-2" onclick="window.YoloOcrController.loadPreset(2)">
+              <i class="lucide-video"></i> Chennai Ciaz ZXi Rear (TN 09 BY 9726)
+            </button>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:14px;">
+            <div id="loop-status-pill" class="loop-status-indicator" style="display:none;">
+              <span class="loop-pulse-dot"></span>
+              <span id="loop-status-text">LIVE LOOP ACTIVE</span>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:6px; font-size:0.8rem; color:var(--text-muted);">
+              <span>Cycle Speed:</span>
+              <select id="loop-speed-select" onchange="window.YoloOcrController.setLoopSpeed(this.value)" class="form-control" style="padding:4px 10px; font-size:0.8rem; width:auto; height:auto; background:var(--bg-dark); border-color:var(--border-color); color:var(--text-primary); cursor:pointer;">
+                <option value="3000">Fast (3s)</option>
+                <option value="4500" selected>Normal (4.5s)</option>
+                <option value="7000">Relaxed (7s)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-3-1">
+          <!-- YOLO Video Frame Canvas Box -->
+          <div class="glass-card" style="padding:24px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+              <div>
+                <h3 style="font-size:1.15rem; display:flex; align-items:center; gap:8px;">
+                  <i class="lucide-aperture" style="color:var(--primary);"></i> Live Frame Object Detection & Bounding Box Overlay
+                </h3>
+                <p style="font-size:0.82rem; color:var(--text-muted);">YOLOv8 real-time vehicle localization and license plate bounding box</p>
+              </div>
+
+              <button class="btn btn-primary btn-sm" onclick="window.YoloOcrController.runYoloOcrPipeline()">
+                <i class="lucide-refresh-cw"></i> Re-Scan Frame
+              </button>
+            </div>
+
+            <!-- Image/Video Frame Container with Bounding Boxes -->
+            <div style="position:relative; border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border-color); background:#04070D; min-height:360px;">
+              <!-- Live HUD Overlay -->
+              <div class="feed-hud-tag" id="feed-hud-overlay">
+                <span class="loop-pulse-dot"></span>
+                <span id="hud-feed-title">CAM-UP14-01 • INDIRAPURAM JUNCTION</span>
+                <span style="color:var(--text-muted);">|</span>
+                <span id="hud-fps" style="color:var(--accent-cyan);">59.8 FPS</span>
+              </div>
+
+              <div id="yolo-scan-line" style="display:none;"></div>
+              
+              <img id="yolo-frame-img" 
+                   src="/assets/images/UP14DL5922.jpg" 
+                   style="width:100%; max-height:420px; object-fit:cover; display:block;" 
+                   alt="YOLO Camera Frame">
+
+              <video id="yolo-frame-video" 
+                     style="display:none; width:100%; max-height:420px; object-fit:cover;" 
+                     controls autoplay loop></video>
+              
+              <!-- Dynamic Overlay Container -->
+              <div id="yolo-bbox-overlay" style="position:absolute; inset:0;">
+                <!-- Initialized by JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- OCR Results Output Card -->
+          <div class="glass-card" style="padding:24px;">
+            <h3 style="font-size:1.15rem; margin-bottom:16px;"><i class="lucide-scan"></i> OCR Recognition Results</h3>
+
+            <div id="ocr-results-card">
+              <!-- Rendered by YoloOcrController.runYoloOcrPipeline() -->
+            </div>
+
+            <div style="margin-top:24px; padding-top:16px; border-top:1px solid var(--border-color);">
+              <h4 style="font-size:0.9rem; margin-bottom:10px;">AI Pipeline Specs:</h4>
+              <ul style="font-size:0.82rem; color:var(--text-muted); padding-left:18px; line-height:1.8;">
+                <li><strong style="color:var(--text-secondary);">Detection Model:</strong> YOLOv8 PyTorch (TensorRT)</li>
+                <li><strong style="color:var(--text-secondary);">OCR Engine:</strong> EasyOCR 2.0 (ResNet + LSTM)</li>
+                <li><strong style="color:var(--text-secondary);">Plate Type:</strong> HSRP High-Security License Plate</li>
+                <li><strong style="color:var(--text-secondary);">DB Matching:</strong> VIGILANT RTO & Police Sync</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/auth.js"></script>
+  <script src="../js/yolo-ocr.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/ai-chat.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.lucide && window.lucide.createIcons) {
+        window.lucide.createIcons();
+      }
+      setTimeout(() => {
+        if (window.YoloOcrController) {
+          window.YoloOcrController.runYoloOcrPipeline();
+        }
+      }, 400);
+    });
+  </script>
+</body>
+</html>

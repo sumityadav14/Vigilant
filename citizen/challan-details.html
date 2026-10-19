@@ -72,9 +72,6 @@
         </div>
 
         <div class="header-actions">
-          <button class="role-switcher-btn" onclick="window.AuthEngine.switchRole('authority')">
-            <i class="lucide-shield"></i> Authority View
-          </button>
           <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
         </div>
       </header>
@@ -85,7 +82,7 @@
           <div>
             <div style="display:flex; align-items:center; gap:12px; margin-bottom:4px;">
               <span id="ch-id" style="font-family:monospace; font-weight:700; color:var(--primary); font-size:1.2rem;"></span>
-              <span class="badge badge-danger">Pending Payment</span>
+              <span id="ch-status" class="badge badge-warning">Status unavailable</span>
             </div>
             <h1 id="ch-title" class="page-title" style="color:var(--danger);"></h1>
           </div>
@@ -94,8 +91,8 @@
             <a id="ch-dispute-link" href="#" class="btn btn-danger">
               <i class="lucide-alert-octagon"></i> Request Dispute Review
             </a>
-            <button class="btn btn-primary" onclick="showToast('Opening payment gateway portal...', 'success')">
-              Pay ₹1,000 Fine Online
+            <button id="ch-pay-button" class="btn btn-primary" disabled>
+              Pay Fine Online
             </button>
           </div>
         </div>
@@ -108,11 +105,8 @@
               <span id="ch-conf" class="badge badge-danger"></span>
             </div>
 
-            <div style="position:relative; border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border-color); background:#000;">
-              <img id="ch-img" src="" alt="AI Violation Snapshot" style="width:100%; max-height:380px; object-fit:cover; display:block;">
-              <div class="cam-bounding-box" style="top:25%; left:35%; width:140px; height:80px;">
-                RED LIGHT<br>96% CONF
-              </div>
+            <div id="ch-evidence-viewer" style="position:relative; min-height:180px; display:flex; align-items:center; justify-content:center; border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border-color); background:#000; color:var(--text-muted);">
+              No evidence data is available.
             </div>
 
             <div style="margin-top:16px; font-size:0.9rem; color:var(--text-muted);">
@@ -159,7 +153,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="../js/mock-data.js"></script>
+  <script src="../js/api.js"></script>
   <script src="../js/auth.js"></script>
   <script src="../js/app.js"></script>
 </body>

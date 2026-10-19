@@ -212,11 +212,11 @@
 
     <div class="hero-content">
       <div class="hero-badge">
-        <i class="lucide-sparkles"></i> AI-Powered Traffic & Citizen Platform
+        <i class="lucide-sparkles"></i> Vehicle & Traffic Management Platform
       </div>
       <h1 class="hero-title">INTELLIGENT VEHICLE & TRAFFIC MANAGEMENT</h1>
       <p class="hero-subtitle">
-        Unified Smart City platform combining AI violation detection, multi-camera vehicle re-identification, citizen vehicle services, document vault, and stolen vehicle alert network.
+        Citizen vehicle services and authority tools, with MongoDB-backed APIs for currently implemented data.
       </p>
       <div class="hero-cta">
         <a href="login.html" class="btn btn-primary btn-lg">
@@ -234,36 +234,36 @@
         <div class="visual-icon" style="background:rgba(37,99,235,0.15); color:var(--primary);">
           <i class="lucide-scan"></i>
         </div>
-        <div class="badge badge-success" style="margin-bottom:8px;">96% Confidence</div>
+        <div class="badge badge-info" style="margin-bottom:8px;">Not configured</div>
         <h4 style="font-size:1.1rem; margin-bottom:4px;">AI Violation Detect</h4>
-        <p style="font-size:0.85rem; color:var(--text-muted);">Red Light & Helmet AI classification in real-time camera feeds.</p>
+        <p style="font-size:0.85rem; color:var(--text-muted);">Violation detection API is not configured.</p>
       </div>
 
       <div class="visual-card">
         <div class="visual-icon" style="background:rgba(6,182,212,0.15); color:var(--accent-cyan);">
           <i class="lucide-git-commit"></i>
         </div>
-        <div class="badge badge-info" style="margin-bottom:8px;">CAM-07 Matched</div>
+        <div class="badge badge-info" style="margin-bottom:8px;">Not configured</div>
         <h4 style="font-size:1.1rem; margin-bottom:4px;">Vehicle Re-ID</h4>
-        <p style="font-size:0.85rem; color:var(--text-muted);">Multi-camera feature re-identification and route tracking.</p>
+        <p style="font-size:0.85rem; color:var(--text-muted);">Vehicle Re-ID and tracking data are not configured.</p>
       </div>
 
       <div class="visual-card">
         <div class="visual-icon" style="background:rgba(239,68,68,0.15); color:var(--danger);">
           <i class="lucide-alert-triangle"></i>
         </div>
-        <div class="badge badge-danger" style="margin-bottom:8px;">Possible Match</div>
+        <div class="badge badge-info" style="margin-bottom:8px;">Not configured</div>
         <h4 style="font-size:1.1rem; margin-bottom:4px;">Stolen Vehicle Network</h4>
-        <p style="font-size:0.85rem; color:var(--text-muted);">Instant alert routing & authority verification assistance.</p>
+        <p style="font-size:0.85rem; color:var(--text-muted);">Stolen-vehicle reporting and search are not configured.</p>
       </div>
 
       <div class="visual-card">
         <div class="visual-icon" style="background:rgba(34,197,94,0.15); color:var(--success);">
           <i class="lucide-video"></i>
         </div>
-        <div class="badge badge-success badge-pulse" style="margin-bottom:8px;">24 Active</div>
+        <div class="badge badge-info" style="margin-bottom:8px;">0 active</div>
         <h4 style="font-size:1.1rem; margin-bottom:4px;">Live Surveillance</h4>
-        <p style="font-size:0.85rem; color:var(--text-muted);">24/7 CCTV surveillance grid with edge video analytics.</p>
+        <p style="font-size:0.85rem; color:var(--text-muted);">Camera data is not currently configured.</p>
       </div>
     </div>
   </section>
@@ -271,20 +271,20 @@
   <!-- Live Stats Bar -->
   <section class="stats-bar">
     <div>
-      <div class="stat-num" style="color:var(--primary);">24</div>
-      <div style="font-size:0.9rem; color:var(--text-muted); font-weight:500;">Active Smart Cameras</div>
+      <div id="landing-camera-count" class="stat-num" style="color:var(--primary);">0</div>
+      <div style="font-size:0.9rem; color:var(--text-muted); font-weight:500;">Configured Cameras</div>
     </div>
     <div>
-      <div class="stat-num" style="color:var(--success);">94.8%</div>
-      <div style="font-size:0.9rem; color:var(--text-muted); font-weight:500;">AI Detection Accuracy</div>
+      <div id="landing-confidence" class="stat-num" style="color:var(--success);">0%</div>
+      <div style="font-size:0.9rem; color:var(--text-muted); font-weight:500;">Average Confidence</div>
     </div>
     <div>
-      <div class="stat-num" style="color:var(--accent-cyan);">12,450+</div>
-      <div style="font-size:0.9rem; color:var(--text-muted); font-weight:500;">Vehicles Detected Today</div>
+      <div id="landing-detection-count" class="stat-num" style="color:var(--accent-cyan);">0</div>
+      <div style="font-size:0.9rem; color:var(--text-muted); font-weight:500;">Detections Today</div>
     </div>
     <div>
-      <div class="stat-num" style="color:var(--warning);">100%</div>
-      <div style="font-size:0.9rem; color:var(--text-muted); font-weight:500;">Human Verification Guardrail</div>
+      <div id="landing-violation-count" class="stat-num" style="color:var(--warning);">0</div>
+      <div style="font-size:0.9rem; color:var(--text-muted); font-weight:500;">Violation Records</div>
     </div>
   </section>
 
@@ -309,7 +309,7 @@
           <i class="lucide-file-text"></i>
         </div>
         <h3 style="font-size:1.25rem; margin-bottom:10px;">Challan Review Workflow</h3>
-        <p style="font-size:0.9rem; color:var(--text-muted);">Inspect high-resolution AI violation evidence clips and submit formal dispute review requests with supporting proof.</p>
+        <p style="font-size:0.9rem; color:var(--text-muted);">Challan listing and payment are available; evidence review is not configured.</p>
       </div>
 
       <div class="glass-card" style="padding:28px;">
@@ -317,7 +317,7 @@
           <i class="lucide-crosshair"></i>
         </div>
         <h3 style="font-size:1.25rem; margin-bottom:10px;">Vehicle Re-Identification</h3>
-        <p style="font-size:0.9rem; color:var(--text-muted);">Deep learning visual search matching vehicle body shape, color, and features across multiple camera feeds without relying solely on license plates.</p>
+        <p style="font-size:0.9rem; color:var(--text-muted);">Vehicle Re-ID is a prototype and is not connected to the backend.</p>
       </div>
 
       <div class="glass-card" style="padding:28px;">
@@ -325,7 +325,7 @@
           <i class="lucide-map-pin"></i>
         </div>
         <h3 style="font-size:1.25rem; margin-bottom:10px;">Multi-Camera Tracking</h3>
-        <p style="font-size:0.9rem; color:var(--text-muted);">Interactive map route reconstruction visualizing a target vehicle's movement vector across traffic intersections in real time.</p>
+        <p style="font-size:0.9rem; color:var(--text-muted);">Live tracking data is not configured.</p>
       </div>
     </div>
   </section>
@@ -336,7 +336,7 @@
       <i class="lucide-shield-alert" style="font-size:1.8rem; flex-shrink:0;"></i>
       <div>
         <strong style="font-size:1.05rem; display:block; margin-bottom:4px;">Legal & Safety Design Guardrail Notice</strong>
-        This platform is an academic engineering prototype. Simulated AI detections provide probability matches marked <em>"Possible AI Match — Human Verification Required"</em>. All final challan decisions and legal actions remain strictly under the jurisdiction of authorized traffic police officers according to official legal procedures.
+        AI detection and camera endpoints are not configured. The current interface does not produce AI predictions or camera matches.
       </div>
     </div>
   </section>
@@ -345,7 +345,7 @@
   <footer style="background:#04070D; border-top:1px solid var(--border-color); padding:40px 5%; color:var(--text-muted); font-size:0.9rem; display:flex; justify-content:space-between; align-items:center;">
     <div style="display:flex; align-items:center; gap:10px;">
       <div class="brand-icon" style="width:28px; height:28px; font-size:0.9rem;"><i class="lucide-shield-check"></i></div>
-      <strong style="color:var(--text-main);">VIGILANT</strong> — B.Tech CSE (AI) Major Project Prototype
+      <strong style="color:var(--text-main);">VIGILANT</strong> — Smart Vehicle & Traffic Management Platform
     </div>
     <div>
       Designed for Smart City Traffic Management & Citizen Empowerment
@@ -353,7 +353,7 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="js/mock-data.js"></script>
+  <script src="js/api.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
 </body>

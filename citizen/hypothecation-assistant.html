@@ -131,9 +131,6 @@
         </div>
 
         <div class="header-actions">
-          <button class="role-switcher-btn" onclick="window.AuthEngine.switchRole('authority')">
-            <i class="lucide-shield"></i> Authority View
-          </button>
           <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
         </div>
       </header>
@@ -143,7 +140,7 @@
         <div class="page-header">
           <div>
             <h1 class="page-title">Hypothecation (HPA) Removal Assistant</h1>
-            <p class="page-subtitle">Track loan closure status and prepare Form 35 application for RTO endorsement removal.</p>
+            <p class="page-subtitle">Guidance for the hypothecation removal process; loan records are not configured.</p>
           </div>
         </div>
 
@@ -151,27 +148,27 @@
         <div class="glass-card" style="padding:28px; margin-bottom:28px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <div>
-              <span class="badge badge-info" style="margin-bottom:8px;">READY FOR REMOVAL</span>
-              <h2 style="font-size:1.4rem;">Tata Nexon EV (DL 04 CD 5678)</h2>
-              <p style="color:var(--text-muted); font-size:0.9rem;">Financier: <strong>HDFC Bank Ltd</strong> • Loan A/C: <code>HDFC-EV-99812</code></p>
+              <span class="badge badge-warning" style="margin-bottom:8px;">STATUS UNAVAILABLE</span>
+              <h2 style="font-size:1.4rem;">No loan data available</h2>
+              <p style="color:var(--text-muted); font-size:0.9rem;">Hypothecation records are not configured by the backend.</p>
             </div>
 
-            <button class="btn btn-primary" onclick="showToast('Initiating Form 35 RTO Application Bundle...', 'success')">
+            <button class="btn btn-primary" onclick="showToast('Hypothecation assistance is not configured.', 'warning')">
               Start RTO Removal Assistance
             </button>
           </div>
 
           <!-- Step Progress -->
           <div class="timeline-steps">
-            <div class="step-item completed">
-              <div class="step-icon"><i class="lucide-check"></i></div>
+            <div class="step-item">
+              <div class="step-icon">1</div>
               <div class="step-title">Loan Paid</div>
             </div>
-            <div class="step-item completed">
-              <div class="step-icon"><i class="lucide-check"></i></div>
+            <div class="step-item">
+              <div class="step-icon">2</div>
               <div class="step-title">Bank NOC Issued</div>
             </div>
-            <div class="step-item active">
+            <div class="step-item">
               <div class="step-icon">3</div>
               <div class="step-title">Form 35 Draft</div>
             </div>
@@ -193,19 +190,19 @@
           <div style="display:flex; flex-direction:column; gap:12px; font-size:0.9rem;">
             <div style="display:flex; align-items:center; gap:12px; background:var(--bg-dark-alt); padding:12px; border-radius:6px;">
               <i class="lucide-check-circle" style="color:var(--success)"></i>
-              <div style="flex:1;"><strong>Bank No Objection Certificate (NOC)</strong> — Issued by HDFC Bank</div>
-              <button class="btn btn-outline btn-sm" onclick="showToast('Downloading NOC PDF...', 'info')">Download NOC</button>
+              <div style="flex:1;"><strong>Bank No Objection Certificate (NOC)</strong> — Obtain from the applicable financier</div>
+              <button class="btn btn-outline btn-sm" onclick="showToast('No NOC file is available.', 'warning')">Download NOC</button>
             </div>
 
             <div style="display:flex; align-items:center; gap:12px; background:var(--bg-dark-alt); padding:12px; border-radius:6px;">
               <i class="lucide-check-circle" style="color:var(--success)"></i>
               <div style="flex:1;"><strong>RTO Form 35 (Duplicate Copies)</strong> — Signed by Financier</div>
-              <button class="btn btn-outline btn-sm" onclick="showToast('Generating Form 35 draft...', 'info')">Generate Form 35</button>
+              <button class="btn btn-outline btn-sm" onclick="showToast('Form 35 generation is not configured.', 'warning')">Generate Form 35</button>
             </div>
 
             <div style="display:flex; align-items:center; gap:12px; background:var(--bg-dark-alt); padding:12px; border-radius:6px;">
               <i class="lucide-clock" style="color:var(--warning)"></i>
-              <div style="flex:1;"><strong>Valid PUC & Insurance Policy</strong> — Active in Document Vault</div>
+              <div style="flex:1;"><strong>Valid PUC & Insurance Policy</strong> — Check the current document records</div>
               <a href="document-vault.html" class="btn btn-outline btn-sm">Vault</a>
             </div>
           </div>
@@ -221,7 +218,6 @@
   </div>
 
   <!-- Scripts -->
-  <script src="../js/mock-data.js"></script>
   <script src="../js/auth.js"></script>
   <script src="../js/app.js"></script>
 </body>

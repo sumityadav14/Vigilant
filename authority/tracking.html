@@ -51,6 +51,9 @@
         <a href="violations.html" class="nav-item">
           <i class="lucide-shield-alert"></i> AI Violations
         </a>
+        <a href="yolo-ocr-demo.html" class="nav-item">
+          <i class="lucide-scan-text"></i> YOLO ALPR & OCR Studio
+        </a>
         <a href="vehicle-reid.html" class="nav-item">
           <i class="lucide-scan-line"></i> Vehicle Re-ID
         </a>
@@ -64,9 +67,9 @@
 
       <div class="sidebar-footer">
         <div class="user-profile-mini">
-          <div class="avatar" style="border-color:var(--danger);">RS</div>
+          <div class="avatar" style="border-color:var(--danger);">AU</div>
           <div class="user-info">
-            <span class="user-name">Insp. R. K. Sharma</span>
+            <span class="user-name">Authority User</span>
             <span class="user-role">Traffic Enforcement Officer</span>
           </div>
         </div>
@@ -83,9 +86,6 @@
         </div>
 
         <div class="header-actions">
-          <button class="role-switcher-btn" style="color:var(--warning);" onclick="window.AuthEngine.switchRole('citizen')">
-            <i class="lucide-user"></i> Citizen View
-          </button>
           <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
         </div>
       </header>
@@ -95,56 +95,32 @@
         <div class="page-header">
           <div>
             <h1 class="page-title">Multi-Camera Trajectory Tracking Map</h1>
-            <p class="page-subtitle">Reconstructed movement trajectory vector for Target Vehicle <strong>VH-1029 (DL 01 AB 1234)</strong>.</p>
+            <p class="page-subtitle">Vehicle tracking data from the configured backend.</p>
           </div>
         </div>
 
         <!-- Guardrail Banner -->
         <div class="legal-notice-banner" style="margin-bottom:20px;">
           <i class="lucide-shield-alert"></i>
-          <strong>AI Guardrail Notice:</strong> Multi-camera tracking results represent AI trajectory reconstruction. Physical officer intercept requires verification.
+          <strong>Service status:</strong> Vehicle tracking is not configured by the backend.
         </div>
 
         <div class="grid-3-1">
           <!-- Interactive Map Container -->
           <div class="glass-card" style="padding:20px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-              <h3 style="font-size:1.1rem;">Live Route Polyline Reconstruction</h3>
-              <span class="badge badge-success">4 CAMERAS MATCHED</span>
+              <h3 style="font-size:1.1rem;">Vehicle Route</h3>
+              <span class="badge badge-info">0 CAMERAS</span>
             </div>
 
-            <div id="leaflet-map"></div>
+            <div id="leaflet-map" style="display:flex; align-items:center; justify-content:center; color:var(--text-muted);">No tracking data is available.</div>
           </div>
 
           <!-- Timeline Sidebar -->
           <div class="glass-card" style="padding:20px;">
             <h3 style="font-size:1.1rem; margin-bottom:14px;">Chronological Timeline</h3>
 
-            <div style="display:flex; flex-direction:column; gap:12px;">
-              <div style="background:var(--bg-dark-alt); padding:12px; border-radius:6px; border-left:3px solid var(--primary);">
-                <strong style="color:var(--primary); font-size:0.8rem;">10:21 AM — CAM-01</strong>
-                <div style="font-size:0.85rem; font-weight:600; margin-top:2px;">XYZ Intersection Gate 1</div>
-                <div style="font-size:0.75rem; color:var(--text-dim);">Speed: 42 km/h • 96% Match</div>
-              </div>
-
-              <div style="background:var(--bg-dark-alt); padding:12px; border-radius:6px; border-left:3px solid var(--primary);">
-                <strong style="color:var(--primary); font-size:0.8rem;">10:29 AM — CAM-03</strong>
-                <div style="font-size:0.85rem; font-weight:600; margin-top:2px;">ABC Expressway KM 14</div>
-                <div style="font-size:0.75rem; color:var(--text-dim);">Speed: 58 km/h • 94% Match</div>
-              </div>
-
-              <div style="background:var(--bg-dark-alt); padding:12px; border-radius:6px; border-left:3px solid var(--danger);">
-                <strong style="color:var(--danger); font-size:0.8rem;">10:42 AM — CAM-07</strong>
-                <div style="font-size:0.85rem; font-weight:600; margin-top:2px;">City Center Square</div>
-                <div style="font-size:0.75rem; color:var(--text-dim);">Red Light Violation • 96% Match</div>
-              </div>
-
-              <div style="background:var(--bg-dark-alt); padding:12px; border-radius:6px; border-left:3px solid var(--primary);">
-                <strong style="color:var(--primary); font-size:0.8rem;">10:51 AM — CAM-11</strong>
-                <div style="font-size:0.85rem; font-weight:600; margin-top:2px;">Highway Flyover Exit</div>
-                <div style="font-size:0.75rem; color:var(--text-dim);">Speed: 64 km/h • 93% Match</div>
-              </div>
-            </div>
+            <div style="color:var(--text-muted); padding:16px; text-align:center;">No tracking events are available.</div>
           </div>
         </div>
 
@@ -153,7 +129,6 @@
   </div>
 
   <!-- Scripts -->
-  <script src="../js/mock-data.js"></script>
   <script src="../js/auth.js"></script>
   <script src="../js/app.js"></script>
 </body>

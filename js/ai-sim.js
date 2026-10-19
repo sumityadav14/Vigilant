@@ -7,12 +7,6 @@ const AISimEngine = {
   // Current Detection Confidence Threshold (0.50 to 0.98)
   confidenceThreshold: 0.85,
 
-  // Simulated 512-D Feature Vector Embedding (Truncated preview for UI)
-  sampleEmbeddings: {
-    "VH-1029": [0.124, -0.892, 0.451, 0.982, -0.114, 0.332, 0.761, -0.542, 0.211, 0.884],
-    "VH-1034": [-0.342, 0.512, -0.128, 0.441, 0.891, -0.221, 0.112, 0.654, -0.871, 0.312]
-  },
-
   // Calculate Cosine Similarity between two feature vectors: cos(θ) = (A · B) / (||A|| ||B||)
   calculateCosineSimilarity(vecA, vecB) {
     let dotProduct = 0;
@@ -39,7 +33,7 @@ const AISimEngine = {
     let visibleCount = 0;
 
     items.forEach(item => {
-      const conf = parseFloat(item.dataset.conf || "0.90");
+      const conf = Number(item.dataset.conf);
       if (conf >= threshold) {
         item.style.display = "block";
         visibleCount++;

@@ -82,10 +82,10 @@
 
     <!-- Role Switcher Tabs -->
     <div class="auth-tabs">
-      <button id="tab-reg-citizen" class="auth-tab-btn active" onclick="switchRegRole('citizen')">
+      <button id="tab-reg-citizen" class="auth-tab-btn active" type="button" onclick="switchRegRole('citizen')">
         <i class="lucide-user"></i> Citizen Registration
       </button>
-      <button id="tab-reg-authority" class="auth-tab-btn" onclick="switchRegRole('authority')">
+      <button id="tab-reg-authority" class="auth-tab-btn" type="button" onclick="switchRegRole('authority')">
         <i class="lucide-shield-alert"></i> Police / Officer Reg
       </button>
     </div>
@@ -105,7 +105,7 @@
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
         <div class="form-group">
           <label class="form-label">Password</label>
-          <input type="password" id="reg-cit-pass" class="form-control" placeholder="••••••••" required>
+          <input type="password" id="reg-cit-pass" class="form-control" placeholder="Enter password" minlength="4" required>
         </div>
         <div class="form-group">
           <label class="form-label">Mobile Number</label>
@@ -127,7 +127,7 @@
     <form id="authority-reg-form" onsubmit="handleRegistration(event, 'authority')" style="display:none;">
       <div class="form-group">
         <label class="form-label">Officer Full Name</label>
-        <input type="text" id="reg-auth-name" class="form-control" placeholder="e.g. Insp. R. K. Sharma" required>
+        <input type="text" id="reg-auth-name" class="form-control" placeholder="e.g. Officer Name" required>
       </div>
 
       <div class="form-group">
@@ -138,7 +138,7 @@
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
         <div class="form-group">
           <label class="form-label">Security Passcode</label>
-          <input type="password" id="reg-auth-pass" class="form-control" placeholder="••••••••" required>
+          <input type="password" id="reg-auth-pass" class="form-control" placeholder="Enter password" minlength="4" required>
         </div>
         <div class="form-group">
           <label class="form-label">Officer Badge Number</label>
@@ -162,58 +162,68 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/mock-data.js"></script>
+  <script src="js/api.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
+
   <script>
     function switchRegRole(role) {
       const tabCitizen = document.getElementById("tab-reg-citizen");
       const tabAuthority = document.getElementById("tab-reg-authority");
-      const citForm = document.getElementById("citizen-reg-form");
-      const authForm = document.getElementById("authority-reg-form");
+      const citizenForm = document.getElementById("citizen-reg-form");
+      const authorityForm = document.getElementById("authority-reg-form");
 
-      if (role === 'citizen') {
+      if (role === "citizen") {
         tabCitizen.classList.add("active");
         tabAuthority.classList.remove("active");
-        citForm.style.display = "block";
-        authForm.style.display = "none";
+        citizenForm.style.display = "block";
+        authorityForm.style.display = "none";
       } else {
         tabAuthority.classList.add("active");
         tabCitizen.classList.remove("active");
-        authForm.style.display = "block";
-        citForm.style.display = "none";
+        authorityForm.style.display = "block";
+        citizenForm.style.display = "none";
       }
     }
 
-    function handleRegistration(event, role) {
+    async function handleRegistration(event, role) {
       event.preventDefault();
-      let userData = { role };
+      let userData = { role: role };
 
-      if (role === 'citizen') {
-        userData.name = document.getElementById('reg-cit-name').value;
-        userData.email = document.getElementById('reg-cit-email').value;
-        userData.phone = document.getElementById('reg-cit-phone').value;
-        userData.vehicleReg = document.getElementById('reg-cit-veh').value;
+      if (role === "citizen") {
+        userData.name = document.getElementById("reg-cit-name").value.trim();
+        userData.email = document.getElementById("reg-cit-email").value.trim();
+        userData.password = document.getElementById("reg-cit-pass").value;
+        userData.phone = document.getElementById("reg-cit-phone").value.trim();
+        userData.vehicleReg = document.getElementById("reg-cit-veh").value.trim();
       } else {
-        userData.name = document.getElementById('reg-auth-name').value;
-        userData.email = document.getElementById('reg-auth-email').value;
-        userData.badgeNumber = document.getElementById('reg-auth-badge').value;
-        userData.department = document.getElementById('reg-auth-dept').value;
+        userData.name = document.getElementById("reg-auth-name").value.trim();
+        userData.email = document.getElementById("reg-auth-email").value.trim();
+        userData.password = document.getElementById("reg-auth-pass").value;
+        userData.badgeNumber = document.getElementById("reg-auth-badge").value.trim();
+        userData.department = document.getElementById("reg-auth-dept").value.trim();
       }
 
-      showToast(`Creating ${role} account...`, 'info');
-      setTimeout(() => {
-        window.AuthEngine.register(userData);
-        showToast('Registration successful! Logging in...', 'success');
+      if (typeof showToast === "function") showToast(`Creating ${role} account...`, "info");
+
+      try {
+        const user = await window.AuthEngine.register(userData);
+
+        if (typeof showToast === "function") showToast("Registration successful! Opening dashboard...", "success");
+
+        const targetUrl = (role === "authority" || (user && user.role === "authority")) ? "authority/dashboard.html" : "citizen/dashboard.html";
         setTimeout(() => {
-          if (role === 'authority') {
-            window.location.href = 'authority/dashboard.html';
-          } else {
-            window.location.href = 'citizen/dashboard.html';
-          }
-        }, 600);
-      }, 500);
+          window.location.href = targetUrl;
+        }, 200);
+      } catch (error) {
+        console.error("Registration error:", error);
+        if (typeof showToast === "function") showToast(error.message || "Registration failed", "danger");
+      }
     }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
+    });
   </script>
 </body>
 </html>

@@ -66,14 +66,6 @@
       box-shadow: 0 2px 8px var(--primary-glow);
     }
 
-    .demo-credential-box {
-      background: rgba(37, 99, 235, 0.08);
-      border: 1px dashed rgba(37, 99, 235, 0.3);
-      padding: 14px;
-      border-radius: var(--radius-sm);
-      margin-top: 20px;
-      font-size: 0.82rem;
-    }
   </style>
 </head>
 <body data-page="login">
@@ -90,10 +82,10 @@
 
     <!-- Role Switcher Tabs -->
     <div class="auth-tabs">
-      <button id="tab-citizen" class="auth-tab-btn active">
+      <button id="tab-citizen" class="auth-tab-btn active" type="button" onclick="switchAuthTab('citizen')">
         <i class="lucide-user"></i> Citizen Portal
       </button>
-      <button id="tab-authority" class="auth-tab-btn">
+      <button id="tab-authority" class="auth-tab-btn" type="button" onclick="switchAuthTab('authority')">
         <i class="lucide-shield-alert"></i> Police / Authority
       </button>
     </div>
@@ -102,48 +94,36 @@
     <form id="citizen-login-form" onsubmit="handleAuth(event, 'citizen')">
       <div class="form-group">
         <label class="form-label">Email Address</label>
-        <input type="email" id="citizen-email" class="form-control" value="citizen@demo.com" required>
+        <input type="email" id="citizen-email" class="form-control" required>
       </div>
 
       <div class="form-group">
         <label class="form-label">Password</label>
-        <input type="password" id="citizen-password" class="form-control" value="••••••••" required>
+        <input type="password" id="citizen-password" class="form-control" required>
       </div>
 
       <button type="submit" class="btn btn-primary btn-lg" style="width:100%; margin-top:10px;">
         Access Citizen Dashboard <i class="lucide-arrow-right"></i>
       </button>
 
-      <div class="demo-credential-box">
-        <strong style="color:var(--primary); display:block; margin-bottom:4px;">Demo Citizen Account:</strong>
-        <code>Email: citizen@demo.com</code><br>
-        <code>Password: demo123</code>
-        <button type="button" class="btn btn-outline btn-sm" style="width:100%; margin-top:8px;" onclick="quickFill('citizen')">Auto-Fill Credentials</button>
-      </div>
     </form>
 
     <!-- Authority Form (Initially Hidden) -->
     <form id="authority-login-form" onsubmit="handleAuth(event, 'authority')" style="display:none;">
       <div class="form-group">
         <label class="form-label">Official Email / Officer ID</label>
-        <input type="email" id="authority-email" class="form-control" value="authority@demo.com" required>
+        <input type="email" id="authority-email" class="form-control" required>
       </div>
 
       <div class="form-group">
         <label class="form-label">Security Passcode</label>
-        <input type="password" id="authority-password" class="form-control" value="••••••••" required>
+        <input type="password" id="authority-password" class="form-control" required>
       </div>
 
       <button type="submit" class="btn btn-danger btn-lg" style="width:100%; margin-top:10px;">
         Enter Command Center <i class="lucide-shield"></i>
       </button>
 
-      <div class="demo-credential-box" style="background:rgba(239, 68, 68, 0.08); border-color:rgba(239, 68, 68, 0.3);">
-        <strong style="color:var(--danger); display:block; margin-bottom:4px;">Demo Authority Officer Account:</strong>
-        <code>Email: authority@demo.com</code><br>
-        <code>Badge: POL-DEL-4092</code>
-        <button type="button" class="btn btn-outline btn-sm" style="width:100%; margin-top:8px;" onclick="quickFill('authority')">Auto-Fill Credentials</button>
-      </div>
     </form>
 
     <div style="text-align:center; margin-top:24px; font-size:0.88rem; display:flex; flex-direction:column; gap:8px;">
@@ -153,36 +133,55 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/mock-data.js"></script>
+  <script src="js/api.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
+
   <script>
-    function quickFill(role) {
-      if (role === 'citizen') {
-        document.getElementById('citizen-email').value = 'citizen@demo.com';
-        document.getElementById('citizen-password').value = 'demo123';
+    function switchAuthTab(role) {
+      const citizenForm = document.getElementById("citizen-login-form");
+      const authorityForm = document.getElementById("authority-login-form");
+      const citizenTab = document.getElementById("tab-citizen");
+      const authorityTab = document.getElementById("tab-authority");
+
+      if (role === "citizen") {
+        citizenForm.style.display = "block";
+        authorityForm.style.display = "none";
+        citizenTab.classList.add("active");
+        authorityTab.classList.remove("active");
       } else {
-        document.getElementById('authority-email').value = 'authority@demo.com';
-        document.getElementById('authority-password').value = 'demo123';
+        citizenForm.style.display = "none";
+        authorityForm.style.display = "block";
+        citizenTab.classList.remove("active");
+        authorityTab.classList.add("active");
       }
-      showToast(`Auto-filled ${role} credentials!`, 'success');
     }
 
-    function handleAuth(event, role) {
+    async function handleAuth(event, role) {
       event.preventDefault();
-      const email = role === 'citizen' ? document.getElementById('citizen-email').value : document.getElementById('authority-email').value;
-      const pass = role === 'citizen' ? document.getElementById('citizen-password').value : document.getElementById('authority-password').value;
+      const email = role === "citizen" ? document.getElementById("citizen-email").value.trim() : document.getElementById("authority-email").value.trim();
+      const password = role === "citizen" ? document.getElementById("citizen-password").value : document.getElementById("authority-password").value;
 
-      showToast(`Authenticating ${role}...`, 'info');
-      setTimeout(() => {
-        window.AuthEngine.login(email, pass, role);
-        if (role === 'authority') {
-          window.location.href = 'authority/dashboard.html';
-        } else {
-          window.location.href = 'citizen/dashboard.html';
-        }
-      }, 600);
+      if (typeof showToast === "function") showToast(`Authenticating ${role}...`, "info");
+
+      try {
+        const user = await window.AuthEngine.login(email, password, role);
+
+        if (typeof showToast === "function") showToast("Login successful! Redirecting...", "success");
+
+        const targetUrl = (user && user.role === "authority") ? "authority/dashboard.html" : "citizen/dashboard.html";
+        setTimeout(() => {
+          window.location.href = targetUrl;
+        }, 200);
+      } catch (error) {
+        console.error("Login error:", error);
+        if (typeof showToast === "function") showToast(error.message || "Invalid credentials", "danger");
+      }
     }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
+    });
   </script>
 </body>
 </html>

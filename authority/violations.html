@@ -35,7 +35,10 @@
           <i class="lucide-video"></i> Live Cameras
         </a>
         <a href="violations.html" class="nav-item active">
-          <i class="lucide-shield-alert"></i> AI Violations <span class="badge-count">823</span>
+          <i class="lucide-shield-alert"></i> AI Violations <span id="authority-violations-count" class="badge-count">0</span>
+        </a>
+        <a href="yolo-ocr-demo.html" class="nav-item">
+          <i class="lucide-scan-text"></i> YOLO ALPR & OCR Studio
         </a>
         <a href="vehicle-reid.html" class="nav-item">
           <i class="lucide-scan-line"></i> Vehicle Re-ID
@@ -50,9 +53,9 @@
 
       <div class="sidebar-footer">
         <div class="user-profile-mini">
-          <div class="avatar" style="border-color:var(--danger);">RS</div>
+          <div class="avatar" style="border-color:var(--danger);">AU</div>
           <div class="user-info">
-            <span class="user-name">Insp. R. K. Sharma</span>
+            <span class="user-name">Authority User</span>
             <span class="user-role">Traffic Enforcement Officer</span>
           </div>
         </div>
@@ -69,9 +72,6 @@
         </div>
 
         <div class="header-actions">
-          <button class="role-switcher-btn" style="color:var(--warning);" onclick="window.AuthEngine.switchRole('citizen')">
-            <i class="lucide-user"></i> Citizen View
-          </button>
           <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
         </div>
       </header>
@@ -81,7 +81,7 @@
         <div class="page-header">
           <div>
             <h1 class="page-title">AI Traffic Violation Detection</h1>
-            <p class="page-subtitle">Real-time object detection models classifying Red Light, Helmet, Speeding, and Seatbelt infractions.</p>
+            <p class="page-subtitle">Violation records returned by the configured backend.</p>
           </div>
         </div>
 
@@ -89,69 +89,14 @@
         <div class="legal-notice-banner" style="margin-bottom:24px;">
           <i class="lucide-shield-alert" style="font-size:1.4rem;"></i>
           <div>
-            <strong>Human Verification Guardrail:</strong> AI Detections are labeled <em>"Possible AI Match — Human Verification Required"</em>. All official challan issuances require officer approval.
+            <strong>Service status:</strong> Violation detection data is not currently configured by the backend.
           </div>
         </div>
 
-        <div class="grid-3-1">
-          <!-- Video Stream Simulation Card -->
+        <div id="violation-records" class="grid-3-1">
           <div class="glass-card" style="padding:24px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-              <h3 style="font-size:1.1rem;">CAM-07 Live Feed & AI Bounding Boxes</h3>
-              <span class="badge badge-danger badge-pulse">96% CONFIDENCE</span>
-            </div>
-
-            <div style="position:relative; border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border-color); background:#000;">
-              <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=800&auto=format&fit=crop" style="width:100%; max-height:400px; object-fit:cover; display:block;" alt="AI Stream">
-              
-              <div class="cam-bounding-box" style="top:25%; left:30%; width:160px; height:90px;">
-                RED LIGHT VIO<br>
-                VH-1029 (DL 01 AB 1234)<br>
-                CONF: 0.96
-              </div>
-
-              <div class="cam-bounding-box" style="top:55%; left:65%; width:120px; height:70px; border-color:#F59E0B;">
-                NO HELMET<br>
-                CONF: 0.91
-              </div>
-            </div>
-          </div>
-
-          <!-- Detection Inspector Details Panel -->
-          <div class="glass-card" style="padding:24px;">
-            <h3 style="font-size:1.15rem; margin-bottom:16px;">AI Detection Details</h3>
-
-            <div style="display:flex; flex-direction:column; gap:14px; font-size:0.88rem;">
-              <div style="background:var(--bg-dark-alt); padding:12px; border-radius:6px; border:1px solid var(--border-color);">
-                <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Infraction Type</strong>
-                <div style="color:var(--danger); font-size:1.1rem; font-weight:700; margin-top:2px;">Red Light Violation</div>
-              </div>
-
-              <div style="background:var(--bg-dark-alt); padding:12px; border-radius:6px; border:1px solid var(--border-color);">
-                <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Detected Vehicle</strong>
-                <div style="font-family:monospace; color:var(--accent-cyan); font-weight:700; font-size:1.05rem; margin-top:2px;">DL 01 AB 1234 (Hyundai Creta)</div>
-              </div>
-
-              <div style="background:var(--bg-dark-alt); padding:12px; border-radius:6px; border:1px solid var(--border-color);">
-                <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Location & Camera</strong>
-                <div>CAM-07 (City Center Square)</div>
-                <div style="font-size:0.75rem; color:var(--text-dim); margin-top:2px;">26 Aug 2026 at 10:42 AM</div>
-              </div>
-
-              <div style="background:var(--bg-dark-alt); padding:12px; border-radius:6px; border:1px solid var(--border-color);">
-                <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">AI Model Score</strong>
-                <div style="color:var(--success); font-weight:700; font-size:1rem; margin-top:2px;">96% Classification Certainty</div>
-              </div>
-            </div>
-
-            <div style="display:flex; flex-direction:column; gap:10px; margin-top:24px;">
-              <button class="btn btn-primary" onclick="showToast('Challan #CH-2026-00124 approved and issued to vehicle owner!', 'success')">
-                <i class="lucide-check-circle"></i> Approve & Issue Challan
-              </button>
-              <button class="btn btn-outline" onclick="showToast('Flagged as false positive for model re-training', 'info')">
-                Flag False AI Detection
-              </button>
-            </div>
+            <h3 style="font-size:1.1rem; margin-bottom:16px;">Violation Records</h3>
+            <p style="color:var(--text-muted);">No violation data is configured.</p>
           </div>
         </div>
 
@@ -160,7 +105,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="../js/mock-data.js"></script>
+  <script src="../js/api.js"></script>
   <script src="../js/auth.js"></script>
   <script src="../js/app.js"></script>
 </body>

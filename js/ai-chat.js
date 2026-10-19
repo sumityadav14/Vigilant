@@ -122,34 +122,16 @@ function processComprehensiveAiIntent(query) {
   if (q.includes("hi") || q.includes("hello") || q.includes("hey") || q.includes("who are you")) {
     return `👋 Hello! I am your <strong>VIGILANT AI Assistant</strong>. I can answer questions about:<br>
       • Traffic Penalties & Fines under Motor Vehicle Act 2019<br>
-      • Your Vehicle RC, Insurance & PUC Expiry Dates<br>
-      • Challan Evidence Inspection & Dispute Reviews<br>
-      • Hypothecation (HPA) Removal & Form 35<br>
-      • Emergency Stolen Vehicle Reporting<br>
-      • Police Command Center Live Camera Telemetry`;
+      • General vehicle document guidance<br>
+      • Backend availability for challans, reports, and camera features`;
   }
 
-  // 2. SPECIFIC VEHICLE DOCUMENT EXPIRIES (CRETA / NEXON)
-  if (q.includes("creta") && (q.includes("puc") || q.includes("pollut") || q.includes("expire"))) {
-    return `📄 <strong>Hyundai Creta (DL 01 AB 1234) PUC Status:</strong><br>Your PUC Certificate <code>PUC-DL-2026-991</code> expires on <strong>02 Sep 2026</strong> (7 days remaining). Renew it in your <a href="../citizen/document-vault.html" style="color:var(--accent-cyan)">Document Vault</a> to avoid a ₹10,000 fine.`;
-  }
-
-  if (q.includes("creta") && (q.includes("insurance") || q.includes("policy"))) {
-    return `🛡️ <strong>Hyundai Creta (DL 01 AB 1234) Insurance:</strong><br>Insurer: HDFC ERGO General Insurance<br>Policy No: <code>INS-HYU-887192</code><br>Expiry Date: <strong>31 Dec 2026</strong> (Valid & Active).`;
-  }
-
-  if (q.includes("nexon") && (q.includes("puc") || q.includes("ev"))) {
-    return `⚡ <strong>Tata Nexon EV (DL 04 CD 5678):</strong><br>As a Zero-Emission Electric Vehicle (EV), this car is <strong>Exempt from PUC Certificate requirements</strong>.`;
-  }
-
-  if (q.includes("nexon") && (q.includes("insurance") || q.includes("policy"))) {
-    return `🛡️ <strong>Tata Nexon EV (DL 04 CD 5678) Insurance:</strong><br>Insurer: TATA AIG Motor Insurance<br>Policy No: <code>INS-TAT-998124</code><br>Expiry Date: <strong>15 Jan 2027</strong> (Valid).`;
-  }
-
-  if (q.includes("rc") || q.includes("registration certificate")) {
-    return `📋 <strong>Registration Certificate (RC) Status:</strong><br>
-      • <strong>DL 01 AB 1234 (Hyundai Creta):</strong> Valid until 12 May 2038 (RTO Delhi North)<br>
-      • <strong>DL 04 CD 5678 (Tata Nexon EV):</strong> Valid until 24 Aug 2039 (RTO Delhi West)`;
+  // Account-specific vehicle data is not available to the chatbot.
+  if (q.includes("puc") || q.includes("pollut") || q.includes("expire") ||
+      q.includes("creta") || q.includes("nexon") || q.includes("insurance") ||
+      q.includes("policy") || q.includes("registration certificate") || q.includes("rc")) {
+    return `📄 <strong>Vehicle document records:</strong><br>
+      Account-specific RC, insurance, and PUC data is not available in the chatbot. Check the <a href="../citizen/document-vault.html" style="color:var(--accent-cyan)">Document Vault</a> for records returned by the backend.`;
   }
 
   // 3. TRAFFIC FINES & PENALTIES (MV AMENDMENT ACT 2019)
@@ -203,15 +185,12 @@ function processComprehensiveAiIntent(query) {
 
   // 4. CHALLANS & DISPUTE WORKFLOW
   if (q.includes("dispute") || q.includes("review") || q.includes("wrong challan") || q.includes("appeal")) {
-    return `⚖️ <strong>How to Dispute a Traffic Challan:</strong><br>
-      1. Go to <a href="../citizen/challan-list.html" style="color:var(--accent-cyan)">Challans List</a>.<br>
-      2. Click <strong>Inspect Evidence</strong> to view the captured AI photo frame & confidence score.<br>
-      3. Click <strong>Request Dispute Review</strong>, select your reason (e.g. Evidence Issue, Wrong Vehicle), and upload proof.<br>
-      4. Once submitted, status changes to <code>UNDER REVIEW</code>, pausing fine penalties while a police officer verifies your evidence.`;
+    return `⚖️ <strong>Challan Review Status:</strong><br>
+      Challans can be listed from the backend. Challan evidence and dispute submission are not currently configured, so the interface cannot submit a review or pause penalties.`;
   }
 
   if (q.includes("pay") || q.includes("payment")) {
-    return `💳 <strong>Pay Challan Online:</strong><br>You can pay your pending challan using Credit/Debit Card, Net Banking, or UPI on the <a href="../citizen/challan-list.html" style="color:var(--accent-cyan)">Challans Management Page</a>.`;
+    return `💳 <strong>Challan Payment:</strong><br>The current API can update a challan's status to paid from the <a href="../citizen/challan-list.html" style="color:var(--accent-cyan)">Challans Management Page</a>. No payment gateway is configured.`;
   }
 
   // 5. HYPOTHECATION & LOAN REMOVAL (HPA)
@@ -220,35 +199,36 @@ function processComprehensiveAiIntent(query) {
       When your car loan is fully paid off:<br>
       1. Obtain the Bank No Objection Certificate (NOC).<br>
       2. Download RTO <strong>Form 35</strong>.<br>
-      3. Track the guided 5-step removal process on the <a href="../citizen/hypothecation-assistant.html" style="color:var(--accent-cyan)">Hypothecation Assistant Page</a>.`;
+      3. The <a href="../citizen/hypothecation-assistant.html" style="color:var(--accent-cyan)">Hypothecation Assistant</a> is a workflow prototype; loan status and Form 35 generation are not connected to the backend.`;
   }
 
   // 6. EMERGENCY STOLEN VEHICLE NETWORK
   if (q.includes("stolen") || q.includes("theft") || q.includes("stole") || q.includes("fir")) {
     return `🚨 <strong>Emergency Stolen Vehicle Reporting:</strong><br>
       If your car is stolen, file an emergency report at <a href="../citizen/stolen-report.html" style="color:var(--danger)">Stolen Vehicle Reporting</a>.<br>
-      Enter your vehicle plate & police FIR number. The platform immediately injects your vehicle's visual features into 24 smart city cameras for automated visual match tracking!`;
+      The reporting and search endpoints are not configured. The platform does not store stolen-vehicle reports or search camera data yet.`;
   }
 
   // 7. AUTHORITY COMMAND CENTER & AI TELEMETRY
   if (q.includes("camera") || q.includes("cctv") || q.includes("telemetry") || q.includes("fps")) {
     return `📹 <strong>Smart City CCTV Telemetry:</strong><br>
-      • Active Camera Nodes: <strong>21 / 24 LIVE</strong><br>
-      • Stream Throughput: <strong>30 FPS</strong><br>
-      • Today's Vehicle Detections: <strong>12,450</strong><br>
-      • Today's AI Violations Logged: <strong>823</strong>`;
+      • Configured camera records: <strong>0</strong><br>
+      • Stream throughput: <strong>0 FPS</strong><br>
+      • Today's detections: <strong>0</strong><br>
+      • Violation records: <strong>0</strong><br>
+      Camera, analytics, and violation APIs are not configured.`;
   }
 
   if (q.includes("reid") || q.includes("re-identification") || q.includes("feature vector") || q.includes("yolo")) {
     return `👁️ <strong>AI Vehicle Re-ID Architecture:</strong><br>
-      • <strong>Object Detection:</strong> YOLOv8 model fine-tuned for traffic violations.<br>
-      • <strong>Re-ID Feature Extractor:</strong> ResNet-50 deep neural network outputting 512D visual feature vectors.<br>
-      • <strong>Similarity Metric:</strong> Cosine Distance ($cos(\\theta) = 0.9642$) matching vehicle body geometry & color across cameras even with hidden plates.`;
+      • Detection and Re-ID interface code is experimental and is not connected to live API data.<br>
+      • <strong>Similarity Metric:</strong> Cosine similarity compares feature vectors when a model and indexed data are configured.<br>
+      • The current Re-ID API is not configured and returns no matches.`;
   }
 
   if (q.includes("map") || q.includes("tracking") || q.includes("route")) {
     return `🗺️ <strong>Multi-Camera Route Tracking:</strong><br>
-      Using <strong>Leaflet.js Spatial GIS Mapping</strong>, the system plots camera markers where a vehicle was detected and reconstructs its movement route vector over time. View it on <a href="../authority/tracking.html" style="color:var(--accent-cyan)">Multi-Cam Tracking Map</a>.`;
+      The <a href="../authority/tracking.html" style="color:var(--accent-cyan)">tracking map</a> is an interface prototype. No route or camera data is available from the backend.`;
   }
 
   // 8. INTELLIGENT COMPREHENSIVE FALLBACK

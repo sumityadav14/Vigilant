@@ -37,6 +37,9 @@
         <a href="violations.html" class="nav-item">
           <i class="lucide-shield-alert"></i> AI Violations
         </a>
+        <a href="yolo-ocr-demo.html" class="nav-item">
+          <i class="lucide-scan-text"></i> YOLO ALPR & OCR Studio
+        </a>
         <a href="vehicle-reid.html" class="nav-item">
           <i class="lucide-scan-line"></i> Vehicle Re-ID
         </a>
@@ -59,9 +62,9 @@
 
       <div class="sidebar-footer">
         <div class="user-profile-mini">
-          <div class="avatar" style="border-color:var(--danger);">RS</div>
+          <div class="avatar" style="border-color:var(--danger);">AU</div>
           <div class="user-info">
-            <span class="user-name">Insp. R. K. Sharma</span>
+            <span class="user-name">Authority User</span>
             <span class="user-role">Traffic Enforcement Officer</span>
           </div>
         </div>
@@ -78,9 +81,6 @@
         </div>
 
         <div class="header-actions">
-          <button class="role-switcher-btn" style="color:var(--warning);" onclick="window.AuthEngine.switchRole('citizen')">
-            <i class="lucide-user"></i> Citizen View
-          </button>
           <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
         </div>
       </header>
@@ -90,37 +90,35 @@
         <div class="page-header">
           <div>
             <h1 class="page-title">Traffic & Violation Report Generator</h1>
-            <p class="page-subtitle">Generate official compliance reports, challan dispute summaries, and camera telemetry logs.</p>
+            <p class="page-subtitle">Review challan records currently available from the backend.</p>
           </div>
         </div>
 
         <!-- Filter Form Card -->
         <div class="glass-card" style="padding:24px; margin-bottom:28px;">
-          <form onsubmit="event.preventDefault(); showToast('Report dataset generated successfully!', 'success');">
+          <form onsubmit="generateChallanReport(event)">
             <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px;">
               <div class="form-group" style="margin-bottom:0;">
                 <label class="form-label">Report Type</label>
                 <select class="form-control">
-                  <option>AI Violation Summary Report</option>
-                  <option>Challan Dispute & Review Log</option>
-                  <option>Stolen Vehicle Camera Matches</option>
-                  <option>Camera Node Health & Telemetry</option>
+                  <option value="challans">Challan Records</option>
+                  <option value="violations">AI Violation Summary (not configured)</option>
+                  <option value="reviews">Challan Dispute & Review Log (not configured)</option>
+                  <option value="stolen">Stolen Vehicle Camera Matches (not configured)</option>
+                  <option value="cameras">Camera Node Health & Telemetry (not configured)</option>
                 </select>
               </div>
 
               <div class="form-group" style="margin-bottom:0;">
                 <label class="form-label">RTO Jurisdiction Zone</label>
                 <select class="form-control">
-                  <option>All Zones (Delhi NCR)</option>
-                  <option>Zone 1 (North Corridor)</option>
-                  <option>Zone 2 (Expressway West)</option>
-                  <option>Zone 3 (Central Square)</option>
+                  <option value="all">All available records</option>
                 </select>
               </div>
 
               <div class="form-group" style="margin-bottom:0;">
                 <label class="form-label">Date Range</label>
-                <input type="date" class="form-control" value="2026-08-26">
+                <input id="report-date-filter" type="date" class="form-control">
               </div>
 
               <div class="form-group" style="margin-bottom:0; display:flex; align-items:end;">
@@ -137,14 +135,14 @@
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
             <div>
               <h3 style="font-size:1.2rem;">Generated Report Data Preview</h3>
-              <p style="font-size:0.82rem; color:var(--text-muted);">823 records matched for selected criteria</p>
+              <p id="reports-record-count" style="font-size:0.82rem; color:var(--text-muted);">0 records</p>
             </div>
 
             <div style="display:flex; gap:10px;">
-              <button class="btn btn-outline btn-sm" onclick="showToast('Downloading official PDF report...', 'success')">
+              <button class="btn btn-outline btn-sm" onclick="showToast('PDF export is not configured.', 'warning')">
                 <i class="lucide-file-text"></i> Download PDF
               </button>
-              <button class="btn btn-primary btn-sm" onclick="showToast('Exporting raw CSV data file...', 'success')">
+              <button class="btn btn-primary btn-sm" onclick="exportChallanReport()">
                 <i class="lucide-download"></i> Export CSV
               </button>
             </div>
@@ -154,43 +152,17 @@
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>Report ID</th>
-                  <th>Timestamp</th>
-                  <th>Camera Node</th>
+                  <th>Challan ID</th>
+                  <th>Date</th>
                   <th>Vehicle Plate</th>
                   <th>Violation Type</th>
-                  <th>AI Confidence</th>
-                  <th>Officer Action</th>
+                  <th>Fine Amount</th>
+                  <th>Status</th>
+                  <th>Camera</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td style="font-family:monospace; color:var(--primary); font-weight:700;">REP-2026-001</td>
-                  <td>26 Aug 2026, 10:42 AM</td>
-                  <td>CAM-07 (City Center)</td>
-                  <td style="font-family:monospace; color:var(--accent-cyan);">DL 01 AB 1234</td>
-                  <td style="color:var(--danger); font-weight:600;">Red Light Violation</td>
-                  <td>96% Confidence</td>
-                  <td><span class="badge badge-success">Approved</span></td>
-                </tr>
-                <tr>
-                  <td style="font-family:monospace; color:var(--primary); font-weight:700;">REP-2026-002</td>
-                  <td>26 Aug 2026, 10:45 AM</td>
-                  <td>CAM-01 (XYZ Intersection)</td>
-                  <td style="font-family:monospace; color:var(--accent-cyan);">HR 26 DQ 9012</td>
-                  <td style="color:var(--warning); font-weight:600;">No Helmet</td>
-                  <td>91% Confidence</td>
-                  <td><span class="badge badge-warning">Pending Review</span></td>
-                </tr>
-                <tr>
-                  <td style="font-family:monospace; color:var(--primary); font-weight:700;">REP-2026-003</td>
-                  <td>26 Aug 2026, 10:47 AM</td>
-                  <td>CAM-07 (City Center)</td>
-                  <td style="font-family:monospace; color:var(--accent-cyan);">DL 01 AB 1234</td>
-                  <td style="color:var(--danger); font-weight:600;">Possible Stolen Match</td>
-                  <td>94% Similarity</td>
-                  <td><span class="badge badge-danger">Patrol Dispatched</span></td>
-                </tr>
+              <tbody id="challan-report-table-body">
+                <tr><td colspan="7" style="text-align:center; padding:24px;">No challan records available.</td></tr>
               </tbody>
             </table>
           </div>
@@ -201,7 +173,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="../js/mock-data.js"></script>
+  <script src="../js/api.js"></script>
   <script src="../js/auth.js"></script>
   <script src="../js/app.js"></script>
 </body>

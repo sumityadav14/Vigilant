@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Vehicle Details — VIGILANT</title>
 
-  <!-- CSS Stylesheets -->
+  <!-- CSS -->
   <link rel="stylesheet" href="../css/global.css">
   <link rel="stylesheet" href="../css/components.css">
   <link rel="stylesheet" href="../css/dashboard.css">
@@ -20,6 +21,7 @@
       gap: 4px;
       border-bottom: 1px solid var(--border-color);
       margin-bottom: 24px;
+      overflow-x: auto;
     }
 
     .tab-btn {
@@ -32,6 +34,7 @@
       cursor: pointer;
       border-bottom: 2px solid transparent;
       transition: var(--transition-fast);
+      white-space: nowrap;
     }
 
     .tab-btn.active {
@@ -41,191 +44,1046 @@
     }
   </style>
 </head>
+
 <body data-page="vehicle-details">
 
   <div class="dashboard-layout">
-    <!-- Sidebar Navigation -->
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
     <aside class="sidebar">
+
       <div class="sidebar-header">
+
         <a href="../index.html" class="brand-logo">
-          <div class="brand-icon"><i class="lucide-shield-check"></i></div>
-          <span class="brand-name">VIGILANT</span>
+
+          <div class="brand-icon">
+            <i class="lucide-shield-check"></i>
+          </div>
+
+          <span class="brand-name">
+            VIGILANT
+          </span>
+
         </a>
+
       </div>
+
 
       <nav class="sidebar-menu">
-        <div class="menu-category">Citizen Navigation</div>
+
+        <div class="menu-category">
+          Citizen Navigation
+        </div>
+
+
         <a href="dashboard.html" class="nav-item">
-          <i class="lucide-layout-dashboard"></i> Dashboard
+
+          <i class="lucide-layout-dashboard"></i>
+
+          Dashboard
+
         </a>
+
+
         <a href="my-vehicles.html" class="nav-item active">
-          <i class="lucide-car"></i> My Vehicles
+
+          <i class="lucide-car"></i>
+
+          My Vehicles
+
         </a>
+
+
         <a href="challan-list.html" class="nav-item">
-          <i class="lucide-file-text"></i> Challans
+
+          <i class="lucide-file-text"></i>
+
+          Challans
+
         </a>
+
+
         <a href="document-vault.html" class="nav-item">
-          <i class="lucide-folder"></i> Documents
+
+          <i class="lucide-folder"></i>
+
+          Documents
+
         </a>
+
+
         <a href="hypothecation-assistant.html" class="nav-item">
-          <i class="lucide-banknote"></i> Hypothecation
+
+          <i class="lucide-banknote"></i>
+
+          Hypothecation
+
         </a>
+
+
         <a href="stolen-report.html" class="nav-item">
-          <i class="lucide-shield-alert"></i> Stolen Vehicle
+
+          <i class="lucide-shield-alert"></i>
+
+          Stolen Vehicle
+
         </a>
+
+
         <a href="notifications-center.html" class="nav-item">
-          <i class="lucide-bell"></i> Notifications
+
+          <i class="lucide-bell"></i>
+
+          Notifications
+
         </a>
+
       </nav>
 
+
       <div class="sidebar-footer">
+
         <div class="user-profile-mini">
-          <div class="avatar">SY</div>
-          <div class="user-info">
-            <span class="user-name">Sumit Yadav</span>
-            <span class="user-role">Vehicle Owner</span>
+
+          <div class="avatar">
+            SY
           </div>
+
+          <div class="user-info">
+
+            <span class="user-name">
+              Sumit Yadav
+            </span>
+
+            <span class="user-role">
+              Vehicle Owner
+            </span>
+
+          </div>
+
         </div>
+
       </div>
+
     </aside>
 
-    <!-- Main Workspace -->
-    <main class="main-content">
-      <header class="top-header">
-        <button id="sidebar-toggle" class="btn-icon d-lg-none"><i class="lucide-menu"></i></button>
 
-        <div style="font-size:0.9rem; color:var(--text-muted);">
-          <a href="my-vehicles.html" style="color:var(--text-muted);">&larr; Back to My Vehicles</a>
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
+
+    <main class="main-content">
+
+
+      <!-- Header -->
+
+      <header class="top-header">
+
+        <button
+          id="sidebar-toggle"
+          class="btn-icon d-lg-none"
+        >
+
+          <i class="lucide-menu"></i>
+
+        </button>
+
+
+        <div
+          style="
+            font-size:0.9rem;
+            color:var(--text-muted);
+          "
+        >
+
+          <a
+            href="my-vehicles.html"
+            style="color:var(--text-muted);"
+          >
+
+            &larr; Back to My Vehicles
+
+          </a>
+
         </div>
+
 
         <div class="header-actions">
-          <button class="role-switcher-btn" onclick="window.AuthEngine.switchRole('authority')">
-            <i class="lucide-shield"></i> Authority View
+          <button
+            class="btn btn-outline btn-sm"
+            onclick="window.AuthEngine.logout()"
+          >
+
+            Logout
+
           </button>
-          <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
+
         </div>
+
       </header>
 
+
+      <!-- =====================================================
+           DASHBOARD CONTAINER
+           ===================================================== -->
+
       <div class="dashboard-container">
-        <!-- Vehicle Title Header -->
+
+
+        <!-- ===================================================
+             VEHICLE HEADER
+             =================================================== -->
+
         <div class="page-header">
+
           <div>
-            <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px;">
-              <h1 id="v-title" class="page-title">Hyundai Creta</h1>
-              <span class="badge badge-success">✓ Verified RC</span>
+
+            <div
+              style="
+                display:flex;
+                align-items:center;
+                gap:12px;
+                margin-bottom:6px;
+              "
+            >
+
+              <h1
+                id="v-title"
+                class="page-title"
+              >
+                Loading Vehicle...
+              </h1>
+
+
+              <span
+                id="v-rc-badge"
+                class="badge badge-success"
+              >
+                Loading...
+              </span>
+
             </div>
-            <div id="v-reg" style="font-family:monospace; background:rgba(37,99,235,0.12); border:1px solid rgba(37,99,235,0.3); color:var(--accent-cyan); font-weight:700; padding:4px 12px; border-radius:4px; display:inline-block; font-size:1.1rem;">
-              DL 01 AB 1234
+
+
+            <div
+              id="v-reg"
+              style="
+                font-family:monospace;
+                background:rgba(37,99,235,0.12);
+                border:1px solid rgba(37,99,235,0.3);
+                color:var(--accent-cyan);
+                font-weight:700;
+                padding:4px 12px;
+                border-radius:4px;
+                display:inline-block;
+                font-size:1.1rem;
+              "
+            >
+              Loading...
             </div>
+
           </div>
 
-          <div style="display:flex; gap:12px;">
-            <a href="document-vault.html" class="btn btn-primary"><i class="lucide-folder"></i> View Documents</a>
-            <a href="stolen-report.html" class="btn btn-danger"><i class="lucide-alert-triangle"></i> Report Stolen</a>
+
+          <div
+            style="
+              display:flex;
+              gap:12px;
+              flex-wrap:wrap;
+            "
+          >
+
+            <a
+              href="document-vault.html"
+              class="btn btn-primary"
+            >
+
+              <i class="lucide-folder"></i>
+
+              View Documents
+
+            </a>
+
+
+            <a
+              href="stolen-report.html"
+              class="btn btn-danger"
+            >
+
+              <i class="lucide-alert-triangle"></i>
+
+              Report Stolen
+
+            </a>
+
           </div>
+
         </div>
 
-        <!-- Technical Specs Summary Card -->
-        <div class="glass-card" style="padding:24px; margin-bottom:28px;">
-          <h3 style="font-size:1.1rem; margin-bottom:16px;">Vehicle Specifications & Identifiers</h3>
-          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; font-size:0.9rem;">
-            <div><strong style="color:var(--text-muted)">Vehicle Type:</strong> <span id="v-type"></span></div>
-            <div><strong style="color:var(--text-muted)">Model Year:</strong> <span id="v-year"></span></div>
-            <div><strong style="color:var(--text-muted)">Body Color:</strong> <span id="v-color"></span></div>
-            <div><strong style="color:var(--text-muted)">Chassis Number:</strong> <span id="v-chassis" style="font-family:monospace;"></span></div>
-            <div><strong style="color:var(--text-muted)">Engine Number:</strong> <span id="v-engine" style="font-family:monospace;"></span></div>
-            <div><strong style="color:var(--text-muted)">Registered Owner:</strong> Sumit Yadav</div>
+
+        <!-- ===================================================
+             VEHICLE SPECIFICATIONS
+             =================================================== -->
+
+        <div
+          class="glass-card"
+          style="
+            padding:24px;
+            margin-bottom:28px;
+          "
+        >
+
+          <h3
+            style="
+              font-size:1.1rem;
+              margin-bottom:16px;
+            "
+          >
+            Vehicle Specifications & Identifiers
+          </h3>
+
+
+          <div
+            style="
+              display:grid;
+              grid-template-columns:repeat(3, 1fr);
+              gap:16px;
+              font-size:0.9rem;
+            "
+          >
+
+            <div>
+
+              <strong style="color:var(--text-muted)">
+                Vehicle Type:
+              </strong>
+
+              <span id="v-type">
+                Loading...
+              </span>
+
+            </div>
+
+
+            <div>
+
+              <strong style="color:var(--text-muted)">
+                Model Year:
+              </strong>
+
+              <span id="v-year">
+                Loading...
+              </span>
+
+            </div>
+
+
+            <div>
+
+              <strong style="color:var(--text-muted)">
+                Body Color:
+              </strong>
+
+              <span id="v-color">
+                Loading...
+              </span>
+
+            </div>
+
+
+            <div>
+
+              <strong style="color:var(--text-muted)">
+                Chassis Number:
+              </strong>
+
+              <span
+                id="v-chassis"
+                style="font-family:monospace;"
+              >
+                Loading...
+              </span>
+
+            </div>
+
+
+            <div>
+
+              <strong style="color:var(--text-muted)">
+                Engine Number:
+              </strong>
+
+              <span
+                id="v-engine"
+                style="font-family:monospace;"
+              >
+                Loading...
+              </span>
+
+            </div>
+
+
+            <div>
+
+              <strong style="color:var(--text-muted)">
+                Owner ID:
+              </strong>
+
+              <span id="v-owner">
+                Loading...
+              </span>
+
+            </div>
+
           </div>
+
         </div>
 
-        <!-- Tabbed Information Vault -->
-        <div class="glass-card" style="padding:24px;">
+
+        <!-- ===================================================
+             DOCUMENT INFORMATION
+             =================================================== -->
+
+        <div
+          class="glass-card"
+          style="padding:24px;"
+        >
+
+
+          <!-- Tabs -->
+
           <div class="tab-bar">
-            <button id="btn-tab-rc" class="tab-btn active" onclick="switchVehicleTab('rc')">RC Certificate</button>
-            <button id="btn-tab-insurance" class="tab-btn" onclick="switchVehicleTab('insurance')">Insurance Policy</button>
-            <button id="btn-tab-puc" class="tab-btn" onclick="switchVehicleTab('puc')">PUC Certificate</button>
-            <button id="btn-tab-hypo" class="tab-btn" onclick="switchVehicleTab('hypo')">Hypothecation</button>
+
+            <button
+              id="btn-tab-rc"
+              class="tab-btn active"
+              onclick="switchVehicleTab('rc')"
+            >
+              RC Certificate
+            </button>
+
+
+            <button
+              id="btn-tab-insurance"
+              class="tab-btn"
+              onclick="switchVehicleTab('insurance')"
+            >
+              Insurance Policy
+            </button>
+
+
+            <button
+              id="btn-tab-puc"
+              class="tab-btn"
+              onclick="switchVehicleTab('puc')"
+            >
+              PUC Certificate
+            </button>
+
+
+            <button
+              id="btn-tab-hypo"
+              class="tab-btn"
+              onclick="switchVehicleTab('hypo')"
+            >
+              Hypothecation
+            </button>
+
           </div>
 
-          <!-- RC Tab -->
-          <div id="tab-rc" class="tab-content">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+
+          <!-- =================================================
+               RC TAB
+               ================================================= -->
+
+          <div
+            id="tab-rc"
+            class="tab-content"
+          >
+
+            <div
+              style="
+                display:grid;
+                grid-template-columns:1fr 1fr;
+                gap:20px;
+              "
+            >
+
               <div>
-                <h4 style="margin-bottom:12px;">Registration Certificate Details</h4>
-                <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">Verified digital record synced with Parivahan National Register.</p>
-                <div style="display:flex; flex-direction:column; gap:10px; font-size:0.9rem;">
-                  <div><strong>RC Status:</strong> <span style="color:var(--success)">✓ ACTIVE & VALID</span></div>
-                  <div><strong>RC Expiry Date:</strong> <span id="v-rcexpiry"></span></div>
-                  <div><strong>Registering Authority:</strong> RTO Delhi North (DL-01)</div>
+
+                <h4 style="margin-bottom:12px;">
+                  Registration Certificate Details
+                </h4>
+
+
+                <p
+                  style="
+                    color:var(--text-muted);
+                    font-size:0.9rem;
+                    margin-bottom:16px;
+                  "
+                >
+                  Digital RC record stored in the VIGILANT database.
+                </p>
+
+
+                <div
+                  style="
+                    display:flex;
+                    flex-direction:column;
+                    gap:10px;
+                    font-size:0.9rem;
+                  "
+                >
+
+                  <div>
+
+                    <strong>
+                      RC Status:
+                    </strong>
+
+                    <span
+                      id="v-rcstatus"
+                      style="color:var(--success);"
+                    >
+                      Loading...
+                    </span>
+
+                  </div>
+
+
+                  <div>
+
+                    <strong>
+                      RC Expiry Date:
+                    </strong>
+
+                    <span id="v-rcexpiry">
+                      Loading...
+                    </span>
+
+                  </div>
+
+
+                  <div>
+
+                    <strong>
+                      Document Number:
+                    </strong>
+
+                    <span id="v-rcnumber">
+                      Loading...
+                    </span>
+
+                  </div>
+
+
+                  <div>
+
+                    <strong>
+                      Document ID:
+                    </strong>
+
+                    <span id="v-rcdocid">
+                      Loading...
+                    </span>
+
+                  </div>
+
                 </div>
+
               </div>
-              <div style="background:var(--bg-dark-alt); padding:20px; border-radius:var(--radius-sm); border:1px solid var(--border-color); text-align:center;">
-                <i class="lucide-shield-check" style="font-size:3rem; color:var(--success); margin-bottom:10px;"></i>
-                <h4>RC Digital Smart Card Verified</h4>
-                <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Digital copy valid for law enforcement inspection</p>
-                <button class="btn btn-outline btn-sm" style="margin-top:14px;" onclick="showToast('Downloading Digital RC PDF...', 'success')">Download Digital RC</button>
+
+
+              <div
+                style="
+                  background:var(--bg-dark-alt);
+                  padding:20px;
+                  border-radius:var(--radius-sm);
+                  border:1px solid var(--border-color);
+                  text-align:center;
+                "
+              >
+
+                <i
+                  class="lucide-shield-check"
+                  style="
+                    font-size:3rem;
+                    color:var(--success);
+                    margin-bottom:10px;
+                  "
+                ></i>
+
+
+                <h4>
+                  RC Digital Record
+                </h4>
+
+
+                <p
+                  style="
+                    font-size:0.8rem;
+                    color:var(--text-muted);
+                    margin-top:4px;
+                  "
+                >
+                  Record retrieved from VIGILANT MongoDB.
+                </p>
+
+
+                <button
+                  class="btn btn-outline btn-sm"
+                  style="margin-top:14px;"
+                  onclick="
+                    showToast(
+                      'Digital RC download feature will be connected next.',
+                      'info'
+                    )
+                  "
+                >
+                  Download Digital RC
+                </button>
+
               </div>
+
             </div>
+
           </div>
 
-          <!-- Insurance Tab -->
-          <div id="tab-insurance" class="tab-content" style="display:none;">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+
+          <!-- =================================================
+               INSURANCE TAB
+               ================================================= -->
+
+          <div
+            id="tab-insurance"
+            class="tab-content"
+            style="display:none;"
+          >
+
+            <div
+              style="
+                display:grid;
+                grid-template-columns:1fr 1fr;
+                gap:20px;
+              "
+            >
+
               <div>
-                <h4 style="margin-bottom:12px;">Comprehensive Motor Insurance</h4>
-                <div style="display:flex; flex-direction:column; gap:10px; font-size:0.9rem;">
-                  <div><strong>Insurer:</strong> HDFC ERGO General Insurance</div>
-                  <div><strong>Policy No:</strong> <span id="v-inspolicy" style="font-family:monospace;"></span></div>
-                  <div><strong>Policy Expiry:</strong> <span id="v-insexpiry" style="color:var(--success); font-weight:700;"></span></div>
+
+                <h4 style="margin-bottom:12px;">
+                  Motor Insurance
+                </h4>
+
+
+                <div
+                  style="
+                    display:flex;
+                    flex-direction:column;
+                    gap:10px;
+                    font-size:0.9rem;
+                  "
+                >
+
+                  <div>
+
+                    <strong>
+                      Insurance Status:
+                    </strong>
+
+                    <span
+                      id="v-insstatus"
+                      style="color:var(--success);"
+                    >
+                      Loading...
+                    </span>
+
+                  </div>
+
+
+                  <div>
+
+                    <strong>
+                      Policy No:
+                    </strong>
+
+                    <span
+                      id="v-inspolicy"
+                      style="font-family:monospace;"
+                    >
+                      Loading...
+                    </span>
+
+                  </div>
+
+
+                  <div>
+
+                    <strong>
+                      Policy Expiry:
+                    </strong>
+
+                    <span
+                      id="v-insexpiry"
+                      style="
+                        color:var(--success);
+                        font-weight:700;
+                      "
+                    >
+                      Loading...
+                    </span>
+
+                  </div>
+
+
+                  <div>
+
+                    <strong>
+                      Document ID:
+                    </strong>
+
+                    <span id="v-insdocid">
+                      Loading...
+                    </span>
+
+                  </div>
+
                 </div>
+
               </div>
-              <div style="background:var(--bg-dark-alt); padding:20px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
-                <span class="badge badge-success">Policy Active</span>
-                <p style="font-size:0.85rem; color:var(--text-muted); margin-top:10px;">Zero-depreciation cover active including third-party legal liability.</p>
-                <button class="btn btn-primary btn-sm" style="margin-top:14px;" onclick="showToast('Opening Policy Renewal Portal...', 'info')">Renew Insurance Online</button>
+
+
+              <div
+                style="
+                  background:var(--bg-dark-alt);
+                  padding:20px;
+                  border-radius:var(--radius-sm);
+                  border:1px solid var(--border-color);
+                "
+              >
+
+                <span
+                  id="v-insbadge"
+                  class="badge badge-success"
+                >
+                  Loading...
+                </span>
+
+
+                <p
+                  style="
+                    font-size:0.85rem;
+                    color:var(--text-muted);
+                    margin-top:10px;
+                  "
+                >
+                  Insurance information is retrieved from
+                  the VIGILANT document database.
+                </p>
+
+
+                <button
+                  class="btn btn-primary btn-sm"
+                  style="margin-top:14px;"
+                  onclick="
+                    showToast(
+                      'Insurance renewal portal will be connected next.',
+                      'info'
+                    )
+                  "
+                >
+                  Renew Insurance Online
+                </button>
+
               </div>
+
             </div>
+
           </div>
 
-          <!-- PUC Tab -->
-          <div id="tab-puc" class="tab-content" style="display:none;">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+
+          <!-- =================================================
+               PUC TAB
+               ================================================= -->
+
+          <div
+            id="tab-puc"
+            class="tab-content"
+            style="display:none;"
+          >
+
+            <div
+              style="
+                display:grid;
+                grid-template-columns:1fr 1fr;
+                gap:20px;
+              "
+            >
+
               <div>
-                <h4 style="margin-bottom:12px;">Pollution Under Control (PUC)</h4>
-                <div style="display:flex; flex-direction:column; gap:10px; font-size:0.9rem;">
-                  <div><strong>Status:</strong> <span id="v-pucstatus" style="color:var(--warning); font-weight:700;"></span></div>
-                  <div><strong>Expiry Date:</strong> <span id="v-pucexpiry" style="color:var(--warning); font-weight:700;"></span></div>
-                  <div><strong>Emission Test Level:</strong> Pass (BS-VI Compliant)</div>
+
+                <h4 style="margin-bottom:12px;">
+                  Pollution Under Control (PUC)
+                </h4>
+
+
+                <div
+                  style="
+                    display:flex;
+                    flex-direction:column;
+                    gap:10px;
+                    font-size:0.9rem;
+                  "
+                >
+
+                  <div>
+
+                    <strong>
+                      Status:
+                    </strong>
+
+                    <span
+                      id="v-pucstatus"
+                      style="
+                        color:var(--warning);
+                        font-weight:700;
+                      "
+                    >
+                      Loading...
+                    </span>
+
+                  </div>
+
+
+                  <div>
+
+                    <strong>
+                      Expiry Date:
+                    </strong>
+
+                    <span
+                      id="v-pucexpiry"
+                      style="
+                        color:var(--warning);
+                        font-weight:700;
+                      "
+                    >
+                      Loading...
+                    </span>
+
+                  </div>
+
+
+                  <div>
+
+                    <strong>
+                      Certificate Number:
+                    </strong>
+
+                    <span
+                      id="v-pucnumber"
+                      style="font-family:monospace;"
+                    >
+                      Loading...
+                    </span>
+
+                  </div>
+
+
+                  <div>
+
+                    <strong>
+                      Document ID:
+                    </strong>
+
+                    <span id="v-pucdocid">
+                      Loading...
+                    </span>
+
+                  </div>
+
                 </div>
+
               </div>
-              <div style="background:rgba(245,158,11,0.08); padding:20px; border-radius:var(--radius-sm); border:1px solid rgba(245,158,11,0.3);">
-                <h4 style="color:var(--warning);">⚠ Expiry Warning</h4>
-                <p style="font-size:0.85rem; color:var(--text-muted); margin-top:6px;">Your PUC certificate expires in 7 days. Avoid ₹10,000 fine by renewing at an authorized emission center.</p>
-                <button class="btn btn-warning btn-sm" style="margin-top:14px;" onclick="showToast('Finding nearest authorized PUC testing center...', 'info')">Find Nearby PUC Center</button>
+
+
+              <div
+                id="puc-warning-box"
+                style="
+                  background:rgba(245,158,11,0.08);
+                  padding:20px;
+                  border-radius:var(--radius-sm);
+                  border:1px solid rgba(245,158,11,0.3);
+                "
+              >
+
+                <h4 style="color:var(--warning);">
+                  PUC Information
+                </h4>
+
+
+                <p
+                  id="puc-warning-text"
+                  style="
+                    font-size:0.85rem;
+                    color:var(--text-muted);
+                    margin-top:6px;
+                  "
+                >
+                  Loading PUC information...
+                </p>
+
+
+                <button
+                  class="btn btn-warning btn-sm"
+                  style="margin-top:14px;"
+                  onclick="
+                    showToast(
+                      'PUC center search will be connected next.',
+                      'info'
+                    )
+                  "
+                >
+                  Find Nearby PUC Center
+                </button>
+
               </div>
+
             </div>
+
           </div>
 
-          <!-- Hypothecation Tab -->
-          <div id="tab-hypo" class="tab-content" style="display:none;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
+
+          <!-- =================================================
+               HYPOTHECATION TAB
+               ================================================= -->
+
+          <div
+            id="tab-hypo"
+            class="tab-content"
+            style="display:none;"
+          >
+
+            <div
+              style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:20px;
+              "
+            >
+
               <div>
-                <h4>Hypothecation / Bank Loan Status</h4>
-                <p id="v-hypo" style="font-size:0.95rem; color:var(--text-secondary); margin-top:6px;"></p>
+
+                <h4>
+                  Hypothecation / Bank Loan Status
+                </h4>
+
+
+                <p
+                  id="v-hypo"
+                  style="
+                    font-size:0.95rem;
+                    color:var(--text-secondary);
+                    margin-top:6px;
+                  "
+                >
+                  No hypothecation information available.
+                </p>
+
               </div>
-              <a href="hypothecation-assistant.html" class="btn btn-primary">Hypothecation Assistant &rarr;</a>
+
+
+              <a
+                href="hypothecation-assistant.html"
+                class="btn btn-primary"
+              >
+                Hypothecation Assistant &rarr;
+              </a>
+
             </div>
+
           </div>
+
 
         </div>
 
       </div>
+
     </main>
+
   </div>
 
-  <!-- Scripts -->
-  <script src="../js/mock-data.js"></script>
+
+  <!-- =====================================================
+       SCRIPTS
+       ===================================================== -->
+
+
+  <!-- IMPORTANT: api.js before app.js -->
+  <script src="../js/api.js"></script>
+
   <script src="../js/auth.js"></script>
+
   <script src="../js/app.js"></script>
+
+
+  <!-- =====================================================
+       VEHICLE DETAIL TAB CONTROLLER
+       ===================================================== -->
+
+  <script>
+
+    function switchVehicleTab(tabName) {
+
+      const tabs = [
+        "rc",
+        "insurance",
+        "puc",
+        "hypo"
+      ];
+
+      tabs.forEach(tab => {
+
+        const content =
+          document.getElementById(`tab-${tab}`);
+
+        const button =
+          document.getElementById(`btn-tab-${tab}`);
+
+        if (content) {
+
+          content.style.display =
+            tab === tabName
+              ? "block"
+              : "none";
+
+        }
+
+        if (button) {
+
+          button.classList.toggle(
+            "active",
+            tab === tabName
+          );
+
+        }
+
+      });
+
+    }
+
+
+    if (window.lucide) {
+
+      window.lucide.createIcons();
+
+    }
+
+  </script>
+
 </body>
 </html>

@@ -72,9 +72,6 @@
         </div>
 
         <div class="header-actions">
-          <button class="role-switcher-btn" onclick="window.AuthEngine.switchRole('authority')">
-            <i class="lucide-shield"></i> Authority Mode
-          </button>
           <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
         </div>
       </header>
@@ -87,16 +84,16 @@
           </div>
 
           <button class="btn btn-primary" onclick="openModal('upload-document-modal')">
-            <i class="lucide-upload"></i> Upload New Document
+            <i class="lucide-upload"></i> Add Document Record
           </button>
         </div>
 
         <!-- Alert Pill for Expiring Docs -->
-        <div style="background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); border-radius:var(--radius-md); padding:16px; margin-bottom:24px; display:flex; align-items:center; gap:12px;">
+        <div id="document-expiry-alert" style="background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); border-radius:var(--radius-md); padding:16px; margin-bottom:24px; display:none; align-items:center; gap:12px;">
           <i class="lucide-alert-triangle" style="color:var(--warning); font-size:1.4rem;"></i>
           <div>
             <strong style="color:var(--warning);">Document Action Required:</strong>
-            <span style="font-size:0.85rem; color:var(--text-secondary); display:block;">PUC Certificate for Hyundai Creta (DL 01 AB 1234) expires in <strong>7 Days (02 Sep 2026)</strong>. Renew online to prevent fines.</span>
+            <span id="document-expiry-alert-text" style="font-size:0.85rem; color:var(--text-secondary); display:block;"></span>
           </div>
         </div>
 
@@ -112,7 +109,7 @@
   <div id="upload-document-modal" class="modal-overlay">
     <div class="modal-container">
       <div class="modal-header">
-        <h3 class="modal-title"><i class="lucide-upload"></i> Upload Vehicle Document</h3>
+        <h3 class="modal-title"><i class="lucide-upload"></i> Add Vehicle Document Record</h3>
         <button class="modal-close" onclick="closeModal('upload-document-modal')">&times;</button>
       </div>
 
@@ -120,9 +117,8 @@
         <div class="modal-body">
           <div class="form-group">
             <label class="form-label">Select Vehicle</label>
-            <select id="upload-doc-vehicle" class="form-control">
-              <option value="DL 01 AB 1234">Hyundai Creta (DL 01 AB 1234)</option>
-              <option value="DL 04 CD 5678">Tata Nexon EV (DL 04 CD 5678)</option>
+            <select id="upload-doc-vehicle" class="form-control" required>
+              <option value="">No registered vehicles available</option>
             </select>
           </div>
 
@@ -133,7 +129,6 @@
                 <option value="PUC">Pollution (PUC) Certificate</option>
                 <option value="Insurance">Insurance Policy</option>
                 <option value="RC">RC Smart Card</option>
-                <option value="HPA">Hypothecation NOC</option>
               </select>
             </div>
 
@@ -145,27 +140,28 @@
 
           <div class="form-group">
             <label class="form-label">New Expiry Date</label>
-            <input type="date" id="upload-doc-expiry" class="form-control" value="2027-10-15" required>
+            <input type="date" id="upload-doc-expiry" class="form-control" required>
           </div>
 
           <div class="form-group">
-            <label class="form-label">Upload Scan (PDF / JPG)</label>
-            <input type="file" class="form-control">
+              <label class="form-label">Document file</label>
+              <input type="file" class="form-control" disabled>
+              <small style="color:var(--text-muted);">File upload is not configured. This form saves document metadata as Unverified.</small>
           </div>
         </div>
 
         <div class="modal-footer">
           <button type="button" class="btn btn-outline" onclick="closeModal('upload-document-modal')">Cancel</button>
-          <button type="submit" class="btn btn-primary">Upload & Verify Document</button>
+          <button type="submit" class="btn btn-primary">Save Unverified Record</button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- Scripts -->
-  <script src="../js/mock-data.js"></script>
-  <script src="../js/auth.js"></script>
-  <script src="../js/app.js"></script>
-  <script src="../js/ai-chat.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/app.js"></script>
+<script src="../js/ai-chat.js"></script>
 </body>
 </html>

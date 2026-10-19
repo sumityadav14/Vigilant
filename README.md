@@ -1,11 +1,11 @@
-# VIGILANT — AI Smart Vehicle, Traffic & Citizen Management Platform
+git# VIGILANT — AI Smart Vehicle, Traffic & Citizen Management Platform
 **B.Tech CSE (Artificial Intelligence) Major Project**
 
 ---
 
 ## 🌟 Executive Project Overview
 
-**VIGILANT** is a unified, next-generation Smart City platform designed to integrate computer vision artificial intelligence with traffic law enforcement and citizen vehicle management.
+**VIGILANT** is a Smart City project with a browser frontend and an Express REST API. Its currently implemented persistent-data routes use MongoDB through Mongoose for authentication, vehicles, challans, and document records. Camera, violation, analytics, stolen-vehicle, and vehicle Re-ID endpoints are not configured and return `501 NOT_CONFIGURED`; the frontend pages for these features are prototypes, not live telemetry.
 
 The platform combines edge AI object detection (**YOLOv8** for traffic violation classification) and deep visual feature extraction (**ResNet-50** 512D embeddings for vehicle re-identification) with a modern dark-themed SaaS web interface. It bridges the gap between traffic police command centers and vehicle owners, featuring digital document vaults, automated expiry reminders, high-resolution evidence inspection, dispute review workflows, multi-camera spatial GIS tracking maps, emergency stolen vehicle alert networks, and an interactive Conversational AI Assistant.
 
@@ -49,16 +49,16 @@ vigilant/
 │   └── responsive.css           # Mobile & Tablet Drawer Overlays & Flex Adapters
 │
 ├── js/                          # Core JavaScript Engines
-│   ├── mock-data.js             # Fictional Demo Datasets (Vehicles, Challans, Cameras, Violations)
 │   ├── auth.js                  # Session & Role Engine (localStorage State Control)
 │   ├── app.js                   # Main UI Controllers, Modals, Toasts, Chart.js & Maps
 │   ├── ai-sim.js                # AI Simulation Engine (Confidence Slider & Vector Math)
 │   ├── api.js                   # REST API Service Abstraction (Fetch Client Wrappers)
 │   └── ai-chat.js               # Conversational AI Assistant Engine (Trained Knowledge Base)
 │
-├── backend/                     # Backend & Database Architecture
-│   ├── server.js                # Express.js Node Backend REST API Server Blueprint
-│   └── schema.sql               # Production SQL Relational Database Schema (17 Tables)
+├── backend/                     # Express REST API and MongoDB models
+│   ├── server.js                # Express API using Mongoose
+│   ├── models/                  # User, Vehicle, Challan, and Document models
+│   └── schema.sql               # Legacy SQL schema reference; not used by the API
 │
 ├── aws-architecture.md          # Production AWS Cloud Deployment Architecture Specification
 └── PROJECT_DEFENSE_GUIDE.md     # Academic Project Report, 15-Slide Deck, Script & 15 Viva Q&As
@@ -75,36 +75,32 @@ vigilant/
 | **Data Analytics** | Chart.js (Bar, Line, Doughnut, Horizontal Bar Charts) |
 | **Spatial GIS Mapping** | Leaflet.js Map Library, OpenStreetMap & CartoDB Dark Tiles |
 | **Conversational AI** | Natural Language Intent Classifier Engine (`js/ai-chat.js`) |
-| **AI Computer Vision** | YOLOv8 Object Detection, ResNet-50 512D Visual Re-ID Embeddings |
+| **AI Computer Vision** | Prototype pipeline code; not connected to the current REST API |
 | **REST API Layer** | Fetch API Service Client (`js/api.js`) |
 | **Backend Server** | Node.js, Express.js REST API Server (`backend/server.js`) |
-| **Database** | Relational SQL Schema (`backend/schema.sql`) for PostgreSQL / MySQL |
-| **Cloud Production** | AWS Plan (S3, RDS PostgreSQL Multi-AZ, SageMaker, CloudFront) |
+| **Database** | MongoDB accessed through Mongoose models in `backend/models/` |
+| **Cloud Production** | Proposed AWS deployment plan in `aws-architecture.md`; not the current runtime database |
 
 ---
 
 ## ⚡ How to Run & Demonstrate the Project
 
-### Option 1: Direct Web Browser Access (Easiest)
-1. Open Windows File Explorer and navigate to `C:\Users\Sumit yadav\Desktop\vigilant`.
-2. Double-click [index.html](file:///C:/Users/Sumit%20yadav/Desktop/vigilant/index.html) to launch in Chrome or Edge.
-
-### Option 2: Live Local Web Server (Recommended)
-Open PowerShell or Command Prompt:
+1. Configure `MONGODB_URI` and `JWT_SECRET` in `backend/.env`.
+2. Start the API from the project root:
 ```powershell
-cd "C:\Users\Sumit yadav\Desktop\vigilant"
+cd backend
+npm install
+npm start
+```
+3. In a second terminal at the project root, serve the frontend:
+```powershell
 python -m http.server 8000
 ```
-Then navigate to `http://localhost:8000` in your web browser.
+Open `http://localhost:8000`. The frontend calls the API at `http://localhost:5000/api`.
 
----
-
-## 🔑 Demo Account Credentials
-
-- **Citizen Portal**: `citizen@demo.com` (Password: `demo123`)
-- **Authority Command Center**: `authority@demo.com` (Badge: `POL-DEL-4092`)
+Create an account through the application, then sign in. The backend stores registered accounts in MongoDB.
 
 ---
 
 ## ⚖️ Legal & Safety Guardrail Notice
-All AI predictions are explicitly labeled: **"Possible AI Match — Human Verification Required"**. Autonomous AI detections assist police officers but do not trigger automated legal penalties without human officer verification.
+Prototype pages may display AI-related labels, but the current API does not produce AI predictions or camera matches. AI data endpoints return `501 NOT_CONFIGURED`; no automated enforcement decision is made by the backend.

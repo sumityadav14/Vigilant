@@ -72,9 +72,6 @@
         </div>
 
         <div class="header-actions">
-          <button class="role-switcher-btn" onclick="window.AuthEngine.switchRole('authority')">
-            <i class="lucide-shield"></i> Authority View
-          </button>
           <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
         </div>
       </header>
@@ -86,7 +83,7 @@
             <h1 class="page-title" style="color:var(--danger); display:flex; align-items:center; gap:10px;">
               🚨 Report Stolen Vehicle
             </h1>
-            <p class="page-subtitle">Instantly alert traffic police cameras for AI visual feature re-identification and tracking.</p>
+            <p class="page-subtitle">Submit a stolen-vehicle report when the backend reporting service is available.</p>
           </div>
         </div>
 
@@ -94,7 +91,7 @@
         <div class="legal-notice-banner" style="background:rgba(239,68,68,0.12); border-color:rgba(239,68,68,0.3); color:var(--danger); margin-bottom:24px;">
           <i class="lucide-shield-alert" style="font-size:1.5rem;"></i>
           <div>
-            <strong>Emergency Alert Procedure:</strong> Filing this form immediately pushes your vehicle details to the Police Command Center live AI camera search network.
+            <strong>Service status:</strong> Stolen-vehicle reporting and camera search are not currently configured by the backend.
           </div>
         </div>
 
@@ -104,16 +101,14 @@
             <div class="form-group">
               <label class="form-label">Select Stolen Vehicle</label>
               <select id="stolen-veh-select" class="form-control" required>
-                <option value="">Choose registered vehicle...</option>
-                <option value="DL 01 AB 1234">Hyundai Creta (DL 01 AB 1234) - White SUV</option>
-                <option value="DL 04 CD 5678">Tata Nexon EV (DL 04 CD 5678) - Teal Blue</option>
+                <option value="">Loading registered vehicles...</option>
               </select>
             </div>
 
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
               <div class="form-group">
                 <label class="form-label">Date & Time Stolen</label>
-                <input type="datetime-local" class="form-control" required>
+                <input id="stolen-reported-at" type="datetime-local" class="form-control" required>
               </div>
               <div class="form-group">
                 <label class="form-label">Last Known Location</label>
@@ -124,22 +119,22 @@
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
               <div class="form-group">
                 <label class="form-label">Police Complaint / FIR Number</label>
-                <input type="text" class="form-control" placeholder="e.g. FIR-2026-99120" required>
+                <input id="stolen-fir-number" type="text" class="form-control" required>
               </div>
               <div class="form-group">
                 <label class="form-label">Police Station Jurisdiction</label>
-                <input type="text" class="form-control" placeholder="e.g. Central City PS" required>
+                <input id="stolen-police-station" type="text" class="form-control" required>
               </div>
             </div>
 
             <div class="form-group">
               <label class="form-label">Incident Description & Distinctive Features</label>
-              <textarea class="form-control" placeholder="Mention scratch marks, sticker on rear glass, modified alloys or specific features for AI Re-ID search..." required></textarea>
+              <textarea id="stolen-description" class="form-control" placeholder="Describe the incident and distinctive vehicle features." required></textarea>
             </div>
 
             <div class="form-group">
               <label class="form-label">Attach FIR Copy / Vehicle Photo</label>
-              <div style="border:2px dashed var(--danger); border-radius:var(--radius-sm); padding:20px; text-align:center; background:rgba(239,68,68,0.05); cursor:pointer;" onclick="showToast('FIR copy attached!', 'success')">
+              <div style="border:2px dashed var(--danger); border-radius:var(--radius-sm); padding:20px; text-align:center; background:rgba(239,68,68,0.05);">
                 <i class="lucide-file-text" style="font-size:1.8rem; color:var(--danger); margin-bottom:6px;"></i>
                 <div style="font-size:0.85rem; font-weight:600;">Upload FIR Copy or Vehicle Photo</div>
               </div>
@@ -157,22 +152,16 @@
             <i class="lucide-shield-alert"></i>
           </div>
 
-          <h2 style="font-size:1.8rem; color:var(--danger); margin-bottom:6px;">EMERGENCY REPORT TRANSMITTED</h2>
-          <span class="badge badge-danger badge-pulse" style="font-size:0.85rem; padding:6px 16px; margin-bottom:16px;">AI SEARCH ACTIVE</span>
+          <h2 style="font-size:1.8rem; color:var(--danger); margin-bottom:6px;">Reporting unavailable</h2>
+          <span class="badge badge-warning" style="font-size:0.85rem; padding:6px 16px; margin-bottom:16px;">Backend not configured</span>
 
           <p style="color:var(--text-muted); font-size:0.95rem; max-width:520px; margin:0 auto 24px auto;">
-            Your report has been broadcast to 24 smart city cameras for automated AI visual feature re-identification and tracking.
+            The backend does not currently store stolen-vehicle reports or search camera data.
           </p>
-
-          <div style="background:var(--bg-dark-alt); padding:16px; border-radius:var(--radius-sm); border:1px solid var(--border-color); max-width:420px; margin:0 auto 24px auto; text-align:left; font-size:0.85rem;">
-            <div><strong style="color:var(--text-muted)">Report Ref ID:</strong> SV-2026-0012</div>
-            <div style="margin-top:4px;"><strong style="color:var(--text-muted)">Broadcast Time:</strong> 26 Aug 2026 at 09:12 PM</div>
-            <div style="margin-top:4px;"><strong style="color:var(--text-muted)">Command Center Status:</strong> Active Alert Sent to Patrol Units</div>
-          </div>
 
           <div class="legal-notice-banner" style="max-width:540px; margin:0 auto 24px auto; text-align:left;">
             <i class="lucide-info"></i>
-            Police notification routed. Any camera visual matches require officer verification before intercept.
+            No report has been submitted.
           </div>
 
           <div style="display:flex; justify-content:center; gap:12px;">
@@ -186,7 +175,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="../js/mock-data.js"></script>
+  <script src="../js/api.js"></script>
   <script src="../js/auth.js"></script>
   <script src="../js/app.js"></script>
 </body>

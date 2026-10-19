@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Vehicles — VIGILANT</title>
+  <title>My Registered Vehicles — VIGILANT</title>
 
   <!-- CSS Stylesheets -->
   <link rel="stylesheet" href="../css/global.css">
@@ -14,213 +14,549 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
+
 <body data-page="citizen-my-vehicles">
 
   <div class="dashboard-layout">
-    <!-- Sidebar Navigation -->
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
     <aside class="sidebar">
+
       <div class="sidebar-header">
+
         <a href="../index.html" class="brand-logo">
-          <div class="brand-icon"><i class="lucide-shield-check"></i></div>
-          <span class="brand-name">VIGILANT</span>
+
+          <div class="brand-icon">
+            <i class="lucide-shield-check"></i>
+          </div>
+
+          <span class="brand-name">
+            VIGILANT
+          </span>
+
         </a>
+
       </div>
+
 
       <nav class="sidebar-menu">
-        <div class="menu-category">Citizen Navigation</div>
+
+        <div class="menu-category">
+          Citizen Navigation
+        </div>
+
+
         <a href="dashboard.html" class="nav-item">
-          <i class="lucide-layout-dashboard"></i> Dashboard
+
+          <i class="lucide-layout-dashboard"></i>
+
+          Dashboard
+
         </a>
+
+
         <a href="my-vehicles.html" class="nav-item active">
-          <i class="lucide-car"></i> My Vehicles <span class="badge-count">2</span>
+
+          <i class="lucide-car"></i>
+
+          My Vehicles
+
+          <span id="vehicles-nav-count" class="badge-count">
+            0
+          </span>
+
         </a>
+
+
         <a href="challan-list.html" class="nav-item">
-          <i class="lucide-file-text"></i> Challans
+
+          <i class="lucide-file-text"></i>
+
+          Challans
+
+          <span id="challans-nav-count" class="badge-count">
+            0
+          </span>
+
         </a>
+
+
         <a href="document-vault.html" class="nav-item">
-          <i class="lucide-folder"></i> Documents
+
+          <i class="lucide-folder"></i>
+
+          Documents
+
         </a>
+
+
         <a href="hypothecation-assistant.html" class="nav-item">
-          <i class="lucide-banknote"></i> Hypothecation
+
+          <i class="lucide-banknote"></i>
+
+          Hypothecation
+
         </a>
+
+
         <a href="stolen-report.html" class="nav-item">
-          <i class="lucide-shield-alert"></i> Stolen Vehicle
+
+          <i class="lucide-shield-alert"></i>
+
+          Stolen Vehicle
+
         </a>
+
+
         <a href="notifications-center.html" class="nav-item">
-          <i class="lucide-bell"></i> Notifications
+
+          <i class="lucide-bell"></i>
+
+          Notifications
+
         </a>
+
       </nav>
 
+
+      <!-- User Profile -->
+
       <div class="sidebar-footer">
+
         <div class="user-profile-mini">
-          <div class="avatar">SY</div>
-          <div class="user-info">
-            <span class="user-name">Sumit Yadav</span>
-            <span class="user-role">Vehicle Owner</span>
+
+          <div class="avatar">
+            SY
           </div>
+
+          <div class="user-info">
+
+            <span class="user-name">
+              Sumit Yadav
+            </span>
+
+            <span class="user-role">
+              Vehicle Owner
+            </span>
+
+          </div>
+
         </div>
+
       </div>
+
     </aside>
 
-    <!-- Main Workspace -->
-    <main class="main-content">
-      <header class="top-header">
-        <button id="sidebar-toggle" class="btn-icon d-lg-none"><i class="lucide-menu"></i></button>
 
-        <div style="font-size:0.9rem; color:var(--text-muted);">
-          Registered Vehicles Vault & RC Verification
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
+
+    <main class="main-content">
+
+
+      <!-- Top Header -->
+
+      <header class="top-header">
+
+        <button
+          id="sidebar-toggle"
+          class="btn-icon d-lg-none"
+        >
+
+          <i class="lucide-menu"></i>
+
+        </button>
+
+
+        <div class="header-search">
+
+          <i class="lucide-search"></i>
+
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search vehicle registration, model..."
+          >
+
         </div>
+
 
         <div class="header-actions">
-          <button class="role-switcher-btn" onclick="window.AuthEngine.switchRole('authority')">
-            <i class="lucide-shield"></i> Authority Mode
+          <button
+            class="btn btn-outline btn-sm"
+            onclick="window.AuthEngine.logout()"
+          >
+
+            <i class="lucide-log-out"></i>
+
+            Logout
+
           </button>
-          <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
+
         </div>
+
       </header>
 
+
+      <!-- =====================================================
+           DASHBOARD BODY
+           ===================================================== -->
+
       <div class="dashboard-container">
+
+
+        <!-- Page Header -->
+
         <div class="page-header">
+
           <div>
-            <h1 class="page-title">My Registered Vehicles</h1>
-            <p class="page-subtitle">Manage your registered cars, scooters, electric vehicles, and RC documents.</p>
+
+            <h1 class="page-title">
+              My Registered Vehicles
+            </h1>
+
+            <p class="page-subtitle">
+              Manage your registered vehicles, RC status,
+              insurance policies, and PUC certificates.
+            </p>
+
           </div>
 
-          <div style="display:flex; gap:12px;">
-            <button class="btn btn-primary" onclick="openModal('add-vehicle-modal')">
-              <i class="lucide-plus"></i> + Add New Vehicle
-            </button>
-            <button class="btn btn-outline" onclick="openModal('upload-document-modal')">
-              <i class="lucide-upload"></i> Upload Document
-            </button>
-          </div>
+
+          <button
+            class="btn btn-primary"
+            onclick="openModal('add-vehicle-modal')"
+          >
+
+            <i class="lucide-plus"></i>
+
+            + Add Vehicle
+
+          </button>
+
         </div>
 
-        <!-- Full Vehicles Grid -->
-        <div id="my-vehicles-full-grid" class="grid-2">
-          <!-- Rendered dynamically by app.js -->
+        <!-- Vehicle Verification Studio Card -->
+        <div class="glass-card" style="padding:24px; margin-bottom:24px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <div>
+              <h3 style="font-size:1.2rem; display:flex; align-items:center; gap:8px;">
+                <i class="lucide-search-check" style="color:var(--primary);"></i> Automatic Vehicle & RC Verification Studio
+              </h3>
+              <p style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">
+                Enter a vehicle registration number to retrieve live vehicle specs, RC, Insurance, PUC, and API Sathi challan records.
+              </p>
+            </div>
+          </div>
+
+          <form id="vehicle-verification-form" onsubmit="window.handleVehicleVerificationSubmit(event)" style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+            <input 
+              type="text" 
+              id="vehicle-verification-input" 
+              class="form-control" 
+              placeholder="Enter Registration Number (e.g. UP14DL5922 / MH12AB3456 / DL01AB1234)" 
+              style="flex:1; min-width:260px; font-weight:700; letter-spacing:1px; text-transform:uppercase;" 
+              required
+            >
+            <button type="submit" id="btn-verify-vehicle" class="btn btn-primary">
+              <i class="lucide-search"></i> Search Vehicle
+            </button>
+          </form>
+
+          <div id="verification-status-message" style="font-size:0.88rem; color:var(--text-muted);">
+            Enter a registration number to begin verification.
+          </div>
+
+          <div id="verification-results-container" style="display:none; margin-top:16px;"></div>
         </div>
+
+
+        <!-- =================================================
+             FILTER BUTTONS
+             ================================================= -->
+
+        <div
+          style="
+            display:flex;
+            gap:12px;
+            margin-bottom:24px;
+          "
+        >
+
+          <button
+            class="btn btn-secondary btn-sm"
+            onclick="filterVehicles('all')"
+          >
+            All Vehicles (2)
+          </button>
+
+
+          <button
+            class="btn btn-outline btn-sm"
+            onclick="filterVehicles('suv')"
+          >
+            SUVs
+          </button>
+
+
+          <button
+            class="btn btn-outline btn-sm"
+            onclick="filterVehicles('ev')"
+          >
+            EVs
+          </button>
+
+        </div>
+
+
+        <!-- =================================================
+             VEHICLES GRID
+
+             IMPORTANT:
+             app.js expects this exact ID
+             ================================================= -->
+
+        <div
+          id="my-vehicles-full-grid"
+          class="grid-2"
+        >
+
+          <!--
+            Vehicles are loaded dynamically
+            from MongoDB by app.js
+          -->
+
+        </div>
+
+
       </div>
+
     </main>
+
   </div>
 
-  <!-- MODAL 1: + ADD VEHICLE MODAL -->
-  <div id="add-vehicle-modal" class="modal-overlay">
+
+  <!-- =====================================================
+       ADD VEHICLE MODAL
+       ===================================================== -->
+
+  <div
+    id="add-vehicle-modal"
+    class="modal-overlay"
+  >
+
     <div class="modal-container">
+
+
       <div class="modal-header">
-        <h3 class="modal-title"><i class="lucide-car"></i> Register New Vehicle</h3>
-        <button class="modal-close" onclick="closeModal('add-vehicle-modal')">&times;</button>
+
+        <h3 class="modal-title">
+          Register New Vehicle
+        </h3>
+
+
+        <button
+          class="modal-close"
+          onclick="closeModal('add-vehicle-modal')"
+        >
+          &times;
+        </button>
+
       </div>
 
-      <form onsubmit="handleAddVehicleSubmit(event)">
-        <div class="modal-body">
+
+      <div class="modal-body">
+
+        <form onsubmit="handleVehicleSubmit(event)">
+
+
+          <!-- Registration Number -->
+
           <div class="form-group">
-            <label class="form-label">Registration Number (Plate No.)</label>
-            <input type="text" id="add-veh-reg" class="form-control" placeholder="e.g. HR 26 DQ 9012" required>
+
+            <label class="form-label">
+              Registration Number
+            </label>
+
+            <input
+              type="text"
+              id="new-vehicle-registration"
+              class="form-control"
+              placeholder="e.g. DL 03 EF 9988"
+              required
+            >
+
+            <p id="vehicle-lookup-status" aria-live="polite" style="font-size:0.82rem; color:var(--text-muted); margin-top:6px;">
+              Enter a registration number to check for provider vehicle details. Lookup does not save the vehicle.
+            </p>
+
           </div>
 
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-            <div class="form-group">
-              <label class="form-label">Vehicle Make / Brand</label>
-              <input type="text" id="add-veh-make" class="form-control" placeholder="e.g. Honda" required>
-            </div>
+
+          <!-- Make + Model -->
+
+          <div
+            style="
+              display:grid;
+              grid-template-columns:1fr 1fr;
+              gap:12px;
+            "
+          >
 
             <div class="form-group">
-              <label class="form-label">Vehicle Model</label>
-              <input type="text" id="add-veh-model" class="form-control" placeholder="e.g. City" required>
+
+              <label class="form-label">
+                Make
+              </label>
+
+              <input
+                type="text"
+                id="new-vehicle-make"
+                class="form-control"
+                placeholder="Hyundai / Tata"
+                required
+              >
+
             </div>
+
+
+            <div class="form-group">
+
+              <label class="form-label">
+                Model
+              </label>
+
+              <input
+                type="text"
+                id="new-vehicle-model"
+                class="form-control"
+                placeholder="Creta / Nexon"
+                required
+              >
+
+            </div>
+
           </div>
 
-          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
+
+          <!-- Year + Vehicle Type -->
+
+          <div
+            style="
+              display:grid;
+              grid-template-columns:1fr 1fr;
+              gap:12px;
+            "
+          >
+
             <div class="form-group">
-              <label class="form-label">Body Type</label>
-              <select id="add-veh-type" class="form-control">
-                <option value="Sedan">Sedan</option>
-                <option value="SUV">SUV</option>
-                <option value="Hatchback">Hatchback</option>
-                <option value="EV">Electric (EV)</option>
-                <option value="Two Wheeler">Two Wheeler</option>
+
+              <label class="form-label">
+                Year of Manufacture
+              </label>
+
+              <input
+                type="number"
+                id="new-vehicle-year"
+                class="form-control"
+                required
+              >
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label class="form-label">
+                Vehicle Type
+              </label>
+
+              <select id="new-vehicle-type" class="form-control">
+
+                <option>
+                  SUV
+                </option>
+
+                <option>
+                  Sedan
+                </option>
+
+                <option>
+                  Hatchback
+                </option>
+
+                <option>
+                  Two-Wheeler
+                </option>
+
+                <option>
+                  EV
+                </option>
+
               </select>
+
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Color</label>
-              <input type="text" id="add-veh-color" class="form-control" placeholder="e.g. Silver">
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Mfg Year</label>
-              <input type="number" id="add-veh-year" class="form-control" value="2024">
-            </div>
           </div>
-        </div>
 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline" onclick="closeModal('add-vehicle-modal')">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save & Register Vehicle</button>
-        </div>
-      </form>
-    </div>
-  </div>
+          <div class="form-group">
+            <label class="form-label">Color</label>
+            <input
+              type="text"
+              id="new-vehicle-color"
+              class="form-control"
+              placeholder="Vehicle color"
+            >
+          </div>
 
-  <!-- MODAL 2: UPLOAD DOCUMENT MODAL -->
-  <div id="upload-document-modal" class="modal-overlay">
-    <div class="modal-container">
-      <div class="modal-header">
-        <h3 class="modal-title"><i class="lucide-upload"></i> Upload Vehicle Document</h3>
-        <button class="modal-close" onclick="closeModal('upload-document-modal')">&times;</button>
+
+          <!-- Submit -->
+
+          <button
+            type="submit"
+            class="btn btn-primary"
+            style="
+              width:100%;
+              margin-top:12px;
+            "
+          >
+
+            Submit Registration
+
+          </button>
+
+        </form>
+
       </div>
 
-      <form onsubmit="handleUploadDocumentSubmit(event)">
-        <div class="modal-body">
-          <div class="form-group">
-            <label class="form-label">Select Vehicle</label>
-            <select id="upload-doc-vehicle" class="form-control">
-              <option value="DL 01 AB 1234">Hyundai Creta (DL 01 AB 1234)</option>
-              <option value="DL 04 CD 5678">Tata Nexon EV (DL 04 CD 5678)</option>
-            </select>
-          </div>
-
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-            <div class="form-group">
-              <label class="form-label">Document Type</label>
-              <select id="upload-doc-type" class="form-control">
-                <option value="PUC">Pollution (PUC) Certificate</option>
-                <option value="Insurance">Insurance Policy</option>
-                <option value="RC">RC Smart Card</option>
-                <option value="HPA">Hypothecation NOC</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Document Certificate No.</label>
-              <input type="text" id="upload-doc-number" class="form-control" placeholder="e.g. PUC-DL-2027-8891" required>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">New Expiry Date</label>
-            <input type="date" id="upload-doc-expiry" class="form-control" value="2027-10-15" required>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Upload Scan (PDF / JPG)</label>
-            <input type="file" class="form-control">
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline" onclick="closeModal('upload-document-modal')">Cancel</button>
-          <button type="submit" class="btn btn-primary">Upload & Verify Document</button>
-        </div>
-      </form>
     </div>
+
   </div>
 
-  <!-- Scripts -->
-  <script src="../js/mock-data.js"></script>
+
+  <!-- =====================================================
+       JAVASCRIPT
+
+       IMPORTANT ORDER:
+      api
+       → auth
+       → app
+       → ai-chat
+       ===================================================== -->
+
+
+  <script src="../js/api.js"></script>
+
   <script src="../js/auth.js"></script>
+
   <script src="../js/app.js"></script>
+
   <script src="../js/ai-chat.js"></script>
+
+
 </body>
 </html>

@@ -32,10 +32,10 @@
           <i class="lucide-layout-dashboard"></i> Dashboard
         </a>
         <a href="my-vehicles.html" class="nav-item">
-          <i class="lucide-car"></i> My Vehicles <span class="badge-count">2</span>
+          <i class="lucide-car"></i> My Vehicles <span id="vehicles-nav-count" class="badge-count">0</span>
         </a>
         <a href="challan-list.html" class="nav-item">
-          <i class="lucide-file-text"></i> Challans <span class="badge-count">2</span>
+          <i class="lucide-file-text"></i> Challans <span id="challans-nav-count" class="badge-count">0</span>
         </a>
         <a href="document-vault.html" class="nav-item">
           <i class="lucide-folder"></i> Documents
@@ -47,7 +47,7 @@
           <i class="lucide-shield-alert"></i> Stolen Vehicle
         </a>
         <a href="notifications-center.html" class="nav-item">
-          <i class="lucide-bell"></i> Notifications <span class="badge-count">3</span>
+          <i class="lucide-bell"></i> Notifications <span class="badge-count">0</span>
         </a>
       </nav>
 
@@ -76,10 +76,6 @@
         </div>
 
         <div class="header-actions">
-          <button class="role-switcher-btn" onclick="window.AuthEngine.switchRole('authority')">
-            <i class="lucide-shield"></i> Switch to Authority Mode
-          </button>
-          
           <a href="notifications-center.html" class="btn-icon">
             <i class="lucide-bell"></i>
           </a>
@@ -115,7 +111,7 @@
           <a href="my-vehicles.html" class="stat-card" style="text-decoration:none;">
             <div>
               <div class="stat-label">Registered Vehicles</div>
-              <div class="stat-value">2</div>
+              <div id="citizen-vehicles-count" class="stat-value">0</div>
             </div>
             <div class="stat-icon stat-icon-blue"><i class="lucide-car"></i></div>
           </a>
@@ -123,7 +119,7 @@
           <a href="challan-list.html" class="stat-card" style="text-decoration:none;">
             <div>
               <div class="stat-label">Pending Challans</div>
-              <div class="stat-value" style="color:var(--danger);">2</div>
+              <div id="citizen-pending-challans-count" class="stat-value" style="color:var(--danger);">0</div>
             </div>
             <div class="stat-icon stat-icon-red"><i class="lucide-file-warning"></i></div>
           </a>
@@ -131,7 +127,7 @@
           <a href="document-vault.html" class="stat-card" style="text-decoration:none;">
             <div>
               <div class="stat-label">Valid Documents</div>
-              <div class="stat-value" style="color:var(--success);">3</div>
+              <div id="citizen-valid-documents-count" class="stat-value" style="color:var(--success);">0</div>
             </div>
             <div class="stat-icon stat-icon-green"><i class="lucide-shield-check"></i></div>
           </a>
@@ -139,7 +135,7 @@
           <a href="document-vault.html" class="stat-card" style="text-decoration:none;">
             <div>
               <div class="stat-label">Expiring Soon</div>
-              <div class="stat-value" style="color:var(--warning);">1</div>
+              <div id="citizen-expiring-documents-count" class="stat-value" style="color:var(--warning);">0</div>
             </div>
             <div class="stat-icon stat-icon-warning"><i class="lucide-clock"></i></div>
           </a>
@@ -164,7 +160,7 @@
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
               <div>
                 <h3 style="font-size:1.2rem;">Recent Challans</h3>
-                <p style="font-size:0.82rem; color:var(--text-muted);">Inspect camera evidence or request dispute review</p>
+                <p style="font-size:0.82rem; color:var(--text-muted);">Review challan records available from the backend.</p>
               </div>
               <a href="challan-list.html" class="btn btn-outline btn-sm">Manage All Challans</a>
             </div>
@@ -198,30 +194,30 @@
               <div style="background:var(--bg-dark-alt); padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
                 <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:600; margin-bottom:4px;">
                   <span>RC Validity</span>
-                  <span style="color:var(--success);">✓ 100% Valid</span>
+                  <span id="rc-health-value" style="color:var(--success);">0 / 0 valid</span>
                 </div>
                 <div style="background:#1E293B; height:6px; border-radius:3px; overflow:hidden;">
-                  <div style="background:var(--success); width:100%; height:100%;"></div>
+                  <div id="rc-health-bar" style="background:var(--success); width:0%; height:100%;"></div>
                 </div>
               </div>
 
               <div style="background:var(--bg-dark-alt); padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
                 <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:600; margin-bottom:4px;">
                   <span>Insurance Policies</span>
-                  <span style="color:var(--success);">✓ Valid until Dec 2026</span>
+                  <span id="insurance-health-value" style="color:var(--success);">0 / 0 valid</span>
                 </div>
                 <div style="background:#1E293B; height:6px; border-radius:3px; overflow:hidden;">
-                  <div style="background:var(--success); width:85%; height:100%;"></div>
+                  <div id="insurance-health-bar" style="background:var(--success); width:0%; height:100%;"></div>
                 </div>
               </div>
 
               <div style="background:var(--bg-dark-alt); padding:14px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
                 <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:600; margin-bottom:4px;">
                   <span>PUC Certificate</span>
-                  <span style="color:var(--warning);">⚠ Expiry in 7 Days</span>
+                  <span id="puc-health-value" style="color:var(--warning);">0 documents</span>
                 </div>
                 <div style="background:#1E293B; height:6px; border-radius:3px; overflow:hidden;">
-                  <div style="background:var(--warning); width:15%; height:100%;"></div>
+                  <div id="puc-health-bar" style="background:var(--warning); width:0%; height:100%;"></div>
                 </div>
               </div>
             </div>
@@ -237,7 +233,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="../js/mock-data.js"></script>
+  <script src="../js/api.js"></script>
   <script src="../js/auth.js"></script>
   <script src="../js/app.js"></script>
   <script src="../js/ai-chat.js"></script>

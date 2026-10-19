@@ -38,6 +38,9 @@
         <a href="violations.html" class="nav-item">
           <i class="lucide-shield-alert"></i> AI Violations
         </a>
+        <a href="yolo-ocr-demo.html" class="nav-item">
+          <i class="lucide-scan-text"></i> YOLO ALPR & OCR Studio
+        </a>
         <a href="vehicle-reid.html" class="nav-item">
           <i class="lucide-scan-line"></i> Vehicle Re-ID
         </a>
@@ -60,9 +63,9 @@
 
       <div class="sidebar-footer">
         <div class="user-profile-mini">
-          <div class="avatar" style="border-color:var(--danger);">RS</div>
+          <div class="avatar" style="border-color:var(--danger);">AU</div>
           <div class="user-info">
-            <span class="user-name">Insp. R. K. Sharma</span>
+            <span class="user-name">Authority User</span>
             <span class="user-role">Traffic Enforcement Officer</span>
           </div>
         </div>
@@ -75,13 +78,10 @@
         <button id="sidebar-toggle" class="btn-icon d-lg-none"><i class="lucide-menu"></i></button>
 
         <div style="font-size:0.9rem; color:var(--text-muted);">
-          Real-time AI Model Performance & Traffic Statistics
+          Backend Analytics
         </div>
 
         <div class="header-actions">
-          <button class="role-switcher-btn" style="color:var(--warning);" onclick="window.AuthEngine.switchRole('citizen')">
-            <i class="lucide-user"></i> Citizen View
-          </button>
           <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
         </div>
       </header>
@@ -91,10 +91,10 @@
         <div class="page-header">
           <div>
             <h1 class="page-title">Traffic Analytics & AI Performance Center</h1>
-            <p class="page-subtitle">Real-time telemetry, model classification accuracy metrics, and violation distributions.</p>
+            <p class="page-subtitle">Statistics from currently configured backend data sources.</p>
           </div>
 
-          <button class="btn btn-primary" onclick="showToast('Exporting complete analytics dataset...', 'success')">
+          <button class="btn btn-primary" onclick="showToast('Analytics export is not configured.', 'warning')">
             <i class="lucide-download"></i> Export Analytics Report
           </button>
         </div>
@@ -104,7 +104,7 @@
           <div class="stat-card">
             <div>
               <div class="stat-label">Avg AI Confidence</div>
-              <div class="stat-value" style="color:var(--success);">94.8%</div>
+              <div id="analytics-average-confidence" class="stat-value" style="color:var(--success);">0%</div>
             </div>
             <div class="stat-icon stat-icon-green"><i class="lucide-cpu"></i></div>
           </div>
@@ -112,7 +112,7 @@
           <div class="stat-card">
             <div>
               <div class="stat-label">Total Detections Today</div>
-              <div class="stat-value">12,450</div>
+              <div id="analytics-detections-today" class="stat-value">0</div>
             </div>
             <div class="stat-icon stat-icon-blue"><i class="lucide-eye"></i></div>
           </div>
@@ -120,7 +120,7 @@
           <div class="stat-card">
             <div>
               <div class="stat-label">Active Surveillance Nodes</div>
-              <div class="stat-value">21 / 24</div>
+              <div id="analytics-active-cameras" class="stat-value">0</div>
             </div>
             <div class="stat-icon stat-icon-warning"><i class="lucide-video"></i></div>
           </div>
@@ -128,7 +128,7 @@
           <div class="stat-card">
             <div>
               <div class="stat-label">Dispute Resolution Rate</div>
-              <div class="stat-value" style="color:var(--primary);">86.4%</div>
+              <div id="analytics-dispute-resolution" class="stat-value" style="color:var(--primary);">0%</div>
             </div>
             <div class="stat-icon stat-icon-blue"><i class="lucide-check-square"></i></div>
           </div>
@@ -176,7 +176,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="../js/mock-data.js"></script>
+  <script src="../js/api.js"></script>
   <script src="../js/auth.js"></script>
   <script src="../js/app.js"></script>
 </body>

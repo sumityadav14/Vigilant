@@ -37,6 +37,9 @@
         <a href="violations.html" class="nav-item">
           <i class="lucide-shield-alert"></i> AI Violations
         </a>
+        <a href="yolo-ocr-demo.html" class="nav-item">
+          <i class="lucide-scan-text"></i> YOLO ALPR & OCR Studio
+        </a>
         <a href="vehicle-reid.html" class="nav-item active">
           <i class="lucide-scan-line"></i> Vehicle Re-ID
         </a>
@@ -50,9 +53,9 @@
 
       <div class="sidebar-footer">
         <div class="user-profile-mini">
-          <div class="avatar" style="border-color:var(--danger);">RS</div>
+          <div class="avatar" style="border-color:var(--danger);">AU</div>
           <div class="user-info">
-            <span class="user-name">Insp. R. K. Sharma</span>
+            <span class="user-name">Authority User</span>
             <span class="user-role">Traffic Enforcement Officer</span>
           </div>
         </div>
@@ -69,9 +72,6 @@
         </div>
 
         <div class="header-actions">
-          <button class="role-switcher-btn" style="color:var(--warning);" onclick="window.AuthEngine.switchRole('citizen')">
-            <i class="lucide-user"></i> Citizen View
-          </button>
           <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
         </div>
       </header>
@@ -91,7 +91,7 @@
             <div style="display:grid; grid-template-columns:1fr 120px; gap:16px; align-items:end;">
               <div class="form-group" style="margin-bottom:0;">
                 <label class="form-label">Enter Vehicle Registration Number or Vehicle ID</label>
-                <input type="text" id="reid-query-input" class="form-control" value="VH-1029 (DL 01 AB 1234)" placeholder="e.g. VH-1029 or DL 01 AB 1234">
+                <input type="text" id="reid-query-input" class="form-control" placeholder="Enter a vehicle registration or vehicle ID">
               </div>
               <button type="submit" class="btn btn-primary" style="height:44px;">
                 <i class="lucide-search"></i> SEARCH
@@ -102,56 +102,7 @@
 
         <!-- Re-ID Search Results Container -->
         <div id="reid-results-card" class="glass-card" style="padding:28px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <div>
-              <span class="badge badge-success" style="margin-bottom:6px;">96% FEATURE SIMILARITY MATCH</span>
-              <h2 style="font-size:1.4rem;">POSSIBLE VEHICLE MATCH: VH-1029</h2>
-              <p style="color:var(--text-muted); font-size:0.9rem;">Hyundai Creta • White SUV • Reg: DL 01 AB 1234</p>
-            </div>
-            <a href="tracking.html" class="btn btn-primary"><i class="lucide-route"></i> Track Multi-Camera Route &rarr;</a>
-          </div>
-
-          <div class="legal-notice-banner" style="margin-bottom:24px;">
-            <i class="lucide-shield-alert"></i>
-            <strong>Guardrail Notice:</strong> Visual Re-ID produces <em>"Possible AI Match — Human Verification Required"</em>.
-          </div>
-
-          <!-- Matched Cameras Timeline Grid -->
-          <h3 style="font-size:1.1rem; margin-bottom:16px;">Matched Camera Trajectory (4 Camera Detections)</h3>
-
-          <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px;">
-            <div style="background:var(--bg-dark-alt); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:16px; text-align:center;">
-              <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">STEP 1</div>
-              <h4 style="color:var(--primary); margin:4px 0;">CAM-01</h4>
-              <p style="font-size:0.8rem; color:var(--text-muted);">XYZ Intersection</p>
-              <div style="font-size:0.85rem; font-weight:700; margin-top:6px; color:var(--text-main);">10:21 AM</div>
-              <span class="badge badge-success" style="font-size:0.7rem; margin-top:8px;">96% Similarity</span>
-            </div>
-
-            <div style="background:var(--bg-dark-alt); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:16px; text-align:center;">
-              <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">STEP 2</div>
-              <h4 style="color:var(--primary); margin:4px 0;">CAM-03</h4>
-              <p style="font-size:0.8rem; color:var(--text-muted);">ABC Expressway</p>
-              <div style="font-size:0.85rem; font-weight:700; margin-top:6px; color:var(--text-main);">10:29 AM</div>
-              <span class="badge badge-success" style="font-size:0.7rem; margin-top:8px;">94% Similarity</span>
-            </div>
-
-            <div style="background:var(--bg-dark-alt); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:16px; text-align:center;">
-              <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">STEP 3</div>
-              <h4 style="color:var(--primary); margin:4px 0;">CAM-07</h4>
-              <p style="font-size:0.8rem; color:var(--text-muted);">City Center Square</p>
-              <div style="font-size:0.85rem; font-weight:700; margin-top:6px; color:var(--text-main);">10:42 AM</div>
-              <span class="badge badge-success" style="font-size:0.7rem; margin-top:8px;">96% Similarity</span>
-            </div>
-
-            <div style="background:var(--bg-dark-alt); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:16px; text-align:center;">
-              <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">STEP 4</div>
-              <h4 style="color:var(--primary); margin:4px 0;">CAM-11</h4>
-              <p style="font-size:0.8rem; color:var(--text-muted);">Highway Flyover</p>
-              <div style="font-size:0.85rem; font-weight:700; margin-top:6px; color:var(--text-main);">10:51 AM</div>
-              <span class="badge badge-success" style="font-size:0.7rem; margin-top:8px;">93% Similarity</span>
-            </div>
-          </div>
+          <p id="reid-search-results" style="color:var(--text-muted);">Vehicle Re-ID is not configured. No matches are available.</p>
         </div>
 
       </div>
@@ -159,7 +110,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="../js/mock-data.js"></script>
+  <script src="../js/api.js"></script>
   <script src="../js/auth.js"></script>
   <script src="../js/app.js"></script>
 </body>
