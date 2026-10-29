@@ -52,6 +52,52 @@ const challanSchema = new mongoose.Schema(
       required: true
     },
 
+    actSection: {
+      type: String,
+      default: "Motor Vehicles Act Section 177"
+    },
+
+    severity: {
+      type: String,
+      enum: ["LOW", "MEDIUM", "HIGH", "CRITICAL"],
+      default: "MEDIUM"
+    },
+
+    hazardScore: {
+      type: Number,
+      default: 50
+    },
+
+    speedKmh: {
+      type: Number,
+      default: null
+    },
+
+    speedLimit: {
+      type: Number,
+      default: null
+    },
+
+    evidenceImage: {
+      type: String,
+      default: ""
+    },
+
+    evidenceCrop: {
+      type: String,
+      default: ""
+    },
+
+    xaiReason: {
+      type: String,
+      default: ""
+    },
+
+    isExempt: {
+      type: Boolean,
+      default: false
+    },
+
     reviewRequest: {
       type: reviewRequestSchema,
       default: undefined

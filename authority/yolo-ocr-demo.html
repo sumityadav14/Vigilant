@@ -107,6 +107,35 @@
       z-index: 12;
       font-family: monospace;
     }
+    @media print {
+      body * {
+        visibility: hidden !important;
+      }
+      #court-slip-modal-backdrop, #court-slip-modal-backdrop * {
+        visibility: visible !important;
+      }
+      #court-slip-modal-backdrop {
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        background: #FFFFFF !important;
+        padding: 0 !important;
+        display: block !important;
+        z-index: 999999 !important;
+      }
+      #court-slip-modal-backdrop > div {
+        max-width: 100% !important;
+        border: none !important;
+        box-shadow: none !important;
+        background: #FFFFFF !important;
+        color: #000000 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 <body data-page="authority-yolo-ocr">
@@ -245,13 +274,19 @@
           <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
             <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;"><i class="lucide-camera"></i> Camera Feeds:</span>
             <button class="preset-chip active" id="preset-btn-0" onclick="window.YoloOcrController.loadPreset(0)">
-              <i class="lucide-video"></i> Indirapuram Dzire (UP 14 DL 5922)
+              <i class="lucide-gauge"></i> Indirapuram Dzire (Speeding 86 km/h)
             </button>
             <button class="preset-chip" id="preset-btn-1" onclick="window.YoloOcrController.loadPreset(1)">
-              <i class="lucide-video"></i> Pune Ciaz Front (MH 12 AB 3456)
+              <i class="lucide-hard-hat"></i> Mumbai Kurla (No Helmet)
             </button>
             <button class="preset-chip" id="preset-btn-2" onclick="window.YoloOcrController.loadPreset(2)">
-              <i class="lucide-video"></i> Chennai Ciaz ZXi Rear (TN 09 BY 9726)
+              <i class="lucide-users"></i> Pune Swargate (Triple Riding)
+            </button>
+            <button class="preset-chip" id="preset-btn-3" onclick="window.YoloOcrController.loadPreset(3)">
+              <i class="lucide-traffic-cone"></i> Delhi Ring Rd (Red Light Breach)
+            </button>
+            <button class="preset-chip" id="preset-btn-4" onclick="window.YoloOcrController.loadPreset(4)">
+              <i class="lucide-ambulance"></i> AIIMS Corridor (Ambulance Priority)
             </button>
           </div>
 
@@ -353,7 +388,14 @@
       }
       setTimeout(() => {
         if (window.YoloOcrController) {
-          window.YoloOcrController.runYoloOcrPipeline();
+          const urlParams = new URLSearchParams(window.location.search);
+          const pParam = urlParams.get('preset') || sessionStorage.getItem("vigilant_selected_preset");
+          if (pParam !== null && !isNaN(parseInt(pParam))) {
+            sessionStorage.removeItem("vigilant_selected_preset");
+            window.YoloOcrController.loadPreset(parseInt(pParam));
+          } else {
+            window.YoloOcrController.runYoloOcrPipeline();
+          }
         }
       }, 400);
     });

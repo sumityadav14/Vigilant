@@ -207,6 +207,19 @@ const ApiService = {
     });
   },
 
+  getViolationReceipt(id) {
+    return this.request(`/violations/${encodeURIComponent(id)}/receipt`, {
+      method: "GET"
+    });
+  },
+
+  detectViolations(payload) {
+    return this.request("/violations/detect", {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+  },
+
   /* ==========================================
      ANALYTICS
      ========================================== */
@@ -219,3 +232,4 @@ const ApiService = {
 };
 
 window.ApiService = ApiService;
+window.VigilantAPI = ApiService;

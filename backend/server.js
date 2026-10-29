@@ -1435,12 +1435,177 @@ app.get("/api/cameras", (req, res) => {
   });
 });
 
-app.get("/api/violations", (req, res) => {
-  res.json({
-    status: "SUCCESS",
-    count: mockChallans.length,
-    violations: mockChallans
-  });
+app.get("/api/violations", async (req, res) => {
+  try {
+    let violations = mockChallans;
+    if (mongoose.connection.readyState === 1) {
+      try {
+        const dbViolations = await Challan.find({}).sort({ createdAt: -1 });
+        if (dbViolations && dbViolations.length > 0) {
+          violations = dbViolations;
+        }
+      } catch (e) {
+        console.warn("MongoDB violations read warning, using mock fallback:", e.message);
+      }
+    }
+
+    const { type, severity, vehicleNumber } = req.query;
+    let filtered = violations;
+    if (type) {
+      filtered = filtered.filter(v => v.violationType && v.violationType.toLowerCase().includes(type.toLowerCase()));
+    }
+    if (severity) {
+      filtered = filtered.filter(v => (v.severity || "MEDIUM").toUpperCase() === severity.toUpperCase());
+    }
+    if (vehicleNumber) {
+      filtered = filtered.filter(v => v.vehicleNumber && v.vehicleNumber.toUpperCase().includes(vehicleNumber.toUpperCase()));
+    }
+
+    res.json({
+      status: "SUCCESS",
+      count: filtered.length,
+      violations: filtered
+    });
+  } catch (err) {
+    res.json({
+      status: "SUCCESS",
+      count: mockChallans.length,
+      violations: mockChallans
+    });
+  }
+});
+
+// Real-time AI violation detector logging endpoint
+app.post("/api/violations/detect", async (req, res) => {
+  try {
+    const {
+      vehicleNumber,
+      violationType,
+      cameraCode,
+      actSection,
+      severity,
+      hazardScore,
+      amount,
+      speedKmh,
+      speedLimit,
+      evidenceImage,
+      evidenceCrop,
+      xaiReason,
+      isExempt
+    } = req.body;
+
+    const vNum = vehicleNumber || req.body.registrationNumber;
+    const vType = violationType || req.body.detectedViolation;
+
+    if (!vNum || !vType) {
+      return res.status(400).json({ status: "ERROR", message: "vehicleNumber and violationType are required" });
+    }
+
+    const challanId = `CH-${String(vNum).substring(0, 4)}-${Date.now().toString().slice(-6)}`;
+    const newRecord = {
+      id: challanId,
+      vehicleNumber: vNum.toUpperCase().replace(/\s+/g, ""),
+      violationType: vType,
+      date: new Date().toISOString().split("T")[0],
+      amount: isExempt ? 0 : (Number(amount) || 1000),
+      status: isExempt ? "Exempt" : "Pending",
+      cameraCode: cameraCode || "CAM-ITMS-LIVE",
+      actSection: actSection || "Motor Vehicles Act Section 177",
+      severity: severity || "MEDIUM",
+      hazardScore: Number(hazardScore) || 50,
+      speedKmh: speedKmh || null,
+      speedLimit: speedLimit || null,
+      evidenceImage: evidenceImage || "",
+      evidenceCrop: evidenceCrop || "",
+      xaiReason: xaiReason || "Automated computer vision detection",
+      isExempt: Boolean(isExempt)
+    };
+
+    if (mongoose.connection.readyState === 1) {
+      try {
+        await Challan.findOneAndUpdate(
+          { id: challanId },
+          newRecord,
+          { upsert: true, returnDocument: "after" }
+        );
+      } catch (e) {
+        console.warn("MongoDB violation write warning:", e.message);
+      }
+    }
+
+    mockChallans.unshift(newRecord);
+
+    res.status(201).json({
+      status: "SUCCESS",
+      message: "Violation logged successfully",
+      violation: newRecord
+    });
+  } catch (error) {
+    res.status(500).json({ status: "ERROR", message: error.message });
+  }
+});
+
+// Official court-admissible receipt data endpoint
+app.get("/api/violations/:id/receipt", async (req, res) => {
+  try {
+    const id = req.params.id;
+    let record = mockChallans.find(c => c.id === id);
+
+    if (!record && mongoose.connection.readyState === 1) {
+      record = await Challan.findOne({ id });
+    }
+
+    if (!record) {
+      return res.status(404).json({ status: "ERROR", message: "Challan record not found" });
+    }
+
+    const vehicle = mockVehicles.find(v => v.registrationNumber === record.vehicleNumber) || {
+      registrationNumber: record.vehicleNumber,
+      make: "Verified",
+      model: "Vehicle",
+      ownerName: "Registered Owner",
+      rto: "Regional Transport Office",
+      rcStatus: "Valid"
+    };
+
+    res.json({
+      status: "SUCCESS",
+      receipt: {
+        challanNumber: record.id,
+        issueDate: record.date,
+        cameraLocation: record.cameraCode,
+        vehicle: {
+          number: vehicle.registrationNumber,
+          registrationNumber: vehicle.registrationNumber,
+          make: vehicle.make,
+          model: vehicle.model,
+          owner: vehicle.ownerName,
+          ownerName: vehicle.ownerName,
+          rto: vehicle.rto,
+          rcStatus: vehicle.rcStatus
+        },
+        infraction: {
+          type: record.violationType,
+          actSection: record.actSection || "Motor Vehicles Act Section 177",
+          fineAmount: record.amount,
+          status: record.status,
+          severity: record.severity || "MEDIUM",
+          hazardScore: record.hazardScore || 50,
+          speedKmh: record.speedKmh,
+          speedLimit: record.speedLimit,
+          xaiReason: record.xaiReason || "Neural class detection verified",
+          isExempt: record.isExempt || false
+        },
+        evidence: {
+          fullScene: record.evidenceImage || vehicle.imageUrl,
+          violationCrop: record.evidenceCrop || vehicle.imageUrl
+        },
+        qrCodePayload: `UPI://PAY?PA=TRAFFICPOLICE@UPI&PN=GOVT_OF_INDIA_ECHALLAN&AM=${record.amount}&CU=INR&TN=${record.id}`
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ status: "ERROR", message: error.message });
+  }
 });
 
 app.get("/api/analytics", (req, res) => {
