@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart City Traffic Map — VIGILANT Command Center</title>
+  <title>Smart City Spatial GIS Map — VIGILANT Command Center</title>
 
   <!-- CSS Stylesheets -->
   <link rel="stylesheet" href="../css/global.css">
@@ -22,9 +22,70 @@
     #full-leaflet-map {
       width: 100%;
       height: calc(100vh - 180px);
+      min-height: 580px;
       border-radius: var(--radius-md);
       border: 1px solid var(--border-color);
       z-index: 1;
+    }
+    .gis-cam-pin {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #1E3A8A;
+      border: 2px solid #38BDF8;
+      color: #FFF;
+      font-size: 1rem;
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.7);
+    }
+    .gis-violation-pin {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #991B1B;
+      border: 2px solid #EF4444;
+      color: #FFF;
+      font-size: 1rem;
+      box-shadow: 0 0 16px rgba(239, 68, 68, 0.8);
+      animation: pulseAlert 1.5s infinite;
+    }
+    .gis-stolen-pin {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #B91C1C;
+      border: 3px solid #FFF;
+      color: #FFF;
+      font-size: 1.1rem;
+      box-shadow: 0 0 22px #EF4444;
+      animation: pulseAlert 1s infinite;
+    }
+    @keyframes pulseAlert {
+      0% { transform: scale(0.95); opacity: 0.85; }
+      50% { transform: scale(1.15); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.85; }
+    }
+    .layer-pill-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      user-select: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: background 0.15s ease;
+    }
+    .layer-pill-toggle:hover {
+      background: rgba(255,255,255,0.05);
     }
   </style>
 </head>
@@ -63,25 +124,22 @@
         <a href="stolen-search.html" class="nav-item">
           <i class="lucide-search"></i> Stolen Search
         </a>
-        <a href="analytics.html" class="nav-item">
-          <i class="lucide-bar-chart-3"></i> Analytics
-        </a>
         <a href="maps.html" class="nav-item active">
-          <i class="lucide-map"></i> Full Map
+          <i class="lucide-map"></i> Full GIS Map
         </a>
-        <a href="reports.html" class="nav-item">
-          <i class="lucide-file-spreadsheet"></i> Reports
+        <a href="profile.html" class="nav-item">
+          <i class="lucide-user-cog"></i> Officer Profile
         </a>
       </nav>
 
       <div class="sidebar-footer">
-        <div class="user-profile-mini">
+        <a href="profile.html" class="user-profile-mini" style="text-decoration:none;">
           <div class="avatar" style="border-color:var(--danger);">AU</div>
           <div class="user-info">
             <span class="user-name">Authority User</span>
             <span class="user-role">Traffic Enforcement Officer</span>
           </div>
-        </div>
+        </a>
       </div>
     </aside>
 
@@ -91,44 +149,259 @@
         <button id="sidebar-toggle" class="btn-icon d-lg-none"><i class="lucide-menu"></i></button>
 
         <div style="font-size:0.9rem; color:var(--text-muted);">
-          Spatial GIS Command Center Layer Map
+          Spatial GIS Command Center Layer Map (Google Maps & Highway AI Interceptors)
         </div>
 
         <div class="header-actions">
+          <a href="profile.html" class="btn btn-outline btn-sm"><i class="lucide-user"></i> My Profile</a>
           <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
         </div>
       </header>
 
-      <div class="dashboard-container">
+      <div class="dashboard-container" style="padding-bottom:12px;">
         
-        <div class="page-header" style="margin-bottom:16px;">
+        <div class="page-header" style="margin-bottom:14px; flex-wrap:wrap; gap:12px;">
           <div>
             <h1 class="page-title">Smart City Spatial GIS Map</h1>
-            <p class="page-subtitle">Map view for configured camera and violation data.</p>
+            <p class="page-subtitle">Interactive Google Maps view of traffic cameras, live infractions, stolen vehicles & green-wave corridors.</p>
           </div>
 
-          <!-- Layer Toggle Checkboxes -->
-          <div style="display:flex; gap:16px; background:var(--card-bg); padding:8px 16px; border-radius:var(--radius-sm); border:1px solid var(--border-color); font-size:0.85rem;">
-            <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
-              <input type="checkbox"> Live Cameras (0)
+          <!-- Dynamic Layer Toggle Checkboxes -->
+          <div style="display:flex; gap:14px; background:var(--card-bg); padding:8px 16px; border-radius:var(--radius-sm); border:1px solid var(--border-color); flex-wrap:wrap; align-items:center;">
+            <label class="layer-pill-toggle">
+              <input type="checkbox" id="layer-cam-toggle" checked onchange="window.GisMapEngine.toggleLayer('cameras', this.checked)">
+              <span style="color:#38BDF8;">📹</span> Cameras (<span id="count-cams">6</span>)
             </label>
-            <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
-              <input type="checkbox"> Violations (0)
+            <label class="layer-pill-toggle">
+              <input type="checkbox" id="layer-viol-toggle" checked onchange="window.GisMapEngine.toggleLayer('violations', this.checked)">
+              <span style="color:#EF4444;">⚠️</span> Violations (<span id="count-viols">5</span>)
             </label>
-            <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
-              <input type="checkbox"> Stolen Alerts (0)
+            <label class="layer-pill-toggle">
+              <input type="checkbox" id="layer-stolen-toggle" checked onchange="window.GisMapEngine.toggleLayer('stolen', this.checked)">
+              <span style="color:#F59E0B;">🚨</span> Stolen Alerts (<span id="count-stolen">2</span>)
+            </label>
+            <label class="layer-pill-toggle">
+              <input type="checkbox" id="layer-amb-toggle" checked onchange="window.GisMapEngine.toggleLayer('ambulance', this.checked)">
+              <span style="color:#10B981;">🚑</span> Green Wave (<span id="count-amb">1</span>)
             </label>
           </div>
         </div>
 
-        <div id="full-leaflet-map" style="display:flex; align-items:center; justify-content:center; color:var(--text-muted);">No geospatial data is configured.</div>
+        <!-- Full Height Map Container -->
+        <div id="full-leaflet-map"></div>
 
       </div>
     </main>
   </div>
 
   <!-- Scripts -->
+  <script src="../js/api.js"></script>
   <script src="../js/auth.js"></script>
   <script src="../js/app.js"></script>
+  <script src="../js/ai-chat.js"></script>
+
+  <!-- Interactive GIS Map Engine -->
+  <script>
+    (function() {
+      let mapInstance = null;
+      const layerGroups = {
+        cameras: null,
+        violations: null,
+        stolen: null,
+        ambulance: null
+      };
+
+      const GIS_DATA = {
+        cameras: [
+          { code: "CAM-GZB-INDIRA-01", name: "Indirapuram Speed Corridor", lat: 28.6315, lng: 77.3480, status: "Active (59.8 FPS)", city: "Ghaziabad" },
+          { code: "CAM-DEL-RINGRD-01", name: "Moti Bagh Ring Road Junction", lat: 28.5830, lng: 77.1740, status: "Active (60.0 FPS)", city: "New Delhi" },
+          { code: "CAM-DEL-CORRIDOR-03", name: "AIIMS Green-Wave Emergency Corridor", lat: 28.5670, lng: 77.2105, status: "Active Priority", city: "New Delhi" },
+          { code: "CAM-MUM-KURLA-02", name: "Kurla West Junction", lat: 19.0728, lng: 72.8826, status: "Active (59.4 FPS)", city: "Mumbai" },
+          { code: "CAM-PUNE-SWARGATE-04", name: "Swargate Bus Transit Hub", lat: 18.5018, lng: 73.8586, status: "Active (60.0 FPS)", city: "Pune" },
+          { code: "CAM-NOIDA-62-01", name: "Sector 62 Metro Inbound", lat: 28.6250, lng: 77.3650, status: "Active (58.9 FPS)", city: "Noida" }
+        ],
+        violations: [
+          { plate: "UP14DL5922", type: "Corridor Over-Speeding (74 in 50 km/h)", act: "Sec 183(1)", fine: 2000, lat: 28.6315, lng: 77.3480, loc: "Delhi-Meerut Expressway" },
+          { plate: "MH01AK7721", type: "No Helmet on Two-Wheeler", act: "Sec 129", fine: 1000, lat: 19.0728, lng: 72.8826, loc: "Kurla Junction, Mumbai" },
+          { plate: "MH12TR3322", type: "Triple Riding on Motorcycle", act: "Sec 128", fine: 1000, lat: 18.5018, lng: 73.8586, loc: "Swargate Hub, Pune" },
+          { plate: "DL04CP9901", type: "Red Light Stop-Line Breach", act: "Sec 184/119", fine: 5000, lat: 28.5830, lng: 77.1740, loc: "Moti Bagh Ring Road, Delhi" },
+          { plate: "MH12AB3456", type: "Signal Jump / Red Light", act: "Sec 119", fine: 1000, lat: 18.5167, lng: 73.8415, loc: "Deccan Gymkhana, Pune" }
+        ],
+        stolen: [
+          { plate: "DL01BC4400", model: "Hyundai Creta (Silver)", status: "Active Police FIR", lat: 28.6400, lng: 77.2100, loc: "Connaught Place Outer Circle, Delhi" },
+          { plate: "MH02EZ9081", model: "Royal Enfield Bullet 350", status: "Stolen 2 Hours Ago", lat: 19.1150, lng: 72.8450, loc: "Andheri East Western Exp Hwy, Mumbai" }
+        ],
+        ambulance: [
+          { plate: "DL01AM9112", fleet: "CATS Ambulance #14", status: "GREEN WAVE CLEARANCE (Sec 194E)", lat: 28.5670, lng: 77.2105, loc: "AIIMS Trauma Corridor, New Delhi" }
+        ]
+      };
+
+      const GisMapEngine = {
+        init() {
+          const mapEl = document.getElementById("full-leaflet-map");
+          if (!mapEl) return;
+
+          // Google Maps Road Layer
+          const googleRoads = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            attribution: '© Google Maps'
+          });
+
+          // Google Maps Traffic Layer
+          const googleTraffic = L.tileLayer('https://mt1.google.com/vt/lyrs=m,traffic&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            attribution: '© Google Traffic'
+          });
+
+          // Google Hybrid / Satellite
+          const googleSatellite = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            attribution: '© Google Satellite'
+          });
+
+          // Tactical Dark GIS
+          const cartoDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            maxZoom: 19,
+            attribution: '© CARTO Tactical Dark'
+          });
+
+          mapInstance = L.map('full-leaflet-map', {
+            center: [28.6139, 77.2090], // Center Delhi-NCR
+            zoom: 11,
+            layers: [googleRoads]
+          });
+
+          const baseMaps = {
+            "Google Maps (Roads)": googleRoads,
+            "Google Traffic Live": googleTraffic,
+            "Google Satellite Hybrid": googleSatellite,
+            "Tactical Dark GIS": cartoDark
+          };
+
+          L.control.layers(baseMaps).addTo(mapInstance);
+
+          // Initialize Feature Groups
+          layerGroups.cameras = L.featureGroup().addTo(mapInstance);
+          layerGroups.violations = L.featureGroup().addTo(mapInstance);
+          layerGroups.stolen = L.featureGroup().addTo(mapInstance);
+          layerGroups.ambulance = L.featureGroup().addTo(mapInstance);
+
+          this.populateMarkers();
+        },
+
+        populateMarkers() {
+          // 1. Cameras
+          GIS_DATA.cameras.forEach(cam => {
+            const icon = L.divIcon({
+              className: 'gis-pin-marker',
+              html: `<div class="gis-cam-pin" title="${cam.name}">📹</div>`,
+              iconSize: [32, 32],
+              iconAnchor: [16, 16]
+            });
+            const marker = L.marker([cam.lat, cam.lng], { icon });
+            marker.bindPopup(`
+              <div style="font-family:sans-serif; min-width:200px; padding:4px;">
+                <div style="font-size:0.75rem; color:#64748B; font-weight:700;">HIGHWAY AI SURVEILLANCE</div>
+                <div style="font-weight:700; font-size:0.95rem; color:#0F172A; margin:3px 0;">${cam.name}</div>
+                <div style="font-size:0.8rem; color:#475569;">${cam.code} • ${cam.city}</div>
+                <div style="margin-top:6px; font-size:0.75rem; color:#059669; font-weight:700;">${cam.status}</div>
+                <div style="margin-top:8px;">
+                  <a href="yolo-ocr-demo.html" class="btn btn-primary btn-sm" style="display:inline-block; font-size:0.75rem; padding:3px 8px; text-decoration:none;">
+                    Open YOLO Stream
+                  </a>
+                </div>
+              </div>
+            `);
+            layerGroups.cameras.addLayer(marker);
+          });
+
+          // 2. Violations
+          GIS_DATA.violations.forEach(v => {
+            const icon = L.divIcon({
+              className: 'gis-pin-marker',
+              html: `<div class="gis-violation-pin" title="${v.type}">⚠️</div>`,
+              iconSize: [32, 32],
+              iconAnchor: [16, 16]
+            });
+            const marker = L.marker([v.lat, v.lng], { icon });
+            marker.bindPopup(`
+              <div style="font-family:sans-serif; min-width:210px; padding:4px;">
+                <div style="font-size:0.75rem; color:#EF4444; font-weight:700;">STATUTORY TRAFFIC INFRACTION</div>
+                <div style="font-weight:800; font-size:1.05rem; font-family:monospace; margin:2px 0;">${v.plate}</div>
+                <div style="font-weight:700; font-size:0.88rem; color:#0F172A;">${v.type}</div>
+                <div style="font-size:0.78rem; color:#64748B; margin-top:3px;">${v.act} • Fine: <strong style="color:#DC2626;">₹${v.fine}</strong></div>
+                <div style="margin-top:8px;">
+                  <a href="violations.html" class="btn btn-outline btn-sm" style="display:inline-block; font-size:0.75rem; padding:3px 8px; text-decoration:none;">
+                    Inspect Violation
+                  </a>
+                </div>
+              </div>
+            `);
+            layerGroups.violations.addLayer(marker);
+          });
+
+          // 3. Stolen Vehicles
+          GIS_DATA.stolen.forEach(s => {
+            const icon = L.divIcon({
+              className: 'gis-pin-marker',
+              html: `<div class="gis-stolen-pin" title="Stolen Vehicle Alert">🚨</div>`,
+              iconSize: [36, 36],
+              iconAnchor: [18, 18]
+            });
+            const marker = L.marker([s.lat, s.lng], { icon });
+            marker.bindPopup(`
+              <div style="font-family:sans-serif; min-width:210px; padding:4px;">
+                <div style="font-size:0.75rem; color:#DC2626; font-weight:800;">🚨 HIGH-PRIORITY STOLEN ALERT</div>
+                <div style="font-weight:800; font-size:1.1rem; font-family:monospace; margin:2px 0;">${s.plate}</div>
+                <div style="font-weight:700; font-size:0.88rem; color:#0F172A;">${s.model}</div>
+                <div style="font-size:0.78rem; color:#475569; margin-top:3px;">Last Ping: ${s.loc}</div>
+                <div style="margin-top:8px;">
+                  <a href="stolen-search.html" class="btn btn-danger btn-sm" style="display:inline-block; font-size:0.75rem; padding:3px 8px; text-decoration:none;">
+                    Dispatch Patrol Unit
+                  </a>
+                </div>
+              </div>
+            `);
+            layerGroups.stolen.addLayer(marker);
+          });
+
+          // 4. Ambulance Priority Corridor
+          GIS_DATA.ambulance.forEach(a => {
+            const icon = L.divIcon({
+              className: 'gis-pin-marker',
+              html: `<div class="gis-cam-pin" style="background:#065F46; border-color:#10B981; box-shadow:0 0 16px #10B981;" title="Ambulance Green Wave">🚑</div>`,
+              iconSize: [32, 32],
+              iconAnchor: [16, 16]
+            });
+            const marker = L.marker([a.lat, a.lng], { icon });
+            marker.bindPopup(`
+              <div style="font-family:sans-serif; min-width:210px; padding:4px;">
+                <div style="font-size:0.75rem; color:#059669; font-weight:800;">EMERGENCY GREEN-WAVE CORRIDOR</div>
+                <div style="font-weight:800; font-size:1.05rem; font-family:monospace; margin:2px 0;">${a.plate}</div>
+                <div style="font-weight:700; font-size:0.88rem; color:#0F172A;">${a.fleet}</div>
+                <div style="font-size:0.75rem; color:#059669; margin-top:3px; font-weight:700;">${a.status}</div>
+              </div>
+            `);
+            layerGroups.ambulance.addLayer(marker);
+          });
+        },
+
+        toggleLayer(layerName, isChecked) {
+          if (!mapInstance || !layerGroups[layerName]) return;
+          if (isChecked) {
+            mapInstance.addLayer(layerGroups[layerName]);
+          } else {
+            mapInstance.removeLayer(layerGroups[layerName]);
+          }
+        }
+      };
+
+      window.GisMapEngine = GisMapEngine;
+
+      document.addEventListener("DOMContentLoaded", () => {
+        GisMapEngine.init();
+      });
+    })();
+  </script>
 </body>
 </html>

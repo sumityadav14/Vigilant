@@ -134,63 +134,45 @@
 
 
         <a href="notifications-center.html" class="nav-item">
-
           <i class="lucide-bell"></i>
-
           Notifications
-
         </a>
 
+        <a href="profile.html" class="nav-item">
+          <i class="lucide-user-cog"></i>
+          My Profile
+        </a>
       </nav>
 
-
       <div class="sidebar-footer">
-
-        <div class="user-profile-mini">
-
+        <a href="profile.html" class="user-profile-mini" style="text-decoration:none; display:flex; align-items:center; gap:12px; cursor:pointer;">
           <div class="avatar">
             SY
           </div>
-
           <div class="user-info">
-
             <span class="user-name">
               Sumit Yadav
             </span>
-
             <span class="user-role">
               Vehicle Owner
             </span>
-
           </div>
-
-        </div>
-
+        </a>
       </div>
-
     </aside>
-
 
     <!-- =====================================================
          MAIN CONTENT
          ===================================================== -->
-
     <main class="main-content">
-
-
       <!-- Header -->
-
       <header class="top-header">
-
         <button
           id="sidebar-toggle"
           class="btn-icon d-lg-none"
         >
-
           <i class="lucide-menu"></i>
-
         </button>
-
 
         <div
           style="
@@ -198,25 +180,22 @@
             color:var(--text-muted);
           "
         >
-
           <a
             href="my-vehicles.html"
             style="color:var(--text-muted);"
           >
-
             &larr; Back to My Vehicles
-
           </a>
-
         </div>
 
-
         <div class="header-actions">
+          <a href="profile.html" class="btn btn-outline btn-sm">
+            <i class="lucide-user"></i> Profile
+          </a>
           <button
             class="btn btn-outline btn-sm"
             onclick="window.AuthEngine.logout()"
           >
-
             Logout
 
           </button>

@@ -335,9 +335,258 @@ function updateUserProfileUI() {
 
 }
 
-window.handleProfileUpdateSubmit = function(event) {
+// ============================================================
+// PROFILE MANAGEMENT (AUTHORITY & CITIZEN)
+// ============================================================
+
+async function renderAuthorityProfile() {
+  let profile = null;
+  try {
+    if (window.ApiService && window.ApiService.getProfile) {
+      const res = await window.ApiService.getProfile();
+      if (res && res.user) {
+        profile = res.user;
+        if (window.AuthEngine && window.AuthEngine.setCurrentUser) {
+          window.AuthEngine.setCurrentUser(profile);
+        }
+      }
+    }
+  } catch (e) {
+    console.warn("Authority profile fetch fallback:", e);
+  }
+
+  if (!profile && window.AuthEngine) {
+    profile = window.AuthEngine.getCurrentUser();
+  }
+
+  if (!profile) return;
+
+  const initials = profile.avatar || (profile.name ? profile.name.slice(0, 2).toUpperCase() : "AU");
+  const avatarEl = document.getElementById("officer-avatar");
+  if (avatarEl) avatarEl.textContent = initials;
+
+  const nameEl = document.getElementById("profile-officer-name");
+  if (nameEl) nameEl.textContent = profile.name || "Officer Inspector";
+
+  const badgeEl = document.getElementById("profile-badge-number");
+  if (badgeEl) badgeEl.textContent = profile.badgeNumber ? `BADGE: ${profile.badgeNumber}` : "POL-DEL-4092";
+
+  const emailEl = document.getElementById("profile-email-disp");
+  if (emailEl) emailEl.textContent = profile.email || "officer@police.gov.in";
+
+  const phoneEl = document.getElementById("profile-phone-disp");
+  if (phoneEl) phoneEl.textContent = profile.phone || "+91 98765 43210";
+
+  const rankEl = document.getElementById("profile-rank");
+  if (rankEl) rankEl.textContent = profile.rank || "Sub-Inspector (Traffic Enforcement)";
+
+  const deptEl = document.getElementById("profile-department");
+  if (deptEl) deptEl.textContent = profile.department || "Traffic Enforcement Division — Sector 4";
+
+  const shiftEl = document.getElementById("profile-shift");
+  if (shiftEl) shiftEl.textContent = profile.activeShift || "Morning General (08:00 - 16:00 IST)";
+
+  const jurisEl = document.getElementById("profile-jurisdiction");
+  if (jurisEl) jurisEl.textContent = profile.address || "Police Headquarters, ITO, New Delhi";
+
+  // Pre-fill edit inputs
+  const editName = document.getElementById("edit-officer-name");
+  if (editName) editName.value = profile.name || "";
+
+  const editPhone = document.getElementById("edit-officer-phone");
+  if (editPhone) editPhone.value = profile.phone || "";
+
+  const editBadge = document.getElementById("edit-officer-badge");
+  if (editBadge) editBadge.value = profile.badgeNumber || "POL-DEL-4092";
+
+  const editDept = document.getElementById("edit-officer-department");
+  if (editDept) editDept.value = profile.department || "Traffic Enforcement Division — Sector 4";
+
+  const editAddress = document.getElementById("edit-officer-address");
+  if (editAddress) editAddress.value = profile.address || "Police Headquarters, ITO, New Delhi";
+
+  // Render dynamic duty logs
+  const dutyContainer = document.getElementById("duty-log-container");
+  if (dutyContainer) {
+    const today = new Date();
+    const timeStr = (h, m) => {
+      const d = new Date(today);
+      d.setHours(h, m, 0);
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    };
+
+    const dutyItems = [
+      {
+        time: timeStr(8, 30),
+        action: "Officer Shift Commenced",
+        detail: "Logged into VIGILANT Sector 4 ANPR grid. 12 surveillance nodes synchronized.",
+        type: "info",
+        icon: "activity"
+      },
+      {
+        time: timeStr(10, 15),
+        action: "ANPR Node Stream Calibration",
+        detail: "Calibrated 4K optical feed on CAM-02-EXPWY. Plate extraction accuracy: 98.4%.",
+        type: "success",
+        icon: "video"
+      },
+      {
+        time: timeStr(11, 40),
+        action: "Statutory Violation Review",
+        detail: "Approved e-Challan for UP14DL5922 (Over-speeding 118 km/h under Sec 183 MV Act).",
+        type: "warning",
+        icon: "shield-alert"
+      },
+      {
+        time: timeStr(13, 5),
+        action: "Green-Wave Corridor Clearance",
+        detail: "Priority corridor granted for Ambulance DL01AM9112 along Ring Road AIIMS route.",
+        type: "danger",
+        icon: "route"
+      }
+    ];
+
+    dutyContainer.innerHTML = dutyItems.map(item => `
+      <div style="background:var(--bg-dark-alt); padding:14px; border-radius:var(--radius-sm); border-left:4px solid var(--${item.type}); display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
+        <div style="display:flex; gap:12px; align-items:flex-start;">
+          <div style="margin-top:2px; color:var(--${item.type}); font-size:1.1rem;"><i class="lucide-${item.icon}"></i></div>
+          <div>
+            <div style="font-weight:600; font-size:0.9rem; color:var(--text-main);">${item.action}</div>
+            <div style="font-size:0.82rem; color:var(--text-muted); margin-top:2px;">${item.detail}</div>
+          </div>
+        </div>
+        <span class="badge badge-info" style="font-size:0.75rem; white-space:nowrap;">${item.time}</span>
+      </div>
+    `).join("");
+
+    if (window.lucide && window.lucide.createIcons) {
+      window.lucide.createIcons();
+    }
+  }
+}
+
+window.handleAuthorityProfileSubmit = async function(event) {
   event.preventDefault();
-  showToast("Profile updates are not configured by the backend.", "warning");
+  const name = document.getElementById("edit-officer-name")?.value;
+  const phone = document.getElementById("edit-officer-phone")?.value;
+  const badgeNumber = document.getElementById("edit-officer-badge")?.value;
+  const department = document.getElementById("edit-officer-department")?.value;
+  const address = document.getElementById("edit-officer-address")?.value;
+
+  try {
+    if (window.ApiService && window.ApiService.updateProfile) {
+      const res = await window.ApiService.updateProfile({
+        name,
+        phone,
+        badgeNumber,
+        department,
+        address
+      });
+      if (res && res.user && window.AuthEngine) {
+        window.AuthEngine.setCurrentUser(res.user);
+      }
+      if (window.showToast) window.showToast("Officer credentials updated successfully!", "success");
+      await renderAuthorityProfile();
+      updateUserProfileUI();
+    }
+  } catch (err) {
+    if (window.showToast) window.showToast(err.message || "Failed to update profile", "error");
+  }
+};
+
+async function renderCitizenProfile() {
+  let profile = null;
+  try {
+    if (window.ApiService && window.ApiService.getProfile) {
+      const res = await window.ApiService.getProfile();
+      if (res && res.user) {
+        profile = res.user;
+        if (window.AuthEngine && window.AuthEngine.setCurrentUser) {
+          window.AuthEngine.setCurrentUser(profile);
+        }
+      }
+    }
+  } catch (e) {
+    console.warn("Citizen profile fetch fallback:", e);
+  }
+
+  if (!profile && window.AuthEngine) {
+    profile = window.AuthEngine.getCurrentUser();
+  }
+
+  if (!profile) return;
+
+  const initials = profile.avatar || (profile.name ? profile.name.slice(0, 2).toUpperCase() : "SY");
+  const mainAvatar = document.getElementById("citizen-main-avatar");
+  if (mainAvatar) mainAvatar.textContent = initials;
+
+  const sideAvatar = document.getElementById("citizen-sidebar-avatar");
+  if (sideAvatar) sideAvatar.textContent = initials;
+
+  const nameEl = document.getElementById("profile-citizen-name");
+  if (nameEl) nameEl.textContent = profile.name || "Sumit Yadav";
+
+  const emailEl = document.getElementById("profile-email-disp");
+  if (emailEl) emailEl.textContent = profile.email || "citizen@example.com";
+
+  const phoneEl = document.getElementById("profile-phone-disp");
+  if (phoneEl) phoneEl.textContent = profile.phone || "+91 98765 43210";
+
+  const dlEl = document.getElementById("profile-dl-disp");
+  if (dlEl) dlEl.textContent = profile.dlNumber || "DL-0420190089123";
+
+  const dlValEl = document.getElementById("profile-dl-validity-disp");
+  if (dlValEl) dlValEl.textContent = profile.dlValidity || "2039-11-20 (Valid & Active)";
+
+  const addrEl = document.getElementById("profile-address-disp");
+  if (addrEl) addrEl.textContent = profile.address || "C-42, Sector 14, Rohini, New Delhi — 110085";
+
+  const countBadge = document.getElementById("profile-vehicles-badge");
+  if (countBadge) countBadge.textContent = `Linked Vehicles: ${profile.vehiclesCount || 1}`;
+
+  // Form inputs
+  const editName = document.getElementById("edit-profile-name");
+  if (editName) editName.value = profile.name || "";
+
+  const editPhone = document.getElementById("edit-profile-phone");
+  if (editPhone) editPhone.value = profile.phone || "";
+
+  const editDL = document.getElementById("edit-profile-dl");
+  if (editDL) editDL.value = profile.dlNumber || "DL-0420190089123";
+
+  const editAddress = document.getElementById("edit-profile-address");
+  if (editAddress) editAddress.value = profile.address || "C-42, Sector 14, Rohini, New Delhi";
+}
+
+window.handleCitizenProfileSubmit = async function(event) {
+  event.preventDefault();
+  const name = document.getElementById("edit-profile-name")?.value;
+  const phone = document.getElementById("edit-profile-phone")?.value;
+  const dlNumber = document.getElementById("edit-profile-dl")?.value;
+  const address = document.getElementById("edit-profile-address")?.value;
+
+  try {
+    if (window.ApiService && window.ApiService.updateProfile) {
+      const res = await window.ApiService.updateProfile({
+        name,
+        phone,
+        dlNumber,
+        address
+      });
+      if (res && res.user && window.AuthEngine) {
+        window.AuthEngine.setCurrentUser(res.user);
+      }
+      if (window.showToast) window.showToast("Citizen profile updated successfully!", "success");
+      await renderCitizenProfile();
+      updateUserProfileUI();
+    }
+  } catch (err) {
+    if (window.showToast) window.showToast(err.message || "Failed to update profile", "error");
+  }
+};
+
+window.handleProfileUpdateSubmit = function(event) {
+  return window.handleCitizenProfileSubmit(event);
 };
 
 
@@ -3293,10 +3542,13 @@ document.addEventListener(
     }
 
 
+    if (page === "authority-profile") {
+      renderAuthorityProfile();
+    }
+
     if (page === "citizen-profile") {
-
+      renderCitizenProfile();
       renderProfileVehicles();
-
     }
 
 

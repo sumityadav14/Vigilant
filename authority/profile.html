@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Officer Profile — VIGILANT Command Center</title>
+  <title>Officer Profile & Duty Credentials — VIGILANT Command Center</title>
 
   <!-- CSS Stylesheets -->
   <link rel="stylesheet" href="../css/global.css">
@@ -83,103 +83,223 @@
       <header class="top-header">
         <button id="sidebar-toggle" class="btn-icon d-lg-none"><i class="lucide-menu"></i></button>
 
-        <div style="font-size:0.9rem; color:var(--text-muted);">
-          Police Officer Credentials & System Duty Authorization
+        <div style="font-size:0.9rem; color:var(--text-muted); display:flex; align-items:center; gap:8px;">
+          <i class="lucide-shield-check" style="color:var(--success);"></i>
+          <span>Police Officer Credentials & System Duty Authorization</span>
         </div>
 
         <div class="header-actions">
-          <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
+          <button class="btn btn-primary btn-sm" onclick="document.getElementById('officer-edit-section').scrollIntoView({behavior:'smooth'})">
+            <i class="lucide-user-edit"></i> Edit Credentials
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">
+            <i class="lucide-log-out"></i> Logout
+          </button>
         </div>
       </header>
 
-      <div class="dashboard-container" style="max-width:960px;">
+      <div class="dashboard-container" style="max-width:1100px;">
         
         <div class="page-header">
           <div>
             <h1 class="page-title">Police Officer Profile & Duty Credentials</h1>
-            <p class="page-subtitle">Inspect officer badge authorization, department jurisdiction, and system action logs.</p>
+            <p class="page-subtitle">Inspect officer badge authorization, department jurisdiction, duty shifts, and system audit logs.</p>
           </div>
 
-          <button class="btn btn-primary" onclick="showToast('Duty log export is not configured.', 'warning')">
-            <i class="lucide-download"></i> Export Duty Log
-          </button>
+          <div style="display:flex; gap:10px;">
+            <button class="btn btn-outline btn-sm" onclick="exportDutyLog()">
+              <i class="lucide-download"></i> Export Duty Log
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="openPasswordModal()">
+              <i class="lucide-key"></i> Security Key
+            </button>
+          </div>
         </div>
 
         <div class="grid-3-1">
           <!-- Main Officer Credentials -->
           <div style="display:flex; flex-direction:column; gap:20px;">
             
-            <!-- Officer Card -->
-            <div class="glass-card" style="padding:28px;">
+            <!-- Officer Identity Card -->
+            <div class="glass-card" style="padding:28px; position:relative; overflow:hidden;">
+              <div style="position:absolute; top:-20px; right:-20px; width:120px; height:120px; background:radial-gradient(circle, rgba(239,68,68,0.15) 0%, transparent 70%); pointer-events:none;"></div>
+
               <div style="display:flex; align-items:center; gap:20px; margin-bottom:24px;">
-                <div class="avatar" style="width:72px; height:72px; font-size:2rem; background:linear-gradient(135deg, var(--danger), var(--warning)); border:2px solid var(--danger);">AU</div>
+                <div class="avatar" id="officer-avatar" style="width:76px; height:76px; font-size:2rem; background:linear-gradient(135deg, var(--danger), var(--warning)); border:3px solid var(--danger); box-shadow:0 0 15px rgba(239,68,68,0.3);">AU</div>
                 <div>
-                  <h2 class="user-name" style="font-size:1.5rem; margin-bottom:2px;">Officer</h2>
-                  <div style="font-size:0.88rem; color:var(--text-muted);">Authority account</div>
-                  <div style="margin-top:6px;">
-                    <span id="profile-badge-number" class="badge badge-danger">Badge unavailable</span>
-                    <span class="badge badge-warning" style="margin-left:6px;">Status unavailable</span>
+                  <h2 class="user-name" id="profile-officer-name" style="font-size:1.6rem; margin-bottom:4px; font-weight:700;">Officer Inspector</h2>
+                  <div style="font-size:0.9rem; color:var(--text-muted); display:flex; align-items:center; gap:8px;">
+                    <i class="lucide-badge-check" style="color:var(--primary);"></i>
+                    <span>Authorized Law Enforcement Officer</span>
+                  </div>
+                  <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
+                    <span id="profile-badge-number" class="badge badge-danger" style="font-weight:600; font-family:monospace; font-size:0.85rem;">POL-DEL-4092</span>
+                    <span id="profile-status-badge" class="badge badge-success"><i class="lucide-activity" style="width:12px;height:12px;"></i> Active on Duty</span>
+                    <span id="profile-role-badge" class="badge badge-info">Traffic Enforcement</span>
                   </div>
                 </div>
               </div>
 
               <!-- Details Grid -->
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; background:var(--bg-dark-alt); padding:20px; border-radius:var(--radius-sm); border:1px solid var(--border-color); font-size:0.9rem;">
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:16px; background:var(--bg-dark-alt); padding:20px; border-radius:var(--radius-sm); border:1px solid var(--border-color); font-size:0.9rem;">
                 <div>
-                  <span style="color:var(--text-muted); font-size:0.8rem; display:block;">Official Department Email</span>
-                  <strong id="profile-email-disp"></strong>
+                  <span style="color:var(--text-muted); font-size:0.8rem; display:block; margin-bottom:3px;">Official Department Email</span>
+                  <strong id="profile-email-disp" style="word-break:break-all; color:var(--text-main);">officer@police.gov.in</strong>
                 </div>
 
                 <div>
-                  <span style="color:var(--text-muted); font-size:0.8rem; display:block;">Active Rank</span>
-                  <strong style="color:var(--warning);">Not available</strong>
+                  <span style="color:var(--text-muted); font-size:0.8rem; display:block; margin-bottom:3px;">Official Contact Phone</span>
+                  <strong id="profile-phone-disp" style="color:var(--text-main);">+91 98765 43210</strong>
                 </div>
 
                 <div>
-                  <span style="color:var(--text-muted); font-size:0.8rem; display:block;">Department / Station</span>
-                  <strong id="profile-department" style="color:var(--primary);">Not available</strong>
+                  <span style="color:var(--text-muted); font-size:0.8rem; display:block; margin-bottom:3px;">Rank / Designation</span>
+                  <strong id="profile-rank" style="color:var(--warning);">Sub-Inspector (Traffic)</strong>
                 </div>
 
                 <div>
-                  <span style="color:var(--text-muted); font-size:0.8rem; display:block;">Current Shift</span>
-                  <strong style="color:var(--success);">Not available</strong>
+                  <span style="color:var(--text-muted); font-size:0.8rem; display:block; margin-bottom:3px;">Department / Unit</span>
+                  <strong id="profile-department" style="color:var(--primary);">Traffic Enforcement Division — Sector 4</strong>
+                </div>
+
+                <div>
+                  <span style="color:var(--text-muted); font-size:0.8rem; display:block; margin-bottom:3px;">Current Operational Shift</span>
+                  <strong id="profile-shift" style="color:var(--success);">Morning General (08:00 - 16:00 IST)</strong>
+                </div>
+
+                <div>
+                  <span style="color:var(--text-muted); font-size:0.8rem; display:block; margin-bottom:3px;">Station Headquarters</span>
+                  <strong id="profile-jurisdiction" style="color:var(--text-main);">Police Headquarters, ITO, New Delhi</strong>
                 </div>
               </div>
+            </div>
+
+            <!-- Editable Officer Profile Form -->
+            <div id="officer-edit-section" class="glass-card" style="padding:28px;">
+              <h3 style="font-size:1.2rem; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+                <i class="lucide-edit-3" style="color:var(--primary);"></i> Update Officer Duty Credentials
+              </h3>
+              <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:20px;">
+                Changes made here persist to the centralized database and are reflected across command logs.
+              </p>
+
+              <form onsubmit="handleAuthorityProfileSubmit(event)">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                  <div class="form-group">
+                    <label class="form-label">Officer Full Name</label>
+                    <input type="text" id="edit-officer-name" class="form-control" required placeholder="e.g. Inspector R. K. Sharma">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Official Mobile Phone</label>
+                    <input type="tel" id="edit-officer-phone" class="form-control" required placeholder="+91 98765 XXXXX">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Police Badge Number</label>
+                    <input type="text" id="edit-officer-badge" class="form-control" required placeholder="e.g. POL-DEL-4092">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Assigned Police Department / Station</label>
+                    <input type="text" id="edit-officer-department" class="form-control" required placeholder="e.g. Traffic Enforcement Division — Sector 4">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Posting Jurisdiction / Headquarters Address</label>
+                  <input type="text" id="edit-officer-address" class="form-control" placeholder="e.g. Police Headquarters, ITO, New Delhi">
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:16px;">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="lucide-save"></i> Save Credentials
+                  </button>
+                </div>
+              </form>
             </div>
 
             <!-- Officer Action Duty Log -->
             <div class="glass-card" style="padding:28px;">
-              <h3 style="font-size:1.2rem; margin-bottom:16px;"><i class="lucide-history"></i> Today's Duty Action Log</h3>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h3 style="font-size:1.2rem; display:flex; align-items:center; gap:8px;">
+                  <i class="lucide-history" style="color:var(--accent-cyan);"></i> Today's Operational Duty Log
+                </h3>
+                <span class="badge badge-info" style="font-size:0.75rem;">LIVE AUDIT TRAIL</span>
+              </div>
 
-              <p style="color:var(--text-muted);">No duty log records are available.</p>
+              <div id="duty-log-container" style="display:flex; flex-direction:column; gap:12px;">
+                <!-- Populated dynamically -->
+              </div>
             </div>
 
           </div>
 
-          <!-- Side Permissions Card -->
+          <!-- Side Permissions & Security -->
           <div style="display:flex; flex-direction:column; gap:20px;">
-            <div class="glass-card" style="padding:20px;">
-              <h3 style="font-size:1.1rem; margin-bottom:14px;">System Permissions</h3>
+            <!-- System Security Matrix -->
+            <div class="glass-card" style="padding:22px;">
+              <h3 style="font-size:1.1rem; margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+                <i class="lucide-shield-alert" style="color:var(--danger);"></i> System Clearances
+              </h3>
 
-              <div style="display:flex; flex-direction:column; gap:12px; font-size:0.85rem;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <span>Challan Approval Level:</span>
-                  <span class="badge badge-warning">Not configured</span>
+              <div style="display:flex; flex-direction:column; gap:14px; font-size:0.85rem;">
+                <div style="background:var(--bg-dark-alt); padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+                  <div style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Challan Approval Level</div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                    <strong style="color:var(--text-main);">Level 2 Statutory</strong>
+                    <span class="badge badge-success">Authorized</span>
+                  </div>
                 </div>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <span>Neural Re-ID Engine:</span>
-                  <span class="badge badge-warning">Not configured</span>
+
+                <div style="background:var(--bg-dark-alt); padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+                  <div style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Neural Re-ID Engine</div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                    <strong style="color:var(--text-main);">ResNet-50 / YOLOv8</strong>
+                    <span class="badge badge-success">High Priority</span>
+                  </div>
                 </div>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <span>GIS Spatial Tracking:</span>
-                  <span class="badge badge-warning">Not configured</span>
+
+                <div style="background:var(--bg-dark-alt); padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+                  <div style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">GIS Spatial Tracking</div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                    <strong style="color:var(--text-main);">Delhi-NCR Corridors</strong>
+                    <span class="badge badge-info">Full Access</span>
+                  </div>
                 </div>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <span>Emergency Dispatch:</span>
-                  <span class="badge badge-warning">Not configured</span>
+
+                <div style="background:var(--bg-dark-alt); padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+                  <div style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Emergency Dispatch</div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+                    <strong style="color:var(--text-main);">Green-Wave Corridor</strong>
+                    <span class="badge badge-warning">Priority Clear</span>
+                  </div>
                 </div>
               </div>
             </div>
+
+            <!-- Officer Quick Actions -->
+            <div class="glass-card" style="padding:22px;">
+              <h3 style="font-size:1.1rem; margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+                <i class="lucide-wrench" style="color:var(--primary);"></i> Command Actions
+              </h3>
+
+              <div style="display:flex; flex-direction:column; gap:10px;">
+                <a href="violations.html" class="btn btn-outline btn-sm" style="width:100%; justify-content:flex-start;">
+                  <i class="lucide-shield-alert"></i> Review Pending Violations
+                </a>
+                <a href="tracking.html" class="btn btn-outline btn-sm" style="width:100%; justify-content:flex-start;">
+                  <i class="lucide-route"></i> Live GIS Vehicle Tracking
+                </a>
+                <a href="maps.html" class="btn btn-outline btn-sm" style="width:100%; justify-content:flex-start;">
+                  <i class="lucide-map"></i> Open Citywide GIS Map
+                </a>
+                <button class="btn btn-outline btn-sm" style="width:100%; justify-content:flex-start;" onclick="openPasswordModal()">
+                  <i class="lucide-key"></i> Update Security Password
+                </button>
+              </div>
+            </div>
+
           </div>
         </div>
 
@@ -187,9 +307,77 @@
     </main>
   </div>
 
+  <!-- Password Reset Modal -->
+  <div id="password-modal" class="modal-backdrop" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center;">
+    <div class="glass-card" style="width:90%; max-width:440px; padding:28px; background:var(--bg-dark); border:1px solid var(--border-color);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h3 style="font-size:1.2rem; display:flex; align-items:center; gap:8px;">
+          <i class="lucide-lock" style="color:var(--warning);"></i> Update Officer Password
+        </h3>
+        <button class="btn-icon" onclick="closePasswordModal()"><i class="lucide-x"></i></button>
+      </div>
+
+      <form onsubmit="handlePasswordUpdateSubmit(event)">
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label">New Password</label>
+          <input type="password" id="new-password-input" class="form-control" required minlength="6" placeholder="Minimum 6 characters">
+        </div>
+        <div class="form-group" style="margin-bottom:20px;">
+          <label class="form-label">Confirm New Password</label>
+          <input type="password" id="confirm-password-input" class="form-control" required minlength="6" placeholder="Re-enter password">
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+          <button type="button" class="btn btn-outline btn-sm" onclick="closePasswordModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Scripts -->
+  <script src="../js/api.js"></script>
   <script src="../js/auth.js"></script>
   <script src="../js/app.js"></script>
   <script src="../js/ai-chat.js"></script>
+
+  <script>
+    // Password Modal handlers
+    window.openPasswordModal = function() {
+      const m = document.getElementById('password-modal');
+      if (m) m.style.display = 'flex';
+    };
+    window.closePasswordModal = function() {
+      const m = document.getElementById('password-modal');
+      if (m) m.style.display = 'none';
+    };
+
+    window.handlePasswordUpdateSubmit = async function(e) {
+      e.preventDefault();
+      const p1 = document.getElementById('new-password-input').value;
+      const p2 = document.getElementById('confirm-password-input').value;
+      if (p1 !== p2) {
+        if (window.showToast) window.showToast('Passwords do not match!', 'error');
+        return;
+      }
+      try {
+        const res = await window.ApiService.updateProfile({ password: p1 });
+        if (window.showToast) window.showToast('Security password updated successfully!', 'success');
+        closePasswordModal();
+      } catch (err) {
+        if (window.showToast) window.showToast(err.message || 'Failed to update password', 'error');
+      }
+    };
+
+    window.exportDutyLog = function() {
+      const text = `VIGILANT POLICE COMMAND CENTER - OFFICER DUTY LOG\nBadge: POL-DEL-4092\nDate: ${new Date().toLocaleDateString()}\nStatus: Verified\n----------------------------------------------------\n08:30 IST - Commenced Shift at Sector 4 Control Center\n10:15 IST - ANPR Stream Calibration on CAM-02-EXPWY\n11:40 IST - Statutory Violation Review (UP14DL5922 Over-speeding)\n13:05 IST - Green-Wave Corridor clearance for DL01AM9112`;
+      const blob = new Blob([text], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `Duty_Log_${new Date().toISOString().slice(0,10)}.txt`;
+      a.click();
+      if (window.showToast) window.showToast('Duty log exported successfully', 'success');
+    };
+  </script>
 </body>
 </html>

@@ -334,38 +334,211 @@ const mockDocuments = [
 ];
 
 const mockTrackingLogs = [
+  // 1. UP14DL5922 (Maruti Suzuki Dzire - Ghaziabad / Noida Expressway)
   {
     trackingId: "TRK-UP14-5922-01",
+    vehicleNumber: "UP14DL5922",
+    vehicleId: "VEH-UP14-5922",
+    cameraCode: "CAM-GZB-CISF-01",
+    cameraName: "CISF Chowk Inbound CAM",
+    timestamp: new Date("2026-10-24T10:05:00Z"),
+    speedKmh: 52,
+    trajectorySequence: 1,
+    latitude: 28.6480,
+    longitude: 77.3685,
+    location: "CISF Camp Chowk, Indirapuram"
+  },
+  {
+    trackingId: "TRK-UP14-5922-02",
+    vehicleNumber: "UP14DL5922",
+    vehicleId: "VEH-UP14-5922",
+    cameraCode: "CAM-GZB-INDIRA-02",
+    cameraName: "Habitat Centre Sector-4 CAM",
+    timestamp: new Date("2026-10-24T10:11:00Z"),
+    speedKmh: 68,
+    trajectorySequence: 2,
+    latitude: 28.6432,
+    longitude: 77.3730,
+    location: "Indirapuram Habitat Centre, Ghaziabad"
+  },
+  {
+    trackingId: "TRK-UP14-5922-03",
+    vehicleNumber: "UP14DL5922",
     vehicleId: "VEH-UP14-5922",
     cameraCode: "CAM-GZB-INDIRA-01",
-    timestamp: new Date("2026-10-24T10:15:00Z"),
+    cameraName: "NH-24 Expressway Speed Corridor CAM",
+    timestamp: new Date("2026-10-24T10:18:00Z"),
     speedKmh: 74,
-    trajectorySequence: 1,
-    latitude: 28.6692,
-    longitude: 77.4538,
-    location: "Indirapuram Junction, Ghaziabad"
+    trajectorySequence: 3,
+    latitude: 28.6315,
+    longitude: 77.3480,
+    location: "Delhi-Meerut Expressway Flyover (Over-Speeding Infraction)",
+    isViolationPoint: true
   },
   {
-    trackingId: "TRK-MUM-7721-01",
-    vehicleId: "VEH-MH01-7721",
-    cameraCode: "CAM-MUM-KURLA-02",
-    timestamp: new Date("2026-10-28T16:40:00Z"),
-    speedKmh: 38,
-    trajectorySequence: 1,
-    latitude: 19.0728,
-    longitude: 72.8826,
-    location: "Kurla Junction, Mumbai"
+    trackingId: "TRK-UP14-5922-04",
+    vehicleNumber: "UP14DL5922",
+    vehicleId: "VEH-UP14-5922",
+    cameraCode: "CAM-NOIDA-62-01",
+    cameraName: "Electronic City Metro CAM",
+    timestamp: new Date("2026-10-24T10:25:00Z"),
+    speedKmh: 48,
+    trajectorySequence: 4,
+    latitude: 28.6250,
+    longitude: 77.3650,
+    location: "Sector 62 Electronic City, Noida"
   },
   {
-    trackingId: "TRK-DEL-9112-01",
+    trackingId: "TRK-UP14-5922-05",
+    vehicleNumber: "UP14DL5922",
+    vehicleId: "VEH-UP14-5922",
+    cameraCode: "CAM-NOIDA-STAD-03",
+    cameraName: "Sector 21A Noida Stadium CAM",
+    timestamp: new Date("2026-10-24T10:34:00Z"),
+    speedKmh: 42,
+    trajectorySequence: 5,
+    latitude: 28.5980,
+    longitude: 77.3420,
+    location: "Noida Stadium Crossroad"
+  },
+
+  // 2. DL04CP9901 (Tata Nexon EV - Delhi Ring Road Corridor)
+  {
+    trackingId: "TRK-DL04-9901-01",
+    vehicleNumber: "DL04CP9901",
+    vehicleId: "VEH-DL04-9901",
+    cameraCode: "CAM-DEL-DHAULA-01",
+    cameraName: "Dhaula Kuan Flyover CAM",
+    timestamp: new Date("2026-10-29T09:15:00Z"),
+    speedKmh: 58,
+    trajectorySequence: 1,
+    latitude: 28.5921,
+    longitude: 77.1610,
+    location: "Dhaula Kuan Interchange, Ring Road"
+  },
+  {
+    trackingId: "TRK-DL04-9901-02",
+    vehicleNumber: "DL04CP9901",
+    vehicleId: "VEH-DL04-9901",
+    cameraCode: "CAM-DEL-RINGRD-01",
+    cameraName: "Moti Bagh Signal Breach Interceptor",
+    timestamp: new Date("2026-10-29T09:22:00Z"),
+    speedKmh: 42,
+    trajectorySequence: 2,
+    latitude: 28.5830,
+    longitude: 77.1740,
+    location: "Moti Bagh Junction (Red Light Stop-Line Breach)",
+    isViolationPoint: true
+  },
+  {
+    trackingId: "TRK-DL04-9901-03",
+    vehicleNumber: "DL04CP9901",
+    vehicleId: "VEH-DL04-9901",
+    cameraCode: "CAM-DEL-AIIMS-02",
+    cameraName: "AIIMS Flyover North Inbound",
+    timestamp: new Date("2026-10-29T09:35:00Z"),
+    speedKmh: 50,
+    trajectorySequence: 3,
+    latitude: 28.5672,
+    longitude: 77.2100,
+    location: "AIIMS Flyover Corridor"
+  },
+  {
+    trackingId: "TRK-DL04-9901-04",
+    vehicleNumber: "DL04CP9901",
+    vehicleId: "VEH-DL04-9901",
+    cameraCode: "CAM-DEL-LAJPAT-04",
+    cameraName: "Lajpat Nagar Central Market CAM",
+    timestamp: new Date("2026-10-29T09:48:00Z"),
+    speedKmh: 46,
+    trajectorySequence: 4,
+    latitude: 28.5700,
+    longitude: 77.2400,
+    location: "Lajpat Nagar Ring Road"
+  },
+
+  // 3. DL01AM9112 (CATS Ambulance - Priority Green-Wave Corridor)
+  {
+    trackingId: "TRK-DL01-9112-01",
+    vehicleNumber: "DL01AM9112",
+    vehicleId: "VEH-DL01-9112",
+    cameraCode: "CAM-DEL-SAFDAR-01",
+    cameraName: "Safdarjung Hospital Emergency Gate",
+    timestamp: new Date("2026-10-29T18:10:00Z"),
+    speedKmh: 62,
+    trajectorySequence: 1,
+    latitude: 28.5705,
+    longitude: 77.2065,
+    location: "Safdarjung Emergency Base"
+  },
+  {
+    trackingId: "TRK-DL01-9112-02",
+    vehicleNumber: "DL01AM9112",
     vehicleId: "VEH-DL01-9112",
     cameraCode: "CAM-DEL-CORRIDOR-03",
-    timestamp: new Date("2026-10-29T18:20:00Z"),
-    speedKmh: 65,
+    cameraName: "AIIMS Trauma Green-Wave Priority CAM",
+    timestamp: new Date("2026-10-29T18:15:00Z"),
+    speedKmh: 70,
+    trajectorySequence: 2,
+    latitude: 28.5670,
+    longitude: 77.2105,
+    location: "AIIMS Trauma Center (Green Wave Priority Granted)",
+    isPriorityPoint: true
+  },
+  {
+    trackingId: "TRK-DL01-9112-03",
+    vehicleNumber: "DL01AM9112",
+    vehicleId: "VEH-DL01-9112",
+    cameraCode: "CAM-DEL-SOUTHEXT-02",
+    cameraName: "South Extension Part 1 Underpass",
+    timestamp: new Date("2026-10-29T18:22:00Z"),
+    speedKmh: 68,
+    trajectorySequence: 3,
+    latitude: 28.5710,
+    longitude: 77.2250,
+    location: "South Extension Transit Corridor"
+  },
+
+  // 4. MH12AB3456 (Maruti Suzuki Ciaz - Pune Metro Corridor)
+  {
+    trackingId: "TRK-MH12-3456-01",
+    vehicleNumber: "MH12AB3456",
+    vehicleId: "VEH-MH12-3456",
+    cameraCode: "CAM-PUNE-SHIVAJI-01",
+    cameraName: "Shivaji Nagar Court Chowk",
+    timestamp: new Date("2026-07-22T14:10:00Z"),
+    speedKmh: 45,
     trajectorySequence: 1,
-    latitude: 28.6139,
-    longitude: 77.2090,
-    location: "AIIMS Trauma Corridor, New Delhi"
+    latitude: 18.5308,
+    longitude: 73.8475,
+    location: "Shivaji Nagar Chowk, Pune"
+  },
+  {
+    trackingId: "TRK-MH12-3456-02",
+    vehicleNumber: "MH12AB3456",
+    vehicleId: "VEH-MH12-3456",
+    cameraCode: "CAM-PUNE-012",
+    cameraName: "Deccan Gymkhana Signal Interceptor",
+    timestamp: new Date("2026-07-22T14:26:00Z"),
+    speedKmh: 52,
+    trajectorySequence: 2,
+    latitude: 18.5167,
+    longitude: 73.8415,
+    location: "Deccan Gymkhana (Signal Jump)",
+    isViolationPoint: true
+  },
+  {
+    trackingId: "TRK-MH12-3456-03",
+    vehicleNumber: "MH12AB3456",
+    vehicleId: "VEH-MH12-3456",
+    cameraCode: "CAM-PUNE-SWARGATE-01",
+    cameraName: "Swargate Bus Terminal Hub",
+    timestamp: new Date("2026-07-22T14:38:00Z"),
+    speedKmh: 35,
+    trajectorySequence: 3,
+    latitude: 18.5018,
+    longitude: 73.8586,
+    location: "Swargate Terminal, Pune"
   }
 ];
 

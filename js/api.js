@@ -54,13 +54,26 @@ const ApiService = {
   },
 
   /* ==========================================
-     AUTHENTICATION
+     AUTHENTICATION & USER PROFILE
      ========================================== */
 
   loginUser(credentials) {
     return this.request("/auth/login", {
       method: "POST",
       body: JSON.stringify(credentials)
+    });
+  },
+
+  getProfile() {
+    return this.request("/auth/profile", {
+      method: "GET"
+    });
+  },
+
+  updateProfile(profileData) {
+    return this.request("/auth/profile", {
+      method: "PUT",
+      body: JSON.stringify(profileData)
     });
   },
 
@@ -183,6 +196,13 @@ const ApiService = {
 
   getVehicleTracking(vehicleId) {
     return this.request(`/vehicle/${vehicleId}/tracking`, {
+      method: "GET"
+    });
+  },
+
+  getAllTracking(vehicleNumber) {
+    const q = vehicleNumber ? `?vehicleNumber=${encodeURIComponent(vehicleNumber)}` : "";
+    return this.request(`/tracking${q}`, {
       method: "GET"
     });
   },

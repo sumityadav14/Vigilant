@@ -21,10 +21,77 @@
   <style>
     #leaflet-map {
       width: 100%;
-      height: 480px;
+      height: 520px;
       border-radius: var(--radius-md);
       border: 1px solid var(--border-color);
       z-index: 1;
+    }
+    .custom-cam-node {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #1E3A8A;
+      border: 2px solid #38BDF8;
+      color: #FFF;
+      font-weight: 800;
+      font-size: 0.75rem;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+      transition: transform 0.2s ease;
+    }
+    .custom-cam-node.violation {
+      background: #991B1B;
+      border-color: #EF4444;
+      box-shadow: 0 0 16px rgba(239, 68, 68, 0.8);
+    }
+    .custom-cam-node.priority {
+      background: #065F46;
+      border-color: #10B981;
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.8);
+    }
+    .live-vehicle-pulse {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #00E676;
+      border: 2px solid #FFF;
+      box-shadow: 0 0 14px #00E676;
+      animation: pulseGlow 1.2s infinite;
+    }
+    @keyframes pulseGlow {
+      0% { transform: scale(0.9); opacity: 0.8; }
+      50% { transform: scale(1.4); opacity: 1; box-shadow: 0 0 24px #00E676; }
+      100% { transform: scale(0.9); opacity: 0.8; }
+    }
+    .timeline-hop-item {
+      padding: 12px 14px;
+      background: var(--bg-dark-alt);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .timeline-hop-item:hover, .timeline-hop-item.active {
+      border-color: var(--primary);
+      background: rgba(37, 99, 235, 0.15);
+      transform: translateX(3px);
+    }
+    .hsrp-mini {
+      display: inline-flex;
+      align-items: center;
+      background: #FFF;
+      color: #000;
+      font-family: monospace;
+      font-weight: 800;
+      font-size: 0.78rem;
+      padding: 2px 6px;
+      border-radius: 3px;
+      border: 1px solid #000;
     }
   </style>
 </head>
@@ -63,16 +130,22 @@
         <a href="stolen-search.html" class="nav-item">
           <i class="lucide-search"></i> Stolen Vehicle Search
         </a>
+        <a href="maps.html" class="nav-item">
+          <i class="lucide-map"></i> Full GIS Map
+        </a>
+        <a href="profile.html" class="nav-item">
+          <i class="lucide-user-cog"></i> Officer Profile
+        </a>
       </nav>
 
       <div class="sidebar-footer">
-        <div class="user-profile-mini">
+        <a href="profile.html" class="user-profile-mini" style="text-decoration:none;">
           <div class="avatar" style="border-color:var(--danger);">AU</div>
           <div class="user-info">
             <span class="user-name">Authority User</span>
             <span class="user-role">Traffic Enforcement Officer</span>
           </div>
-        </div>
+        </a>
       </div>
     </aside>
 
@@ -82,45 +155,106 @@
         <button id="sidebar-toggle" class="btn-icon d-lg-none"><i class="lucide-menu"></i></button>
 
         <div style="font-size:0.9rem; color:var(--text-muted);">
-          Spatial GIS Multi-Camera Route Reconstruction
+          Spatial GIS Multi-Camera Vehicle Trajectory & Speed Telemetry Reconstruction
         </div>
 
         <div class="header-actions">
+          <a href="profile.html" class="btn btn-outline btn-sm"><i class="lucide-user"></i> My Profile</a>
           <button class="btn btn-outline btn-sm" onclick="window.AuthEngine.logout()">Logout</button>
         </div>
       </header>
 
       <div class="dashboard-container">
         
-        <div class="page-header">
+        <div class="page-header" style="flex-wrap:wrap; gap:16px;">
           <div>
-            <h1 class="page-title">Multi-Camera Trajectory Tracking Map</h1>
-            <p class="page-subtitle">Vehicle tracking data from the configured backend.</p>
+            <h1 class="page-title">Multi-Camera Vehicle Trajectory Tracking</h1>
+            <p class="page-subtitle">Real-time geospatial corridor reconstruction from highway AI surveillance nodes.</p>
+          </div>
+
+          <!-- Vehicle Selector & Control Toolbar -->
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:6px; background:var(--bg-dark-alt); padding:6px 12px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+              <span style="font-size:0.8rem; color:var(--text-muted);"><i class="lucide-car"></i> Vehicle:</span>
+              <select id="vehicle-track-select" onchange="window.TrackingEngine.switchVehicle(this.value)" class="form-control" style="padding:4px 8px; font-size:0.82rem; width:auto; background:var(--bg-dark); border-color:var(--border-color); color:var(--text-primary); font-weight:700;">
+                <option value="UP14DL5922" selected>UP14DL5922 — Maruti Dzire (Ghaziabad/Noida)</option>
+                <option value="DL04CP9901">DL04CP9901 — Tata Nexon EV (Delhi Ring Rd)</option>
+                <option value="DL01AM9112">DL01AM9112 — CATS Ambulance (Green Wave)</option>
+                <option value="MH12AB3456">MH12AB3456 — Maruti Ciaz (Pune Metro)</option>
+              </select>
+            </div>
+
+            <button class="btn btn-primary btn-sm" onclick="window.TrackingEngine.replayJourney()">
+              <i class="lucide-play"></i> Replay Journey
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="window.TrackingEngine.refreshTracking()">
+              <i class="lucide-refresh-cw"></i> Refresh
+            </button>
           </div>
         </div>
 
-        <!-- Guardrail Banner -->
-        <div class="legal-notice-banner" style="margin-bottom:20px;">
-          <i class="lucide-shield-alert"></i>
-          <strong>Service status:</strong> Vehicle tracking is not configured by the backend.
+        <!-- Telemetry Summary Row -->
+        <div class="grid-4" style="margin-bottom:20px;">
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">Active Vehicle</div>
+              <div id="stat-veh-number" class="stat-value" style="color:var(--primary); font-size:1.3rem;">UP14DL5922</div>
+            </div>
+            <div class="stat-icon stat-icon-blue"><i class="lucide-car"></i></div>
+          </div>
+
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">Camera Nodes Traversed</div>
+              <div id="stat-nodes-count" class="stat-value" style="color:var(--accent-cyan); font-size:1.3rem;">5 Nodes</div>
+            </div>
+            <div class="stat-icon stat-icon-blue"><i class="lucide-video"></i></div>
+          </div>
+
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">Peak Tracked Speed</div>
+              <div id="stat-peak-speed" class="stat-value" style="color:var(--danger); font-size:1.3rem;">74 km/h</div>
+            </div>
+            <div class="stat-icon stat-icon-warning" style="color:#EF4444; background:rgba(239,68,68,0.15);"><i class="lucide-gauge"></i></div>
+          </div>
+
+          <div class="stat-card">
+            <div>
+              <div class="stat-label">Trajectory Status</div>
+              <div id="stat-route-status" class="stat-value" style="color:var(--warning); font-size:1.3rem;">Speeding Flagged</div>
+            </div>
+            <div class="stat-icon stat-icon-warning"><i class="lucide-shield-alert"></i></div>
+          </div>
         </div>
 
         <div class="grid-3-1">
           <!-- Interactive Map Container -->
           <div class="glass-card" style="padding:20px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-              <h3 style="font-size:1.1rem;">Vehicle Route</h3>
-              <span class="badge badge-info">0 CAMERAS</span>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+              <h3 style="font-size:1.1rem; display:flex; align-items:center; gap:8px;">
+                <i class="lucide-map-pin" style="color:var(--primary);"></i> Geospatial Highway Trajectory
+              </h3>
+              <div style="font-size:0.8rem; color:var(--text-muted); display:flex; align-items:center; gap:12px;">
+                <span><span style="color:#38BDF8;">●</span> Normal CAM</span>
+                <span><span style="color:#EF4444;">●</span> Infraction Point</span>
+                <span><span style="color:#10B981;">●</span> Priority Wave</span>
+              </div>
             </div>
 
-            <div id="leaflet-map" style="display:flex; align-items:center; justify-content:center; color:var(--text-muted);">No tracking data is available.</div>
+            <!-- Leaflet Container -->
+            <div id="leaflet-map"></div>
           </div>
 
           <!-- Timeline Sidebar -->
-          <div class="glass-card" style="padding:20px;">
-            <h3 style="font-size:1.1rem; margin-bottom:14px;">Chronological Timeline</h3>
+          <div class="glass-card" style="padding:20px; display:flex; flex-direction:column;">
+            <h3 style="font-size:1.1rem; margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+              <i class="lucide-clock" style="color:var(--primary);"></i> Chronological Timeline
+            </h3>
 
-            <div style="color:var(--text-muted); padding:16px; text-align:center;">No tracking events are available.</div>
+            <div id="tracking-timeline-list" style="display:flex; flex-direction:column; gap:10px; overflow-y:auto; max-height:460px; padding-right:4px;">
+              <!-- Populated by TrackingEngine -->
+            </div>
           </div>
         </div>
 
@@ -129,7 +263,256 @@
   </div>
 
   <!-- Scripts -->
+  <script src="../js/api.js"></script>
   <script src="../js/auth.js"></script>
   <script src="../js/app.js"></script>
+  <script src="../js/ai-chat.js"></script>
+
+  <!-- Interactive Tracking Engine -->
+  <script>
+    (function() {
+      let mapInstance = null;
+      let pathPolyline = null;
+      let markerGroup = null;
+      let liveCarMarker = null;
+      let currentTrackingData = [];
+      let replayTimer = null;
+
+      const TrackingEngine = {
+        activeVehicle: "UP14DL5922",
+
+        async init() {
+          this.initMap();
+          await this.loadVehicleRoute(this.activeVehicle);
+        },
+
+        initMap() {
+          const mapEl = document.getElementById("leaflet-map");
+          if (!mapEl) return;
+
+          // Base Tile Layers (Google Maps + OSM + Dark GIS)
+          const googleRoads = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            attribution: '© Google Maps'
+          });
+
+          const googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            attribution: '© Google Maps Satellite'
+          });
+
+          const cartoDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            maxZoom: 19,
+            attribution: '© CARTO'
+          });
+
+          const osmStandard = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+          });
+
+          mapInstance = L.map('leaflet-map', {
+            center: [28.6315, 77.3480],
+            zoom: 12,
+            layers: [googleRoads]
+          });
+
+          const baseMaps = {
+            "Google Maps (Roads)": googleRoads,
+            "Google Satellite Hybrid": googleHybrid,
+            "Tactical Dark GIS": cartoDark,
+            "OpenStreetMap": osmStandard
+          };
+
+          L.control.layers(baseMaps).addTo(mapInstance);
+          markerGroup = L.featureGroup().addTo(mapInstance);
+        },
+
+        async loadVehicleRoute(vehicleNumber) {
+          this.activeVehicle = vehicleNumber;
+          try {
+            let data = null;
+            if (window.ApiService && window.ApiService.getVehicleTracking) {
+              const res = await window.ApiService.getVehicleTracking(vehicleNumber);
+              if (res && res.tracking && res.tracking.length > 0) {
+                data = res.tracking;
+              }
+            }
+
+            if (!data) {
+              const token = localStorage.getItem("vigilant_auth_token") || "";
+              const resp = await fetch(`/api/tracking?vehicleNumber=${vehicleNumber}`, {
+                headers: { "Authorization": `Bearer ${token}` }
+              });
+              if (resp.ok) {
+                const json = await resp.json();
+                data = json.tracking;
+              }
+            }
+
+            currentTrackingData = data || [];
+            this.renderTracking(currentTrackingData);
+          } catch (e) {
+            console.error("Failed to load vehicle route:", e);
+          }
+        },
+
+        renderTracking(points) {
+          if (!mapInstance || !points || points.length === 0) return;
+
+          markerGroup.clearLayers();
+          if (pathPolyline) mapInstance.removeLayer(pathPolyline);
+          if (liveCarMarker) mapInstance.removeLayer(liveCarMarker);
+
+          const latLngs = [];
+          let peakSpeed = 0;
+          let hasViolation = false;
+
+          points.forEach((pt, idx) => {
+            const lat = Number(pt.latitude);
+            const lng = Number(pt.longitude);
+            latLngs.push([lat, lng]);
+
+            if (pt.speedKmh > peakSpeed) peakSpeed = pt.speedKmh;
+            if (pt.isViolationPoint) hasViolation = true;
+
+            // Custom Node Pin
+            let nodeClass = "custom-cam-node";
+            if (pt.isViolationPoint) nodeClass += " violation";
+            else if (pt.isPriorityPoint) nodeClass += " priority";
+
+            const customIcon = L.divIcon({
+              className: 'custom-leaflet-marker',
+              html: `<div class="${nodeClass}">${idx + 1}</div>`,
+              iconSize: [32, 32],
+              iconAnchor: [16, 16]
+            });
+
+            const marker = L.marker([lat, lng], { icon: customIcon });
+            const speedColor = pt.speedKmh > 65 ? '#EF4444' : '#00E676';
+            
+            marker.bindPopup(`
+              <div style="font-family:sans-serif; min-width:180px; padding:4px;">
+                <div style="font-size:0.75rem; color:#64748B; font-weight:700;">HOP #${idx + 1} • ${pt.cameraCode}</div>
+                <div style="font-weight:700; font-size:0.92rem; color:#0F172A; margin:3px 0;">${pt.location}</div>
+                <div style="font-size:0.8rem; display:flex; justify-content:space-between; margin-top:6px; border-top:1px solid #E2E8F0; padding-top:4px;">
+                  <span>Speed: <strong style="color:${speedColor};">${pt.speedKmh} km/h</strong></span>
+                  <span>${new Date(pt.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+                </div>
+                ${pt.isViolationPoint ? `<div style="margin-top:6px; background:#FEE2E2; color:#991B1B; font-size:0.72rem; padding:3px 6px; border-radius:4px; font-weight:700;">⚠️ Statutory Infraction Logged</div>` : ''}
+              </div>
+            `);
+
+            markerGroup.addLayer(marker);
+          });
+
+          // Draw Glowing Path Polyline
+          pathPolyline = L.polyline(latLngs, {
+            color: hasViolation ? '#EF4444' : '#2563EB',
+            weight: 5,
+            opacity: 0.85,
+            dashArray: '8, 8',
+            lineJoin: 'round'
+          }).addTo(mapInstance);
+
+          // Add Current Pulsing Vehicle Marker at latest hop
+          const lastPoint = latLngs[latLngs.length - 1];
+          const carPulseIcon = L.divIcon({
+            className: 'custom-leaflet-car-pulse',
+            html: `<div class="live-vehicle-pulse" title="Current Real-time Position"></div>`,
+            iconSize: [20, 20],
+            iconAnchor: [10, 10]
+          });
+          liveCarMarker = L.marker(lastPoint, { icon: carPulseIcon }).addTo(mapInstance);
+
+          mapInstance.fitBounds(pathPolyline.getBounds(), { padding: [50, 50] });
+
+          // Update KPI telemetry
+          document.getElementById("stat-veh-number").textContent = this.activeVehicle;
+          document.getElementById("stat-nodes-count").textContent = `${points.length} Nodes`;
+          document.getElementById("stat-peak-speed").textContent = `${peakSpeed} km/h`;
+          
+          const statusEl = document.getElementById("stat-route-status");
+          if (hasViolation) {
+            statusEl.textContent = "Infraction Flagged";
+            statusEl.style.color = "var(--danger)";
+          } else {
+            statusEl.textContent = "Corridor Cleared";
+            statusEl.style.color = "var(--success)";
+          }
+
+          this.renderTimeline(points);
+        },
+
+        renderTimeline(points) {
+          const listEl = document.getElementById("tracking-timeline-list");
+          if (!listEl) return;
+
+          listEl.innerHTML = points.map((pt, idx) => {
+            const timeStr = new Date(pt.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            return `
+              <div class="timeline-hop-item ${idx === points.length - 1 ? 'active' : ''}" onclick="window.TrackingEngine.focusHop(${idx})">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-weight:700; font-size:0.85rem; color:#FFF;">
+                    <span style="color:var(--primary);">#${idx + 1}</span> ${pt.cameraCode}
+                  </span>
+                  <span style="font-size:0.75rem; color:var(--text-muted);">${timeStr}</span>
+                </div>
+                <div style="font-size:0.8rem; color:var(--text-secondary);">${pt.location}</div>
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; margin-top:2px;">
+                  <span style="color:${pt.speedKmh > 65 ? 'var(--danger)' : 'var(--success)'}; font-weight:700;">
+                    <i class="lucide-gauge" style="width:12px; height:12px; vertical-align:middle;"></i> ${pt.speedKmh} km/h
+                  </span>
+                  ${pt.isViolationPoint ? '<span class="badge badge-danger" style="font-size:0.65rem;">INFRACTION</span>' : '<span class="badge badge-info" style="font-size:0.65rem;">MONITORED</span>'}
+                </div>
+              </div>
+            `;
+          }).join("");
+
+          if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
+        },
+
+        focusHop(index) {
+          if (!currentTrackingData[index] || !mapInstance) return;
+          const pt = currentTrackingData[index];
+          mapInstance.flyTo([pt.latitude, pt.longitude], 15, { animate: true, duration: 1 });
+        },
+
+        switchVehicle(vehNum) {
+          this.loadVehicleRoute(vehNum);
+        },
+
+        refreshTracking() {
+          this.loadVehicleRoute(this.activeVehicle);
+        },
+
+        replayJourney() {
+          if (!currentTrackingData || currentTrackingData.length < 2) return;
+          if (replayTimer) clearInterval(replayTimer);
+
+          let step = 0;
+          this.focusHop(0);
+
+          replayTimer = setInterval(() => {
+            step++;
+            if (step >= currentTrackingData.length) {
+              clearInterval(replayTimer);
+              return;
+            }
+            this.focusHop(step);
+            if (liveCarMarker) {
+              liveCarMarker.setLatLng([currentTrackingData[step].latitude, currentTrackingData[step].longitude]);
+            }
+          }, 1800);
+        }
+      };
+
+      window.TrackingEngine = TrackingEngine;
+
+      document.addEventListener("DOMContentLoaded", () => {
+        TrackingEngine.init();
+      });
+    })();
+  </script>
 </body>
 </html>
