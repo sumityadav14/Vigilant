@@ -47,7 +47,10 @@
           <i class="lucide-route"></i> Multi-Cam Tracking
         </a>
         <a href="stolen-search.html" class="nav-item">
-          <i class="lucide-search"></i> Stolen Search
+          <i class="lucide-search"></i> Stolen Vehicle Search
+        </a>
+        <a href="ai-models.html" class="nav-item">
+          <i class="lucide-cpu"></i> AI Model Telemetry
         </a>
         <a href="analytics.html" class="nav-item">
           <i class="lucide-bar-chart-3"></i> Analytics
@@ -106,12 +109,11 @@
             <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px;">
               <div class="form-group" style="margin-bottom:0;">
                 <label class="form-label">Report Type</label>
-                <select class="form-control">
-                  <option value="challans">Challan Records</option>
-                  <option value="violations">AI Violation Summary (not configured)</option>
-                  <option value="reviews">Challan Dispute & Review Log (not configured)</option>
-                  <option value="stolen">Stolen Vehicle Camera Matches (not configured)</option>
-                  <option value="cameras">Camera Node Health & Telemetry (not configured)</option>
+                <select class="form-control" onchange="generateChallanReport(event)">
+                  <option value="challans">e-Challan Statutory Records</option>
+                  <option value="violations">AI Violation Perception Summary</option>
+                  <option value="stolen">Stolen Vehicle Police Hotlist</option>
+                  <option value="cameras">Surveillance Node Health & Telemetry</option>
                 </select>
               </div>
 
@@ -145,8 +147,8 @@
             </div>
 
             <div style="display:flex; gap:10px;">
-              <button class="btn btn-outline btn-sm" onclick="showToast('PDF export is not configured.', 'warning')">
-                <i class="lucide-file-text"></i> Download PDF
+              <button class="btn btn-outline btn-sm" onclick="window.print()">
+                <i class="lucide-file-text"></i> Print / PDF
               </button>
               <button class="btn btn-primary btn-sm" onclick="exportChallanReport()">
                 <i class="lucide-download"></i> Export CSV

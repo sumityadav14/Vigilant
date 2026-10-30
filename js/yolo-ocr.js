@@ -1741,7 +1741,10 @@ const YoloOcrController = {
      ----------------------------------------------------------- */
   openCourtSlipModal(plateOrPresetId) {
     let vehicle = null;
-    if (this.videoVehicles && this.videoVehicles.length > 0) {
+    if (typeof plateOrPresetId === "number" && itmsPresets[plateOrPresetId]) {
+      vehicle = itmsPresets[plateOrPresetId];
+    }
+    if (!vehicle && this.videoVehicles && this.videoVehicles.length > 0) {
       vehicle = this.videoVehicles.find(v => v.plateNumber === plateOrPresetId || v.id === plateOrPresetId);
     }
     if (!vehicle) {

@@ -1589,9 +1589,81 @@ app.delete(
 
 app.get("/api/cameras", (req, res) => {
   const cameras = [
-    { code: "CAM-GZB-014", name: "Indirapuram Flyover Camera #14", location: "Ghaziabad, UP", status: "Active", streamUrl: "rtsp://live.vigilant.gov/gzb-014" },
-    { code: "CAM-PUNE-012", name: "FC Road Shivajinagar Camera #12", location: "Pune, MH", status: "Active", streamUrl: "rtsp://live.vigilant.gov/pune-012" },
-    { code: "CAM-CHN-008", name: "Anna Salai Main Junction Camera #08", location: "Chennai, TN", status: "Active", streamUrl: "rtsp://live.vigilant.gov/chn-008" }
+    {
+      code: "CAM-GZB-014",
+      cameraCode: "CAM-GZB-014",
+      name: "Indirapuram Flyover AI Interceptor #14",
+      junction: "Indirapuram Expressway Sector 14",
+      location: "Ghaziabad, UP",
+      status: "Active",
+      fps: 60,
+      resolution: "1080p Full HD",
+      activeVehicles: 28,
+      speedLimit: "60 km/h",
+      imageUrl: "/assets/images/UP14DL5922.jpg",
+      streamUrl: "rtsp://live.vigilant.gov/gzb-014",
+      anprAccuracy: "99.4%"
+    },
+    {
+      code: "CAM-MUM-022",
+      cameraCode: "CAM-MUM-022",
+      name: "Kurla Junction AI Multi-Threat #22",
+      junction: "LBS Marg & CST Road Intersection",
+      location: "Mumbai, MH",
+      status: "Active",
+      fps: 60,
+      resolution: "1080p Full HD",
+      activeVehicles: 34,
+      speedLimit: "50 km/h",
+      imageUrl: "/assets/images/bike_helmet.jpg",
+      streamUrl: "rtsp://live.vigilant.gov/mum-022",
+      anprAccuracy: "98.9%"
+    },
+    {
+      code: "CAM-PUNE-012",
+      cameraCode: "CAM-PUNE-012",
+      name: "FC Road Shivajinagar Camera #12",
+      junction: "Fergusson College Road Tri-Junction",
+      location: "Pune, MH",
+      status: "Active",
+      fps: 60,
+      resolution: "4K Ultra HD",
+      activeVehicles: 19,
+      speedLimit: "40 km/h",
+      imageUrl: "/assets/images/MH12AB3456.jpg",
+      streamUrl: "rtsp://live.vigilant.gov/pune-012",
+      anprAccuracy: "99.1%"
+    },
+    {
+      code: "CAM-CHN-008",
+      cameraCode: "CAM-CHN-008",
+      name: "Anna Salai Main Junction Camera #08",
+      junction: "Mount Road Anna Flyover Corridor",
+      location: "Chennai, TN",
+      status: "Active",
+      fps: 60,
+      resolution: "1080p Full HD",
+      activeVehicles: 42,
+      speedLimit: "50 km/h",
+      imageUrl: "/assets/images/TN09BY9726.jpg",
+      streamUrl: "rtsp://live.vigilant.gov/chn-008",
+      anprAccuracy: "99.6%"
+    },
+    {
+      code: "CAM-DEL-005",
+      cameraCode: "CAM-DEL-005",
+      name: "AIIMS Emergency Corridor PTZ #05",
+      junction: "Ring Road Ansari Nagar Flyway",
+      location: "New Delhi, DL",
+      status: "Active",
+      fps: 60,
+      resolution: "4K Ultra HD",
+      activeVehicles: 15,
+      speedLimit: "60 km/h",
+      imageUrl: "/assets/images/ambulance.jpg",
+      streamUrl: "rtsp://live.vigilant.gov/del-005",
+      anprAccuracy: "99.8%"
+    }
   ];
   res.json({
     status: "SUCCESS",
@@ -1782,71 +1854,303 @@ app.get("/api/analytics", (req, res) => {
     analytics: {
       totalVehiclesScanned: 18450,
       totalViolationsDetected: 3540,
-      activeCameras: 3,
-      accuracyRate: "99.4%"
+      totalDetectionsToday: 4892,
+      activeCameras: 5,
+      activeSurveillanceNodes: 18,
+      accuracyRate: "99.4%",
+      averageConfidence: 98.6,
+      disputeResolutionRate: 94.2,
+      revenueSummary: {
+        totalCompounded: 4892000,
+        collected: 4120000,
+        pending: 772000
+      },
+      violationsByType: {
+        "Over-Speeding (Sec 183)": 1420,
+        "No Helmet (Sec 129)": 1180,
+        "Red Light Breach (Sec 184)": 940,
+        "Triple Riding (Sec 128)": 560,
+        "Seatbelt Infraction (Sec 194B)": 792
+      },
+      violationsByHour: {
+        "00:00": 42,
+        "02:00": 18,
+        "04:00": 26,
+        "06:00": 110,
+        "08:00": 380,
+        "10:00": 540,
+        "12:00": 420,
+        "14:00": 360,
+        "16:00": 490,
+        "18:00": 680,
+        "20:00": 590,
+        "22:00": 236
+      },
+      vehiclesByType: {
+        "Two-Wheeler": 2100,
+        "Car / Sedan": 1640,
+        "SUV": 620,
+        "Auto-Rickshaw": 380,
+        "Bus / Commercial": 152
+      },
+      violationsByCamera: {
+        "CAM-GZB-014": 1280,
+        "CAM-DEL-005": 980,
+        "CAM-MUM-022": 1140,
+        "CAM-PUNE-012": 840,
+        "CAM-CHN-008": 652
+      }
     }
   });
 });
 
-app.post("/api/stolen/report", (req, res) => {
-  res.status(201).json({
+const stolenHotlistDatabase = [
+  {
+    firNumber: "FIR-2026-DEL-8941",
+    policeStation: "Crime Branch, Central Delhi PS",
+    actSection: "Section 379 IPC (Motor Vehicle Theft)",
+    registrationNumber: "UP14DL5922",
+    make: "Maruti Suzuki",
+    model: "Dzire VXi",
+    color: "Arctic White",
+    chassisNumber: "MA3EFA12S00984124",
+    engineNumber: "K12M894210",
+    ownerName: "Sumit Yadav",
+    ownerPhone: "+91 98765 43210",
+    reportedAt: "2026-09-18",
+    status: "🚨 ACTIVE POLICE HOTLIST",
+    alertLevel: "CRITICAL RED",
+    lastSeenCamera: "CAM-GZB-014 (Indirapuram Flyover AI Interceptor #14)",
+    lastSeenLocation: "Indirapuram Sector 14, Ghaziabad",
+    lastSeenTime: "2026-10-30 09:14:22 AM IST",
+    imageUrl: "/assets/images/UP14DL5922.jpg",
+    anprConfidence: "99.4%"
+  },
+  {
+    firNumber: "FIR-2026-MUM-4421",
+    policeStation: "Kurla Police Station, Zone V Mumbai",
+    actSection: "Section 379 IPC (Motor Vehicle Theft)",
+    registrationNumber: "MH12AB3456",
+    make: "Honda",
+    model: "City ZX",
+    color: "Golden Brown",
+    chassisNumber: "MAKGM2538HN204918",
+    engineNumber: "L15Z119830",
+    ownerName: "Rahul Sharma",
+    ownerPhone: "+91 98112 34567",
+    reportedAt: "2026-10-02",
+    status: "🚨 ACTIVE POLICE HOTLIST",
+    alertLevel: "HIGH PRIORITY",
+    lastSeenCamera: "CAM-PUNE-012 (FC Road Shivajinagar Camera #12)",
+    lastSeenLocation: "Fergusson College Road, Pune",
+    lastSeenTime: "2026-10-30 08:42:15 AM IST",
+    imageUrl: "/assets/images/MH12AB3456.jpg",
+    anprConfidence: "98.9%"
+  },
+  {
+    firNumber: "FIR-2026-CHN-1192",
+    policeStation: "Mount Road Traffic Cell, Chennai",
+    actSection: "Section 379 IPC (Motor Vehicle Theft)",
+    registrationNumber: "TN09BY9726",
+    make: "Hyundai",
+    model: "Creta SX",
+    color: "Polar White",
+    chassisNumber: "MALC381CLNM094812",
+    engineNumber: "D4FA104819",
+    ownerName: "Priya Sundaram",
+    ownerPhone: "+91 94441 23456",
+    reportedAt: "2026-10-14",
+    status: "🚨 ACTIVE POLICE HOTLIST",
+    alertLevel: "HIGH PRIORITY",
+    lastSeenCamera: "CAM-CHN-008 (Anna Salai Main Junction Camera #08)",
+    lastSeenLocation: "Anna Flyover Corridor, Chennai",
+    lastSeenTime: "2026-10-30 07:29:40 AM IST",
+    imageUrl: "/assets/images/TN09BY9726.jpg",
+    anprConfidence: "99.2%"
+  }
+];
+
+app.get("/api/stolen-vehicles", (req, res) => {
+  res.json({
     status: "SUCCESS",
-    message: "Stolen vehicle broadcast report registered successfully."
+    count: stolenHotlistDatabase.length,
+    hotlist: stolenHotlistDatabase
   });
 });
 
-app.post("/api/stolen/search", (req, res) => {
-  const query = String(req.body?.query || req.body?.vehicleNumber || "").toUpperCase().trim();
-  const matches = mockVehicles.filter(v => 
-    !query || 
-    v.registrationNumber.includes(query) || 
-    v.make.toUpperCase().includes(query) || 
-    v.model.toUpperCase().includes(query) ||
-    v.rto.toUpperCase().includes(query)
-  );
+app.post("/api/stolen/report", (req, res) => {
+  const { firNumber, vehicleNumber, ownerName, policeStation } = req.body || {};
+  const newStolen = {
+    firNumber: firNumber || `FIR-2026-GEN-${Date.now().toString().slice(-4)}`,
+    policeStation: policeStation || "Metro Anti-Auto Theft Squad (AATS)",
+    actSection: "Section 379 IPC (Motor Vehicle Theft)",
+    registrationNumber: (vehicleNumber || "UNKNOWN").toUpperCase(),
+    make: "Reported",
+    model: "Vehicle",
+    color: "Standard",
+    ownerName: ownerName || "Complainant",
+    ownerPhone: "+91 90000 00000",
+    reportedAt: new Date().toISOString().split("T")[0],
+    status: "🚨 ACTIVE POLICE HOTLIST",
+    alertLevel: "CRITICAL RED",
+    lastSeenCamera: "CAM-GZB-014",
+    lastSeenLocation: "National Highway Network",
+    lastSeenTime: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+    imageUrl: "/assets/images/UP14DL5922.jpg",
+    anprConfidence: "99.0%"
+  };
+  stolenHotlistDatabase.unshift(newStolen);
+  res.status(201).json({
+    status: "SUCCESS",
+    message: "Stolen vehicle broadcast report registered successfully.",
+    hotlistRecord: newStolen
+  });
+});
+
+const handleStolenSearch = (req, res) => {
+  const raw = String(req.body?.query || req.body?.vehicleNumber || req.query?.query || req.query?.vehicleNumber || "").toUpperCase().trim();
+  let matches = stolenHotlistDatabase;
+  if (raw) {
+    matches = stolenHotlistDatabase.filter(v =>
+      v.registrationNumber.includes(raw) ||
+      v.firNumber.toUpperCase().includes(raw) ||
+      v.make.toUpperCase().includes(raw) ||
+      v.model.toUpperCase().includes(raw) ||
+      v.ownerName.toUpperCase().includes(raw)
+    );
+    if (matches.length === 0) {
+      // Check mockVehicles fallback
+      const foundInMock = mockVehicles.filter(v =>
+        v.registrationNumber.includes(raw) ||
+        v.make.toUpperCase().includes(raw)
+      );
+      if (foundInMock.length > 0) {
+        matches = foundInMock.map((m, idx) => ({
+          firNumber: `FIR-2026-DEL-${8100 + idx}`,
+          policeStation: "Delhi Police Auto Theft Squad",
+          actSection: "Section 379 IPC",
+          registrationNumber: m.registrationNumber,
+          make: m.make,
+          model: m.model,
+          color: m.color,
+          chassisNumber: "MA3EFA12S" + Math.floor(100000 + Math.random() * 900000),
+          engineNumber: "ENG" + Math.floor(100000 + Math.random() * 900000),
+          ownerName: m.ownerName,
+          ownerPhone: "+91 98765 00000",
+          reportedAt: "2026-09-20",
+          status: "🚨 ACTIVE POLICE HOTLIST",
+          alertLevel: "HIGH PRIORITY",
+          lastSeenCamera: "CAM-GZB-014",
+          lastSeenLocation: m.rto,
+          lastSeenTime: "2026-10-30 09:14:22 AM IST",
+          imageUrl: m.imageUrl || "/assets/images/UP14DL5922.jpg",
+          anprConfidence: "99.2%"
+        }));
+      }
+    }
+  }
 
   return res.json({
     status: "SUCCESS",
     count: matches.length,
     matchFound: matches.length > 0,
-    matches: matches.map(m => ({
-      registrationNumber: m.registrationNumber,
-      make: m.make,
-      model: m.model,
-      color: m.color,
-      rto: m.rto,
-      ownerName: m.ownerName,
-      status: "STOLEN ALERT ACTIVE",
-      reportedAt: "2026-09-25",
-      lastKnownLocation: m.rto,
-      imageUrl: m.imageUrl
-    }))
+    matches
   });
-});
+};
 
-app.post("/api/vehicle-reid", (req, res) => {
-  const query = String(req.body?.query || "").toUpperCase().trim();
-  const matches = mockVehicles.filter(v => 
-    !query || 
-    v.registrationNumber.includes(query) || 
-    v.make.toUpperCase().includes(query) || 
-    v.model.toUpperCase().includes(query)
-  );
+app.post("/api/stolen/search", handleStolenSearch);
+app.get("/api/stolen/search", handleStolenSearch);
+
+const handleVehicleReID = (req, res) => {
+  const query = String(req.body?.query || req.body?.vehicleId || req.body?.registrationNumber || req.query?.query || "").toUpperCase().trim();
+  
+  const targetPlate = query || "UP14DL5922";
+  const matchedVeh = mockVehicles.find(v => v.registrationNumber.includes(targetPlate)) || mockVehicles[0];
+
+  const corridorTrajectory = [
+    {
+      sightingId: "REID-SIGHT-001",
+      cameraCode: "CAM-GZB-014",
+      cameraName: "Indirapuram Flyover AI Interceptor #14",
+      junction: "Indirapuram Sector 14 Expressway",
+      timestamp: "Today, 09:14:22 AM IST",
+      speedKmh: 86,
+      speedLimit: 60,
+      cosineSimilarity: 0.9864,
+      similarityScore: "98.6%",
+      lane: "Lane 2 (Fast Corridor)",
+      direction: "Westbound to Delhi",
+      plateCrop: "/assets/images/UP14DL5922.jpg",
+      fullScene: "/assets/images/UP14DL5922.jpg",
+      colorDetected: matchedVeh ? matchedVeh.color : "White",
+      typeDetected: matchedVeh ? matchedVeh.type : "Car",
+      featureEmbeddingPreview: "[-0.0412, +0.1834, -0.0911, +0.3341, +0.0712, -0.1982 ... 512-dim FP32]"
+    },
+    {
+      sightingId: "REID-SIGHT-002",
+      cameraCode: "CAM-DEL-005",
+      cameraName: "AIIMS Emergency Corridor PTZ #05",
+      junction: "Ring Road Ansari Nagar Flyway",
+      timestamp: "Today, 09:32:05 AM IST",
+      speedKmh: 54,
+      speedLimit: 60,
+      cosineSimilarity: 0.9741,
+      similarityScore: "97.4%",
+      lane: "Lane 1 (Middle Corridor)",
+      direction: "Southbound to Ashram",
+      plateCrop: "/assets/images/UP14DL5922.jpg",
+      fullScene: "/assets/images/UP14DL5922.jpg",
+      colorDetected: matchedVeh ? matchedVeh.color : "White",
+      typeDetected: matchedVeh ? matchedVeh.type : "Car",
+      featureEmbeddingPreview: "[-0.0398, +0.1812, -0.0894, +0.3310, +0.0699, -0.1970 ... 512-dim FP32]"
+    },
+    {
+      sightingId: "REID-SIGHT-003",
+      cameraCode: "CAM-PUNE-012",
+      cameraName: "FC Road Shivajinagar Camera #12",
+      junction: "Fergusson College Road Corridor",
+      timestamp: "Today, 09:48:19 AM IST",
+      speedKmh: 42,
+      speedLimit: 40,
+      cosineSimilarity: 0.9692,
+      similarityScore: "96.9%",
+      lane: "Lane 3 (Exit Corridor)",
+      direction: "Eastbound to Shivajinagar",
+      plateCrop: "/assets/images/MH12AB3456.jpg",
+      fullScene: "/assets/images/MH12AB3456.jpg",
+      colorDetected: "Golden Brown",
+      typeDetected: "Car",
+      featureEmbeddingPreview: "[-0.0425, +0.1799, -0.0925, +0.3301, +0.0728, -0.1955 ... 512-dim FP32]"
+    }
+  ];
 
   return res.json({
     status: "SUCCESS",
-    count: matches.length,
-    matches: matches.map((m, idx) => ({
-      reidId: `REID-MATCH-00${idx + 1}`,
-      registrationNumber: m.registrationNumber,
-      similarityScore: (99.5 - idx * 0.4).toFixed(1) + "%",
-      vehicleModel: `${m.make} ${m.model} (${m.color})`,
-      cameraLocation: m.rto,
-      timestamp: new Date().toISOString(),
-      imageUrl: m.imageUrl
+    targetVehicle: {
+      registrationNumber: matchedVeh ? matchedVeh.registrationNumber : targetPlate,
+      make: matchedVeh ? matchedVeh.make : "Maruti Suzuki",
+      model: matchedVeh ? matchedVeh.model : "Dzire",
+      color: matchedVeh ? matchedVeh.color : "Arctic White",
+      ownerName: matchedVeh ? matchedVeh.ownerName : "Sumit Yadav",
+      primaryImage: matchedVeh ? matchedVeh.imageUrl : "/assets/images/UP14DL5922.jpg"
+    },
+    matchCount: corridorTrajectory.length,
+    highestSimilarity: "98.6%",
+    trajectory: corridorTrajectory,
+    matches: corridorTrajectory.map(t => ({
+      reidId: t.sightingId,
+      registrationNumber: matchedVeh ? matchedVeh.registrationNumber : targetPlate,
+      similarityScore: t.similarityScore,
+      vehicleModel: `${matchedVeh ? matchedVeh.make : 'Maruti'} ${matchedVeh ? matchedVeh.model : 'Dzire'} (${t.colorDetected})`,
+      cameraLocation: `${t.cameraCode} • ${t.junction}`,
+      timestamp: t.timestamp,
+      imageUrl: t.fullScene
     }))
   });
-});
+};
+
+app.post("/api/vehicle-reid", handleVehicleReID);
+app.get("/api/vehicle-reid", handleVehicleReID);
 
 // ============================================================
 // 6.1 CHALLANS - MARK AS PAID

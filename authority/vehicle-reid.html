@@ -104,23 +104,38 @@
         </div>
 
         <!-- Search Input Card -->
-        <div class="glass-card" style="padding:28px; margin-bottom:28px;">
+        <div class="glass-card" style="padding:24px 28px; margin-bottom:24px;">
           <form onsubmit="performReIDSearch(event)">
-            <div style="display:grid; grid-template-columns:1fr 120px; gap:16px; align-items:end;">
+            <div style="display:grid; grid-template-columns:1fr 140px; gap:16px; align-items:end;">
               <div class="form-group" style="margin-bottom:0;">
-                <label class="form-label">Enter Vehicle Registration Number or Vehicle ID</label>
-                <input type="text" id="reid-query-input" class="form-control" placeholder="Enter a vehicle registration or vehicle ID">
+                <label class="form-label" style="display:flex; justify-content:space-between;">
+                  <span>Vehicle Registration Number / Query</span>
+                  <span style="font-size:0.75rem; color:var(--text-muted);">Quick: UP14DL5922 | MH12AB3456 | TN09BY9726</span>
+                </label>
+                <input type="text" id="reid-query-input" class="form-control" placeholder="e.g. UP14DL5922" value="UP14DL5922" style="font-weight:700; letter-spacing:1px; text-transform:uppercase;">
               </div>
               <button type="submit" class="btn btn-primary" style="height:44px;">
-                <i class="lucide-search"></i> SEARCH
+                <i class="lucide-scan"></i> Re-ID Search
               </button>
             </div>
           </form>
+
+          <!-- Quick Preset Chips -->
+          <div style="margin-top:14px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <span style="font-size:0.78rem; color:var(--text-muted); font-weight:600;">Sample Targets:</span>
+            <button class="btn btn-outline btn-sm" style="font-size:0.75rem; padding:3px 10px;" onclick="window.quickSearchReID('UP14DL5922')">UP14DL5922 (White Dzire)</button>
+            <button class="btn btn-outline btn-sm" style="font-size:0.75rem; padding:3px 10px;" onclick="window.quickSearchReID('MH12AB3456')">MH12AB3456 (Brown City)</button>
+            <button class="btn btn-outline btn-sm" style="font-size:0.75rem; padding:3px 10px;" onclick="window.quickSearchReID('TN09BY9726')">TN09BY9726 (White Creta)</button>
+          </div>
         </div>
 
         <!-- Re-ID Search Results Container -->
         <div id="reid-results-card" class="glass-card" style="padding:28px;">
-          <p id="reid-search-results" style="color:var(--text-muted);">Vehicle Re-ID is not configured. No matches are available.</p>
+          <div id="reid-search-results">
+            <div style="text-align:center; padding:24px; color:var(--text-muted);">
+              Initializing Deep Learning Vehicle Re-Identification Corridor...
+            </div>
+          </div>
         </div>
 
       </div>

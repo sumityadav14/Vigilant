@@ -99,20 +99,20 @@
         
         <div class="page-header">
           <div>
-            <h1 class="page-title">Camera Records</h1>
-            <p class="page-subtitle">Camera records available from the configured backend.</p>
+            <h1 class="page-title">Live CCTV Surveillance & Edge AI Nodes</h1>
+            <p class="page-subtitle">Real-time highway interceptors, junction cameras, speed radar nodes, and ANPR optical perception streams.</p>
           </div>
 
-            <div style="display:flex; gap:12px;">
-              <button class="btn btn-primary" onclick="renderCamerasPage()">
-              <i class="lucide-refresh-cw"></i> Refresh Camera Data
+          <div style="display:flex; gap:12px;">
+            <button class="btn btn-primary" onclick="renderCamerasPage()">
+              <i class="lucide-refresh-cw"></i> Refresh Camera Feeds
             </button>
           </div>
         </div>
 
         <!-- Camera Grid -->
-        <div id="camera-grid" class="camera-grid" style="grid-template-columns:repeat(2, 1fr); gap:24px;">
-          <p style="grid-column:1 / -1; text-align:center; color:var(--text-muted); padding:24px;">No camera data is configured.</p>
+        <div id="camera-grid" class="camera-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:24px;">
+          <p style="grid-column:1 / -1; text-align:center; color:var(--text-muted); padding:24px;">Loading live camera nodes...</p>
         </div>
 
       </div>
@@ -148,6 +148,7 @@
 
   <!-- Scripts -->
   <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
   <script src="../js/app.js"></script>
 </body>
 </html>

@@ -172,6 +172,10 @@ const ApiService = {
     });
   },
 
+  getStolenVehicles() {
+    return this.request("/stolen-vehicles");
+  },
+
   searchStolenVehicle(searchData) {
     return this.request("/stolen/search", {
       method: "POST",
