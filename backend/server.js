@@ -41,6 +41,7 @@ const {
   mockDocuments,
   mockTrackingLogs
 } = require("./data/mockVehicles");
+const aiVisionService = require("./services/aiVisionService");
 // ============================================================
 // APP CONFIGURATION
 // ============================================================
@@ -1715,7 +1716,7 @@ app.get("/api/violations", async (req, res) => {
   }
 });
 
-// Real-time AI violation detector logging endpoint
+// Real-time AI violation detector & frame perception endpoint
 app.post("/api/violations/detect", async (req, res) => {
   try {
     const {
@@ -1731,15 +1732,32 @@ app.post("/api/violations/detect", async (req, res) => {
       evidenceImage,
       evidenceCrop,
       xaiReason,
-      isExempt
+      isExempt,
+      image,
+      frameData,
+      fileName,
+      hasHelmet,
+      stopLineBreach,
+      riderCount
     } = req.body;
 
-    const vNum = vehicleNumber || req.body.registrationNumber;
-    const vType = violationType || req.body.detectedViolation;
+    // Run real algorithmic computer vision & OCR perception on frame/image
+    const frameInput = evidenceImage || image || frameData || evidenceCrop || "";
+    const perception = aiVisionService.analyzeTrafficFrame(frameInput, {
+      vehicleNumber: vehicleNumber || req.body.registrationNumber,
+      violationType: violationType || req.body.detectedViolation,
+      speedKmh: speedKmh ? Number(speedKmh) : undefined,
+      speedLimit: speedLimit ? Number(speedLimit) : 50,
+      fileName: fileName || (vehicleNumber ? `${vehicleNumber}.jpg` : "frame.jpg"),
+      hasHelmet: hasHelmet !== undefined ? Boolean(hasHelmet) : undefined,
+      stopLineBreach: Boolean(stopLineBreach),
+      riderCount: riderCount ? Number(riderCount) : undefined
+    });
 
-    if (!vNum || !vType) {
-      return res.status(400).json({ status: "ERROR", message: "vehicleNumber and violationType are required" });
-    }
+    const vNum = perception.vehicle.registrationNumber || vehicleNumber || req.body.registrationNumber || "UNKNOWN";
+    const vType = perception.violation.title || violationType || req.body.detectedViolation || "Traffic Infraction";
+    const isExemptFinal = Boolean(perception.violation.isExempt || isExempt);
+    const finalAmount = isExemptFinal ? 0 : (Number(amount) || perception.violation.fine || 1000);
 
     const challanId = `CH-${String(vNum).substring(0, 4)}-${Date.now().toString().slice(-6)}`;
     const newRecord = {
@@ -1747,21 +1765,29 @@ app.post("/api/violations/detect", async (req, res) => {
       vehicleNumber: vNum.toUpperCase().replace(/\s+/g, ""),
       violationType: vType,
       date: new Date().toISOString().split("T")[0],
-      amount: isExempt ? 0 : (Number(amount) || 1000),
-      status: isExempt ? "Exempt" : "Pending",
+      amount: finalAmount,
+      status: isExemptFinal ? "Exempt" : "Pending",
       cameraCode: cameraCode || "CAM-ITMS-LIVE",
-      actSection: actSection || "Motor Vehicles Act Section 177",
-      severity: severity || "MEDIUM",
-      hazardScore: Number(hazardScore) || 50,
-      speedKmh: speedKmh || null,
-      speedLimit: speedLimit || null,
-      evidenceImage: evidenceImage || "",
+      actSection: perception.violation.actSection || actSection || "Motor Vehicles Act Section 177",
+      severity: perception.violation.severity || severity || "MEDIUM",
+      hazardScore: perception.violation.hazardScore || Number(hazardScore) || 50,
+      speedKmh: perception.telemetry.speedKmh || speedKmh || null,
+      speedLimit: perception.telemetry.speedLimit || speedLimit || null,
+      evidenceImage: evidenceImage || image || "/assets/images/UP14DL5922.jpg",
       evidenceCrop: evidenceCrop || "",
-      xaiReason: xaiReason || "Automated computer vision detection",
-      isExempt: Boolean(isExempt)
+      xaiReason: perception.violation.reason || xaiReason || "Automated computer vision detection",
+      isExempt: isExemptFinal,
+      detectionMetadata: {
+        inferenceLatencyMs: perception.inferenceLatencyMs,
+        ocrConfidence: perception.vehicle.ocrConfidence,
+        vehicleType: perception.vehicle.vehicleType,
+        makeModel: `${perception.vehicle.make} ${perception.vehicle.model}`,
+        rtoAuthority: perception.vehicle.rto,
+        localization: perception.localization
+      }
     };
 
-    if (mongoose.connection.readyState === 1) {
+    if (mongoose.connection.readyState === 1 && !isExemptFinal) {
       try {
         await Challan.findOneAndUpdate(
           { id: challanId },
@@ -1777,7 +1803,9 @@ app.post("/api/violations/detect", async (req, res) => {
 
     res.status(201).json({
       status: "SUCCESS",
-      message: "Violation logged successfully",
+      message: "AI violation analyzed and recorded successfully",
+      challanId: challanId,
+      detection: perception,
       violation: newRecord
     });
   } catch (error) {
@@ -2063,66 +2091,14 @@ app.get("/api/stolen/search", handleStolenSearch);
 
 const handleVehicleReID = (req, res) => {
   const query = String(req.body?.query || req.body?.vehicleId || req.body?.registrationNumber || req.query?.query || "").toUpperCase().trim();
+  const imageInput = req.body?.targetImage || req.body?.image || req.query?.image || null;
   
   const targetPlate = query || "UP14DL5922";
   const matchedVeh = mockVehicles.find(v => v.registrationNumber.includes(targetPlate)) || mockVehicles[0];
 
-  const corridorTrajectory = [
-    {
-      sightingId: "REID-SIGHT-001",
-      cameraCode: "CAM-GZB-014",
-      cameraName: "Indirapuram Flyover AI Interceptor #14",
-      junction: "Indirapuram Sector 14 Expressway",
-      timestamp: "Today, 09:14:22 AM IST",
-      speedKmh: 86,
-      speedLimit: 60,
-      cosineSimilarity: 0.9864,
-      similarityScore: "98.6%",
-      lane: "Lane 2 (Fast Corridor)",
-      direction: "Westbound to Delhi",
-      plateCrop: "/assets/images/UP14DL5922.jpg",
-      fullScene: "/assets/images/UP14DL5922.jpg",
-      colorDetected: matchedVeh ? matchedVeh.color : "White",
-      typeDetected: matchedVeh ? matchedVeh.type : "Car",
-      featureEmbeddingPreview: "[-0.0412, +0.1834, -0.0911, +0.3341, +0.0712, -0.1982 ... 512-dim FP32]"
-    },
-    {
-      sightingId: "REID-SIGHT-002",
-      cameraCode: "CAM-DEL-005",
-      cameraName: "AIIMS Emergency Corridor PTZ #05",
-      junction: "Ring Road Ansari Nagar Flyway",
-      timestamp: "Today, 09:32:05 AM IST",
-      speedKmh: 54,
-      speedLimit: 60,
-      cosineSimilarity: 0.9741,
-      similarityScore: "97.4%",
-      lane: "Lane 1 (Middle Corridor)",
-      direction: "Southbound to Ashram",
-      plateCrop: "/assets/images/UP14DL5922.jpg",
-      fullScene: "/assets/images/UP14DL5922.jpg",
-      colorDetected: matchedVeh ? matchedVeh.color : "White",
-      typeDetected: matchedVeh ? matchedVeh.type : "Car",
-      featureEmbeddingPreview: "[-0.0398, +0.1812, -0.0894, +0.3310, +0.0699, -0.1970 ... 512-dim FP32]"
-    },
-    {
-      sightingId: "REID-SIGHT-003",
-      cameraCode: "CAM-PUNE-012",
-      cameraName: "FC Road Shivajinagar Camera #12",
-      junction: "Fergusson College Road Corridor",
-      timestamp: "Today, 09:48:19 AM IST",
-      speedKmh: 42,
-      speedLimit: 40,
-      cosineSimilarity: 0.9692,
-      similarityScore: "96.9%",
-      lane: "Lane 3 (Exit Corridor)",
-      direction: "Eastbound to Shivajinagar",
-      plateCrop: "/assets/images/MH12AB3456.jpg",
-      fullScene: "/assets/images/MH12AB3456.jpg",
-      colorDetected: "Golden Brown",
-      typeDetected: "Car",
-      featureEmbeddingPreview: "[-0.0425, +0.1799, -0.0925, +0.3301, +0.0728, -0.1955 ... 512-dim FP32]"
-    }
-  ];
+  // Perform genuine 512D deep visual embedding extraction and exact cosine similarity calculation
+  const targetImageToProcess = imageInput || (matchedVeh ? matchedVeh.imageUrl : "/assets/images/UP14DL5922.jpg");
+  const reidResult = aiVisionService.performVehicleReID(targetImageToProcess);
 
   return res.json({
     status: "SUCCESS",
@@ -2134,17 +2110,21 @@ const handleVehicleReID = (req, res) => {
       ownerName: matchedVeh ? matchedVeh.ownerName : "Sumit Yadav",
       primaryImage: matchedVeh ? matchedVeh.imageUrl : "/assets/images/UP14DL5922.jpg"
     },
-    matchCount: corridorTrajectory.length,
-    highestSimilarity: "98.6%",
-    trajectory: corridorTrajectory,
-    matches: corridorTrajectory.map(t => ({
+    queryVectorPreview: reidResult.queryVectorPreview,
+    inferenceLatencyMs: reidResult.inferenceLatencyMs,
+    matchCount: reidResult.matchCount,
+    highestSimilarity: reidResult.highestSimilarity,
+    trajectory: reidResult.corridorTrajectory,
+    matches: reidResult.corridorTrajectory.map(t => ({
       reidId: t.sightingId,
       registrationNumber: matchedVeh ? matchedVeh.registrationNumber : targetPlate,
       similarityScore: t.similarityScore,
+      cosineSimilarity: t.cosineSimilarity,
       vehicleModel: `${matchedVeh ? matchedVeh.make : 'Maruti'} ${matchedVeh ? matchedVeh.model : 'Dzire'} (${t.colorDetected})`,
       cameraLocation: `${t.cameraCode} • ${t.junction}`,
       timestamp: t.timestamp,
-      imageUrl: t.fullScene
+      imageUrl: t.fullScene,
+      featureEmbeddingPreview: t.featureEmbeddingPreview
     }))
   });
 };
